@@ -25,6 +25,9 @@ export async function transcribeAudio(prevState: any, formData: FormData) {
         file: createReadStream(audioFile.name),
         model: "whisper-1",
     });
+
+    await fs.unlink(audioFile.name);
+
     console.log("result", transcription.text);
     return {result: transcription.text};
 }
