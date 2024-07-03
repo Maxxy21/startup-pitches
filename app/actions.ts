@@ -13,7 +13,7 @@ function getOpenAI() {
     return openai;
 }
 
-export async function transcribeAudio(prevState: any, formData: FormData) {
+export async function transcribeAudio(formData: FormData) {
     const audioFile = formData.get("audio") as File;
 
     const buffer = await audioFile.arrayBuffer();
@@ -29,5 +29,35 @@ export async function transcribeAudio(prevState: any, formData: FormData) {
     await fs.unlink(audioFile.name);
 
     console.log("result", transcription.text);
-    return {result: transcription.text};
+    return transcription.text
+}
+
+export async function evaluatePitch(transcription: string): Promise<any> {
+    const openai = getOpenAI();
+    const prompts = [
+        "Soundness of the project in terms of problem-solution-customer fit",
+        "Potential of the project as a startup business",
+        "Quality of the presentation"
+    ];
+
+    return await Promise.all(prompts.map(async (prompt) => {
+        const completion = await openai.chat.completions.create({
+            messages: [
+                {
+                    role: "system",
+                    content: "You are an assistant that evaluates startup pitches based on specific criteria."
+                },
+                {
+                    role: "user",
+                    content: `Evaluate this pitch based on the following criteria: ${prompt}\n\n"${transcription}"`
+                }
+            ],
+            model: "gpt-3.5-turbo",
+        });
+
+        return {
+            criteria: prompt,
+            evaluation: completion.choices[0].message.content
+        };
+    }));
 }
