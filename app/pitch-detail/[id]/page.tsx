@@ -13,9 +13,9 @@ const PitchDetailPage: React.FC = () => {
             <p className="mt-2">{pitchData.transcription}</p>
             <h2 className="text-2xl font-semibold mt-6">Evaluations:</h2>
             <ul className="list-disc mt-2">
-                {pitchData.evaluations.map((evali, index) => (
+                {pitchData.evaluations.map((evaluation, index) => (
                     <li key={index}>
-                        <strong>{evali.criteria}:</strong> {evali.evaluation}
+                        <strong>{evaluation.criteria}:</strong> {evaluation.evaluation}
                     </li>
                 ))}
             </ul>
