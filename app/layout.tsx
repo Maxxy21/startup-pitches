@@ -10,6 +10,7 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import {PitchProvider} from "@/contexts/PitchContext";
+import {SideBar} from "@/app/_components/nav/side-bar";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -27,13 +28,6 @@ export default function RootLayout({
         <ClerkProvider>
             <html lang="en">
             <body className={inter.className}>
-
-                    <SignedIn>
-                        <UserButton/>
-                    </SignedIn>
-                    <SignedOut>
-                        <SignInButton/>
-                    </SignedOut>
 
             <PitchProvider>
                 {children}

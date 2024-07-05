@@ -3,7 +3,7 @@
 import React, {useState, FormEvent} from 'react';
 import {useRouter} from 'next/navigation';
 import {Button} from '@/components/ui/button';
-import FileUploader from '@/app/_components/FileUploader';
+import FileUploader from '@/app/_components/fileUploader';
 import {transcribeAudio, evaluatePitch} from '@/app/actions';
 import {usePitch} from '@/contexts/PitchContext';
 
