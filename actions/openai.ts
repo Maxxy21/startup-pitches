@@ -45,7 +45,7 @@ export async function evaluatePitch(transcription: string): Promise<any> {
             messages: [
                 {
                     role: "system",
-                    content: "You are an assistant that evaluates startup pitches based on specific criteria."
+                    content: "You are an assistant that evaluates startup pitches.ts based on specific criteria."
                 },
                 {
                     role: "user",

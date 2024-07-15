@@ -1,16 +1,9 @@
-import {
-    ClerkProvider,
-    SignInButton,
-    SignedIn,
-    SignedOut,
-    UserButton
-} from '@clerk/nextjs'
-
 import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import {PitchProvider} from "@/contexts/PitchContext";
-import {SideBar} from "@/app/_components/nav/side-bar";
+import {SideBar} from "@/components/nav/side-bar";
+import {ConvexClientProvider} from "@/providers/convex-client-provider";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -25,15 +18,14 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <ClerkProvider>
-            <html lang="en">
-            <body className={inter.className}>
 
-            <PitchProvider>
-                {children}
-            </PitchProvider>
-            </body>
-            </html>
-        </ClerkProvider>
+        <html lang="en">
+        <body className={inter.className}>
+        <ConvexClientProvider>
+            {children}
+        </ConvexClientProvider>
+        </body>
+        </html>
+
     );
 }

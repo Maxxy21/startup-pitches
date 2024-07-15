@@ -14,7 +14,6 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as pitch from "../pitch.js";
 import type * as pitches from "../pitches.js";
 
 /**
@@ -26,7 +25,6 @@ import type * as pitches from "../pitches.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  pitch: typeof pitch;
   pitches: typeof pitches;
 }>;
 export declare const api: FilterApi<

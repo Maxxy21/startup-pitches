@@ -1,4 +1,4 @@
-// components/fileUploader.tsx
+// components/file-uploader.tsx
 import React, {ChangeEvent} from 'react';
 
 interface FileUploaderProps {

@@ -7,7 +7,7 @@ This is a Speech to Text application built with [Next.js](https://nextjs.org/).
 First, clone the repository to your local machine:
 
 ```bash
-git clone <https://github.com/Maxxy21/startup-pitches.git>
+git clone <https://github.com/Maxxy21/startup-pitches.ts.git>
 ```
 
 Then, navigate into the project directory and install the dependencies:

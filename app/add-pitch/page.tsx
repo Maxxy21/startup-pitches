@@ -3,8 +3,8 @@
 import React, {useState, FormEvent} from 'react';
 import {useRouter} from 'next/navigation';
 import {Button} from '@/components/ui/button';
-import FileUploader from '@/app/_components/fileUploader';
-import {transcribeAudio, evaluatePitch} from '@/app/actions';
+import FileUploader from '@/components/file-uploader';
+import {transcribeAudio, evaluatePitch} from '@/actions/openai';
 import {usePitch} from '@/contexts/PitchContext';
 
 const AddPitchPage = () => {
