@@ -2,13 +2,6 @@ import {Menu} from "lucide-react";
 import Link from "next/link";
 
 import {Button} from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
 import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
 import {primaryNavItems} from "@/utils";
 
@@ -46,26 +39,7 @@ export default function MobileNav({
                             </Link>
                         ))}
 
-                        <div className="flex items-center mt-6 mb-2">
-                            <p className="flex flex-1 text-base">My Projects</p>
-                        </div>
                     </nav>
-                    <div className="mt-auto">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Upgrade to Pro</CardTitle>
-                                <CardDescription>
-                                    Unlock all features and get unlimited access to our support
-                                    team.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Button size="sm" className="w-full">
-                                    Upgrade
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </div>
                 </SheetContent>
             </Sheet>
             <div className="flex items-center md:justify-between w-full gap-1 md:gap-2 py-2">

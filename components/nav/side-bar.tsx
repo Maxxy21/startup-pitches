@@ -1,23 +1,12 @@
 "use client";
 import Link from "next/link";
 
-import {Button} from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
 import {primaryNavItems} from "@/utils";
 
 import {usePathname} from "next/navigation";
 import {cn} from "@/lib/utils";
-import {api} from "@/convex/_generated/api";
-import {useQuery} from "convex/react";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Hash, PlusIcon} from "lucide-react";
-import {Doc} from "@/convex/_generated/dataModel";
 import {Dialog, DialogTrigger} from "@/components/ui/dialog";
 import UserProfile from "@/components/nav/user-profile";
 

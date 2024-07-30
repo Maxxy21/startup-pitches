@@ -1,5 +1,5 @@
 "use client"
-import React, {ChangeEvent, Dispatch, SetStateAction, useState} from 'react'
+import React, {Dispatch, SetStateAction} from 'react'
 
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
@@ -14,14 +14,13 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
-import {toast} from "@/components/ui/use-toast"
 import {CardFooter} from "@/components/ui/card";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
 import {useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {evaluatePitch, transcribeAudio} from "@/actions/openai";
+import {fileToText} from "@/utils";
 
 const FormSchema = z.object({
     pitchName: z.string().min(2, {
@@ -31,6 +30,7 @@ const FormSchema = z.object({
     content: z.string().optional(),
     file: z.any().optional(),
 })
+
 
 
 const AddPitchInline = ({
@@ -51,93 +51,6 @@ const AddPitchInline = ({
     })
 
     const fileRef = form.register("file");
-
-
-    function fileToText(file: File): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (typeof reader.result === 'string') {
-                    resolve(reader.result);
-                } else {
-                    reject('Failed to read file as text.');
-                }
-            };
-            reader.onerror = () => reject(reader.error);
-            reader.readAsText(file);
-        });
-    }
-
-
-    // async function onSubmit(data: z.infer<typeof FormSchema>) {
-    //     const {pitchName, contentType, content, file} = data;
-    //     let transcriptionText = content || "";
-    //
-    //     if (contentType === 'audio' && file instanceof FileList) {
-    //         const audioFile = file[0];
-    //         const audioFormats = ['audio/flac', 'audio/m4a', 'audio/mp3', 'audio/mp4', 'audio/mpeg', 'audio/mpga', 'audio/oga', 'audio/ogg', 'audio/wav', 'audio/webm'];
-    //
-    //         if (audioFormats.includes(audioFile.type)) {
-    //             const formData = new FormData();
-    //             formData.append('audio', audioFile);
-    //             transcriptionText = await transcribeAudio(formData);
-    //         } else {
-    //             throw new Error("Invalid audio file format. Supported formats: flac, m4a, mp3, mp4, mpeg, mpga, oga, ogg, wav, webm");
-    //         }
-    //     }
-    //
-    //     if (contentType === 'textFile' && file instanceof FileList) {
-    //         const textFile = file[0];
-    //         const reader = new FileReader();
-    //         reader.onload = function (event) {
-    //             transcriptionText = event.target?.result as string;
-    //         };
-    //         reader.readAsText(textFile);
-    //     }
-    //
-    //     const evaluationResults = await evaluatePitch(transcriptionText);
-    //
-    //     await createPitch({
-    //         name: pitchName,
-    //         text: transcriptionText,
-    //         evaluation: JSON.stringify(evaluationResults),
-    //     });
-    //     form.resetField("pitchName");
-    //     form.resetField("content");
-    //     form.resetField("file");
-    // }
-
-    // async function onSubmit(data: z.infer<typeof FormSchema>) {
-    //     let transcriptionText = data.content || "";
-    //
-    //     if (data.contentType === 'audio' && data.file instanceof FileList) {
-    //         const audioFile = data.file[0];
-    //         const audioFormats = ['audio/flac', 'audio/m4a', 'audio/mp3', 'audio/mp4', 'audio/mpeg', 'audio/mpga', 'audio/oga', 'audio/ogg', 'audio/wav', 'audio/webm'];
-    //
-    //         if (audioFormats.includes(audioFile.type)) {
-    //             const formData = new FormData();
-    //             formData.append('audio', audioFile);
-    //             transcriptionText = await transcribeAudio(formData);
-    //         } else {
-    //             throw new Error("Invalid audio file format. Supported formats: flac, m4a, mp3, mp4, mpeg, mpga, oga, ogg, wav, webm");
-    //         }
-    //     } else if (data.contentType === 'textFile' && data.file instanceof FileList) {
-    //         transcriptionText = await fileToText(data.file[0]);
-    //     }
-    //
-    //     const evaluationResults = await evaluatePitch(transcriptionText);
-    //
-    //     await createPitch({
-    //         name: data.pitchName,
-    //         text: transcriptionText,
-    //         evaluation: JSON.stringify(evaluationResults),
-    //     });
-    //
-    //     // Reset form fields after submission
-    //     form.resetField("pitchName");
-    //     form.resetField("content");
-    //     form.resetField("file");
-    // }
 
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {

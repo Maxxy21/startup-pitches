@@ -98,9 +98,9 @@ export async function transcribeAudio(formData: FormData) {
 export async function evaluatePitch(transcription: string): Promise<{ criteria: string; comment: string; score: number; }[]> {
     const openai = getOpenAI();
     const prompts = [
-        "Soundness of the project in terms of problem-solution-customer fit",
-        "Potential of the project as a startup business",
-        "Quality of the presentation"
+        "Soundness of the project in terms of problem-solution-customer fit. Provide comments and a score from 1 to 10.",
+        "Potential of the project as a startup business. Provide comments and a score from 1 to 10.",
+        "Quality of the presentation. Provide comments and a score from 1 to 10."
     ];
 
     const evaluations = await Promise.all(prompts.map(async (prompt) => {
@@ -108,7 +108,7 @@ export async function evaluatePitch(transcription: string): Promise<{ criteria: 
             messages: [
                 {
                     role: "system",
-                    content: "You are an assistant that evaluates startup pitches based on specific criteria."
+                    content: "You are an assistant that evaluates and scores startup pitches based on specific criteria."
                 },
                 {
                     role: "user",
@@ -118,13 +118,14 @@ export async function evaluatePitch(transcription: string): Promise<{ criteria: 
             model: "gpt-3.5-turbo",
         });
 
-        // Ensure comment is never null, provide a default empty string or a meaningful default message
-        const comment = completion.choices[0].message.content || "No comment provided";
+        const responseText = completion.choices[0].message.content || "";
+        const scoreMatch = responseText.match(/Score: (\d+)/); // Regex to extract score from the response
+        const score = scoreMatch ? parseInt(scoreMatch[1], 10) : 5; // Default score if not found
 
         return {
-            criteria: prompt,
-            comment: comment,
-            score: Math.floor(Math.random() * 10) + 1  // Generating random scores for illustration
+            criteria: prompt.split(".")[0], // Extract criteria name from prompt
+            comment: responseText,
+            score: score
         };
     }));
 
