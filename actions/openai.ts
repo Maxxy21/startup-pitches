@@ -32,7 +32,70 @@ export async function transcribeAudio(formData: FormData) {
     return transcription.text
 }
 
-export async function evaluatePitch(transcription: string): Promise<any> {
+// export async function evaluatePitch(transcription: string): Promise<any> {
+//     const openai = getOpenAI();
+//     const prompts = [
+//         "Soundness of the project in terms of problem-solution-customer fit",
+//         "Potential of the project as a startup business",
+//         "Quality of the presentation"
+//     ];
+//
+//     return await Promise.all(prompts.map(async (prompt) => {
+//         const completion = await openai.chat.completions.create({
+//             messages: [
+//                 {
+//                     role: "system",
+//                     content: "You are an assistant that evaluates startup pitches.ts based on specific criteria."
+//                 },
+//                 {
+//                     role: "user",
+//                     content: `Evaluate this pitch based on the following criteria: ${prompt}\n\n"${transcription}"`
+//                 }
+//             ],
+//             model: "gpt-3.5-turbo",
+//         });
+//
+//         return {
+//             criteria: prompt,
+//             evaluation: completion.choices[0].message.content
+//         };
+//     }));
+// }
+
+
+// export async function evaluatePitch(transcription: string): Promise<any> {
+//     const openai = getOpenAI();
+//     const prompts = [
+//         "Soundness of the project in terms of problem-solution-customer fit",
+//         "Potential of the project as a startup business",
+//         "Quality of the presentation"
+//     ];
+//
+//     return await Promise.all(prompts.map(async (prompt) => {
+//         const completion = await openai.chat.completions.create({
+//             messages: [
+//                 {
+//                     role: "system",
+//                     content: "You are an assistant that evaluates startup pitches based on specific criteria."
+//                 },
+//                 {
+//                     role: "user",
+//                     content: `Evaluate this pitch based on the following criteria: ${prompt}\n\n"${transcription}"`
+//                 }
+//             ],
+//             model: "gpt-3.5-turbo",
+//         });
+//
+//         return {
+//             criteria: prompt,
+//             comment: completion.choices[0].message.content,
+//             score: Math.floor(Math.random() * 10) + 1  // Generating random scores for illustration
+//         };
+//     }));
+// }
+
+
+export async function evaluatePitch(transcription: string): Promise<{ criteria: string; comment: string; score: number; }[]> {
     const openai = getOpenAI();
     const prompts = [
         "Soundness of the project in terms of problem-solution-customer fit",
@@ -40,12 +103,12 @@ export async function evaluatePitch(transcription: string): Promise<any> {
         "Quality of the presentation"
     ];
 
-    return await Promise.all(prompts.map(async (prompt) => {
+    const evaluations = await Promise.all(prompts.map(async (prompt) => {
         const completion = await openai.chat.completions.create({
             messages: [
                 {
                     role: "system",
-                    content: "You are an assistant that evaluates startup pitches.ts based on specific criteria."
+                    content: "You are an assistant that evaluates startup pitches based on specific criteria."
                 },
                 {
                     role: "user",
@@ -55,9 +118,17 @@ export async function evaluatePitch(transcription: string): Promise<any> {
             model: "gpt-3.5-turbo",
         });
 
+        // Ensure comment is never null, provide a default empty string or a meaningful default message
+        const comment = completion.choices[0].message.content || "No comment provided";
+
         return {
             criteria: prompt,
-            evaluation: completion.choices[0].message.content
+            comment: comment,
+            score: Math.floor(Math.random() * 10) + 1  // Generating random scores for illustration
         };
     }));
+
+    return evaluations;
 }
+
+

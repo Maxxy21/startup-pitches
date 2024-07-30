@@ -1,0 +1,580 @@
+Okay, it's actually a very simple representation of the four phases, if you remember these
+are the four phases we have been through in the course and actually this is the typical
+steps of early, early stage startups and the main questions we are going to discuss is
+during this process what GenAI tools can support this process and if you have used, how you
+use them and what's your opinion on that. But before we jump into these questions,
+for any opinions it would be good to know where this opinion is coming from in terms of your
+background so we can make better sense of that. So for that I have a couple of questions. So
+for example, I know, are you still working? You are working still? Yeah. Okay, so what are you
+working as a software professional? I'm working as a developer, full stock, so I'm doing both
+backend and front-end. On the backend I'm using Scala, I don't know if you know that language
+and in the front-end I'm using PureScript, that is probably a language that you don't know about,
+exactly. And I don't know, if I'm going too far, stop me if I'm doing too much. But that's related
+to your thesis? Yeah, but no, no, no, it's not related to my thesis, no. But about, I don't know
+if the next question was if you use generative AI in your work settings and the thing is,
+um, no, because it's very, very bad, because PureScript is a language that is not very
+common, that has a very little niche of people that are doing it. So the AI model is straight,
+very, very badly with it. And yeah, well, I've tried using some, I mean, a few months ago,
+now there are new models, so maybe something changed, I don't know. But yeah, I know,
+it was the one time I've tried, it was a very horrible experience. Yeah, so talk about this,
+then, how's your general knowledge, you evaluate your general knowledge on generative AI?
+So, I mean, I know how they work, not in the specific details, but I know generally how they
+work. I would say that I try, I mean, I'm not the super passionate person that looks at every news
+articles, and I don't know, is subscribed to a newsletter about generative AI, but I look around,
+I see what's up. I mean, I've watched, that's strange, but I've watched some YouTube videos
+also about how they were using them, also in different fields, so generative AI music or
+and not just for coding. But yeah, I'm not the biggest fan that is spot on with every update and
+super focused, but I try to keep myself informed of how they're progressing and what's going on.
+Also, because I find that they are very relevant for our field.
+Yeah, your field as a software developer, or in general in IT or?
+I would say in software development especially, because like, we have seen what AI can do in,
+like, it can generate code very, very quickly. And also, I'm not using AI for work, but now for my,
+I'm using it a bit for my thesis, and I've tried Claude, that is the new,
+like, I don't know if, a lot of people are talking-
+It's Claude, C-L-A-U-D-E.
+Yeah, yeah, yeah. I don't know the pronunciation, Claude, Claude, I don't know the pronunciation.
+Claude, Claude, okay.
+And for example, now I had to convert some code to C, to C sharp, to C plus plus,
+and there is no automated tool to do that very well, but I've sent a file to
+Claude, and it got it back translated, and mostly was working, and it really helped me,
+saved a lot of time, of course, then afterwards I went over everything to make sure that it did.
+It also made some very silly mistakes, and that's fine, it happens. I think that's,
+yeah, that's the difference between using it badly, and using it correctly, and using it in
+the wrong way. If you just take it as a black box magic machine that brings out code, then it's
+probably not, and you are not knowledgeable about how that code should work, then it's,
+it's fine maybe for a personal project, but if you want to use it in a work environment,
+it doesn't work, but what I think really can work, and I've seen also other people online
+having this opinion, is using it as a sort of, like doing pair programming with AI, basically.
+So having AI as another person, another entity that you can discuss opinions, you can,
+and yeah, so basically doing pair programming with AI.
+Yeah, but in this case, you have to have anyway a good amount of
+knowledge in order to do this pair programming, right?
+Yeah, of course, I've seen people comparing AI to like an intern, so it produces intern
+quality code, but I also think on the other point, like so, of course, if you're knowledgeable
+about it, you can use it this way. On the other part, if you don't know much about,
+I don't know about programming in generally, but for example, in my case, I didn't know C++
+very well. I've had a university course about C in the first year of the bachelor,
+so it was a few years ago, but nothing about C++ specifically, and like asking the AI about
+some features of the languages, some specific APIs about the standard libraries, or some specific
+mechanism on how the language is working compared to, for example, C. I think that
+can be and is becoming more and more an easier way to learn compared going on stock overflow
+and searching, because stupid example, I don't know how to concatenate an integer to a string.
+It's much, much faster for simple things like that, but still that you need to learn.
+It's much, much easier to ask an AI generative model than to go and search on Google,
+and for simple stuff like that, they usually get it right.
+Yeah, so now connecting to this, how would you say your experience with any startup
+entrepreneurial related activities? Do you have any experience before you're taking on this course?
+Okay, so this is your first experience. Yeah, yeah. So yeah, in this case, you are like,
+in this case, a programmer analogy, no, it's like a programmer with very limited experience.
+So in this case, how gen AI could help in this startup process, as you see here,
+from ideation to problem identification, validation, so on. So how would you feel?
+For ideation, I think it's very good, because it's very good at generating stuff and coming
+up with ideas. And so we also use that in the mini-academy we did at the beginning of the course,
+to come up with an idea and to refine the idea. We asked Chachi Bitti for some insights and
+what could work. And I think for the ideation phase, the very, very, very, very early one
+could be very good. And I think it is very good actually right now as it stands.
+And you use the Chachi Bitti always? Did you use any other language models?
+No, we just use Chachi Bitti at that time. For the problem identification,
+I guess, since it's trained on real data of what people actually think,
+could maybe work to get an initial glimpse at what could be a problem. But then I don't think
+it's enough. You cannot identify a problem in Chachi Bitti. You need, of course, to go out
+and ask people and actually experience it for yourself. Especially if you are working in this
+entrepreneurship environment where you really need to believe in your idea.
+And I think that's kind of the same pattern for the other
+points of the steps of the graphs. Also problem validation. We've used it like
+in the course with the digital persona. But again we trained it using data of real
+interviews we've done talking with real people. And after that maybe it could be a bit useful to
+ask those risky questions that you wouldn't want to ask a real user. Like how much are you willing
+to pay for it or stuff like that. I also think that AI tends to be very, like they tend to please
+you and to always say that you're correct. Like the true plus true equals five. If you say it
+enough time, the AI will also believe that true plus true is equal to five. So it could be useful
+but I think since you're dealing with that problem that real people have, you have to be very careful
+on how you use it. And it has to be a tool, not the actual way you do the entire step.
+Right. Now that you mentioned this digital persona,
+so how did you actually build this digital persona?
+So we put as resources all the transcription of the interviews we did. And then we came up
+ourselves with a persona that made sense. So a student that lived in a city where transportation
+is not the best. And we described a bit the environment this person was, this persona was
+living in, his routine. And then we gave it a try. I think it worked quite well. Probably we didn't
+use it as much as we could have. Because again, we did the problem identification and validation
+first on real people. And then we moved on to Judge GPT. So at that point,
+maybe there is also confirmation bias. Because if you interview people that
+agree with you, and then you give it to Judge GPT, then of course it will also agree with you.
+So that's why I say that you need to be very careful.
+Yeah. And then after we created it, and we asked a few of this tricky question, how much would you
+be able to, will you pay for it? And do you have any other thing that you would want? Or do you see
+any critical points on this idea? After that, we kind of stopped using it. And also, I think
+that we could have done probably, and we didn't do, is going over it again when we pivoted a bit
+with the idea going from advertisement on cars to blah blah car in urban environment.
+Honestly, I kind of forgot that it was there when we reached that point.
+I kind of forgot the existence of this persona that we built.
+That probably would have been also a very good place to use it. Yeah.
+If you forgot it, it means that it's not that necessary or useful.
+Then with regard to the effort you put to build this persona and the benefit you get, do you think
+this is worth the effort? Yeah. I mean, the effort was on our side in gathering the data to train,
+to give a context to the model. And that's what you need to do anyways if you're
+following the steps and trying to validate your ideas. Anyways, you need to talk to people,
+do interviews. So just dumping all that information to the model and adding a bit of context
+to create a realistic and specific persona wasn't that much of a... It was quite easy.
+I think it took maybe an hour at most. Yeah, 45 minutes, an hour. And also because we were
+trying different prompts, seeing how it responded. But yeah, I think it's worth trying it. It doesn't
+require that much time. Okay. Yeah. So as you said that this persona was not really used in
+the later stages, right? Especially. We would have also needed to retrain it a bit because
+we pivoted the idea. So even if the main point... And actually, some of the questions that we've
+asked were still relevant, but we would have needed to do a bit more research, probably,
+to cover the small gap that was in between the two solutions. So the problem was validated that
+it's fine. For the solution, probably we could have done a bit more questions. And that is where
+I could have came in, because those are the tricky questions that you don't want to ask
+real people. So do you think this is a good idea? Because, I mean, probably also JGPT will respond
+in a positive way, but maybe that's something that we have not tried to make it as critical
+as possible. So probably in the prompt, you can emphasize the need that you have of it being
+critical and coming up with problems. Probably if you train it more in that direction, then it's
+also good to ask, like, how much are you willing to pay? Do you see any problems? Do you like the
+idea? And then probably it becomes a better tool. Yeah. Okay. So then if we move on in this process
+in the later stage, if not this digital persona, what other generative AI tools that came,
+that you have used, that actually you found? I think not me personally, but Jaluca used some
+AI tools to create the screenshots of the application. I think it was like Figma, but
+with a lot more AI. So you could then change all the different components and stuff, but you could
+also give it a prompt to start generating a template. But of course, also, as I said,
+Jaluca did most of it. So probably you should ask him later about this point. I don't think we've
+used any other tool. How about the video? Did you use any tool? I did it all by myself.
+I don't know. I felt more confident doing the edits myself than letting an AI do that. Because
+I've seen some tools that let you edit a video, like you give it the individual pieces and then
+it edits doing zoom ins. But that seemed something that was trained like on TikToks
+and Instagram Reels and was more aimed on that general direction. Also, usually,
+if you want tools that do a good job on that part, on the creativity part, you need to pay.
+It's also like when we did the mini-academy at the beginning and we created a video,
+I think I had to create four different accounts because we changed ideas. And so
+as a student being chief, I'm fortunate enough to have Final Cut Pro because my dad bought it
+and we have the family shared account. And so Final Cut Pro is a professional tool.
+I had already used it a couple of times to do very easy things, but also our video
+it was mostly cuts with the music so that the music, when the music hit the high point,
+also there would be the cut. So that was quite easy for me to do and it took, I think,
+yeah, I don't know, a day at most. And a lot of the effort also went into recording and that's
+not something that we wanted to do with AI, creating images of us doing things.
+Actually, I think AI to reach the quality of what you have done
+probably still needs some time.
+Okay, then other tools you don't recall any?
+I don't think we use any other tools because, I mean, for the presentation itself, we used Canva.
+I mean, it has some AI tools to write like certain textbox or rearrange the
+layout of the slide. But I don't know, I wouldn't call it really an AI tool because also
+PowerPoint, I mean, also PowerPoint now has some AI features, but it was also able to do that earlier,
+just moving stuff around and see what's there. And also at the end, then we moved stuff manually and
+we rewritten the text manually ourselves. So that had some AI components, but we didn't use any of
+that. Also, yeah, now this generative AI is a specialized type of AI, right? So it's not
+every smart feature is generative AI. Yeah. Do you remember this website that I gave to you
+to do the landing page? Would you consider that?
+Ah, right. Right. I forgot about that. Yeah, thanks. Yeah, that was, I mean, I forgot about
+that also because then we didn't put that much focus on the landing page and it wasn't really
+our MVP. So that's why I forgot. But yeah, that used AI to generate the page. It was quite good.
+And I think even though the actual hosting capabilities were quite limited, I think also
+because we didn't want it to pay. Probably if we had paid, we could have had more stuff to rearrange
+and to do. But the code, like the style was good, I think. And then I just took the code,
+copy pasted it. So I changed it on another server. Yeah, we've used names.
+Now I don't remember. Wait, let me do a quick research because I won't remember.
+Because that's a very good service that if you want to, I don't know.
+It's, it's, it's, it's, it's, it's, no. Oh, God. Netlify. Okay. It came to me by itself.
+So Netlify. Netlify is the service. How do you file it? Yeah, can you write down in the...
+Yeah, yeah, I can send you the... Netlify is a website that you can build with a
+rebuild template, right? It's a hosting service. I sent you the link. And it has very good free plans
+where you can host your service. And if you have, even if you have no experience at all
+in actual coding, it has a feature where you just drag and drop the HTML, CSS, and JavaScript
+source code. And then it does everything else automatically. So you don't need to know
+everything about web hosting or... But of course, then you have the option to go around the settings
+and change some things. It has also some capabilities to do like Lambda function, for example,
+in AWS. So it's a function that runs and are called and they don't cost you anything. I think
+if you are under a thousand calls per month, something like that, don't remember the exact
+number. But yeah, what we did was take the HTML, CSS, and JavaScript. There was no JavaScript.
+HTML and CSS code generated by the tool, put it in a new project, added a few small things,
+like the connection to the database. And I removed a few, like some very small stuff,
+like I had to adjust the location of the, for example, the CSS, because it was hosting
+everything on a different... So I had to change a bit the URLs. And then, yeah. And then that's it.
+And you're actually, your landing page now is on this website.
+You're actually in the Miro board.
+Yeah, yeah. Let me go back to Miro. I mean, if you look at the URL, it should also say
+Netlify something, something. Oh, no. Can you send me the link to the Miro?
+Oh, yeah. Wait a moment.
+Because I think I lost.
+Okay. Wait a moment.
+But yeah, I'm quite sure that it uses...
+The blue code.
+It's here.
+Thank you.
+Welcome.
+Yeah, but don't worry. This is not really important.
+Yeah, yes.
+But yeah, it's good that you have the link, just in case
+you want to revisit what you have done in this course.
+So yeah, the website is like, if you see in the URL, it's writeshare-blue.netlify.app.
+So yeah.
+Okay.
+Yeah, yeah.
+Yeah, yeah. And then we've used the simple analytics too,
+the student that came and did the presentation about analytics.
+Yeah. Which one? It's not Applify or Aptude.
+So, okay.
+No, this was one of the different options that you provided at the end of the slide.
+You had all the different services that... And this was the easiest to implement.
+It was one line of code to add in the HTML.
+Are you monitoring? Are there any...
+No, I don't think there's any...
+And then you have to do the digital marketing part, right? To get people...
+Yeah.
+...trapped in traffic and so on. So yeah.
+Okay. So do you remember the very first kind of plugin I gave to you?
+And there is actually a chat bot there.
+So the thing is, at the beginning when you gave us the tool, I was using Safari as my main browser,
+and that didn't work with Safari.
+Oh, it's not working. Yeah, yeah.
+And so I installed it for Chrome, but then when you gave us the option to go and have the
+Google form, and then afterwards again, you gave us the option to go and add the
+the Google form, and then afterwards again, having the...
+Having us able to manually add stuff to the learning
+diary, I kind of forgot about the existence of the plugin.
+And afterwards, I also switched to a Chromium based browser where the plugin could have
+probably worked. But at that point, we are already in the phases where you gave us the
+access to the Google form directly, and so I didn't use the plugin at all.
+Yeah. Yeah. The original idea, of course, what we wish to see is that you have this
+mirror board here, and then you prepare other documents based on this mirror board, right?
+So because you have all your idea presented visually as, for example, in Canvas,
+empathy map, and so on. So, yeah. But of course...
+I just had the true web page on two tops, and then I switched between them.
+Yeah. If there's a simpler way of handling that.
+Okay. So then let's write up if you couldn't recall any other generative AI tools.
+Let me think, but no, I don't think we...
+Then the concluding question is, so what's your opinion based on your core experience
+with the course, your general experience? How would you see the role that generative AI play
+in this early phases of startup process? Do you think it has a future?
+For the ideation phase, I think it can have a future for sure.
+For the other phases, I think given that you
+are in a context where you're talking about real people, and you're not trying to build the software
+for the sake of building a software, but you're trying to build a software for specific needs
+of users. So the whole part of the problem validation and the problem solution feed,
+and also the problem identification, especially the problem identification, you need to go out
+and talk to people to understand really and deeply what the problem is and if the solution
+that you've thought about is right. Yeah, as I said earlier, I think it can just work as a tool
+to enhance and maybe make some step a bit simpler. For example, it could create
+an interview structure. Maybe if you give it a bit of context, it could be good to create
+an interview structure or a questionnaire. If you're going for the problem identification part,
+it can be good, as I've said, with the digital persona to maybe ask a bit of the more tricky
+questions. But I don't think it can go further than that.
+Here, actually, because both you and Gianluca, you are from computer science
+part, background. Do you see any difficulties for entrepreneurs that don't have this background
+to somehow? Do you see any obstacles there? I mean, if you are building a software solution,
+then it can greatly help you to create a first prototype, for sure. I wasn't
+thinking about that. Yeah, giving my background. Yeah, for that specific, like
+doing more technical things, also building a landing page. If you have zero knowledge
+about how HTML, CSS and JavaScript works, for sure, it's a big help. Yeah, for people without
+technical background. Yeah, yeah, for sure. For the strictly technical aspect of building MVPs
+and prototypes. Yeah. On the contrary, if there's an AI tool that can help you
+do the financial part, because that's the part that's missing, right? How do you see that?
+So, I don't know if I would trust an AI like that. Because, like, you're talking,
+like, if you're talking about an MVP or a prototype, and the AI lets you build it in
+one day instead of a week, you have nothing to lose. If the AI is suggesting you a business model
+and you try to implement it and you lose money because of it, then that's a bigger issue. And
+you have something to lose there. So, again, in the innovation phase, it could be good to
+get some ideas on some business models. But I don't know if I would trust an AI tool to actually do
+the entire financial part of my setup. Right. But maybe, I don't know, maybe that's, again,
+I would have to try it. But on the same, like, to try it and trust it, I would have to have that
+knowledge first, because I tend not to trust things unless I know myself it's good. So,
+either I have somebody that I trust a lot, try one of these tools and say it's very good, and then
+I could give it a try and trust it. But blindly like this, I wouldn't use it.
+Right. Yeah. I did forget to ask a very important question. So, can I ask?
+So, this is really my last question. So, in this process, which part of the activity is actually
+you perceive most difficult? What we have been through in the course, which part for you
+is particularly difficult?
+I think the most difficult part was, for me personally,
+probably the problem solution fit. Because at the beginning, I wasn't really all in on the whole
+putting advertisement on car things. And I was a bit skeptical about that. I was,
+and so, in that part, I was a bit more, I wasn't that motivated. And
+it was very difficult for me. That's also, because that wasn't my actual idea, right,
+it was more the look ideas, and I was joining in. But afterwards, when we pivoted to this new
+blablacar business model, then I felt more at ease. And I think
+the general process went much better from that point onwards.
+Yeah. So, that would, like not a specific step or specific things we did. It's more that in
+the beginning, I was feeling a bit lost because I was going in another
+personal idea. And so, I felt like we weren't aligned on some, maybe we could have discussed
+more, we could have spent more time discussing about ourselves. And I could have spent more time
+asking him about specific details. Yeah. So, going in another one ideas, I guess, it's my,
+if I have to summarize it in two words. Yeah. So, if you believe in the idea,
+if you share the vision, what you want to do, right? Yeah. Yeah. Yeah. I guess, for this,
+is there any generative AI tool can help? I don't know. Like a chat book that moderates,
+I don't know. That's more like, again, we're talking about real people and like feelings. And
+so, that's something that, unless there is like a psychologist, AI, I don't know.
+Yeah. Yeah. Okay. Good. And that's all my questions. I don't know,
+Trento, we move on? Oh, do you have anything? Yeah, we can. Thank you. Great. And thanks a
+lot to Fabio and thanks for the time you give us. Yeah. No worries. Thank also to you
+for the feedback you provided us. Yeah. And good luck with your graduation in September,
+right? I understand. Yeah. Yeah. Good. So, keep in touch. Okay. Thank you. Thank you. Bye. Bye.
+Okay. We move on to the last. Yeah. Yeah. So, I go on now, ask Gianluca. Okay.
+Be prepared. He has a lot of opinions.
+Okay. I'm here. Thank you. Thank you. And
+can you see the image I uploaded for? Yeah, the one where you have a flow chart with multiple
+AI related pictures. So, the generative AI stuff. Right. Yeah. Yeah. Yeah. As I said,
+probably you have a lot of opinions to share with us. So, we are prepared for that. So,
+it's a good idea. Let me start with that. Let me start. Okay. Because in order to put your
+opinion into context, I think we need to know more about you. Even though I think I already know
+something, but I don't know. Also, for recording purpose, we would like to
+get this contextual information. So, for example, your experience with software development,
+can you tell us? So, my experience with software development begins with the first year of
+university and we learn how to do Java and then HTML, then Python, partly Node.js and jQuery. So,
+basically website development. Then for the second year, we learn how to deal with JavaScript and
+therefore app development. And as part of my free choice internship, I also learned how to deal with
+PHP. And so, then as part of the other courses of the university, we learn how to write smart
+contracts. Therefore, we use Solidity, which is based on C++. Therefore, I would say I'm somewhat
+experienced with software development. Real world experience, professional experience?
+No. No, not in that sense, other than the internship that I had with a company.
+Yeah. Okay. So, in this work experience, have you had any contact with any generative AI tools?
+Yes. What is that?
+So, I used ChatGBT and Gemini to basically have myself. So, the fact that I learned how to code
+PHP on the spot because I had to do that. I had to integrate an API and therefore I discovered the
+power of generative AI specifically for telling me what to do. And of course, I did my own code then
+and did my trial and testing, but definitely generative AI was very helpful. Typically,
+I only use generative AI for coding because writing texts and other things I do. I mean,
+I tried once like having an email written by, I think it was Copilot, which is the same thing
+as ChatGBT. But the thing is these softwares typically don't write the way I would write things
+and therefore it's much easier and faster for me to write the email myself and then read it
+multiple times and correct the mistakes. So, yeah. And to a certain extent, I only use
+these tools for coding related purposes. Okay. Yeah. So, in terms of startup entrepreneurial
+activities before taking on the course, have you had any? What are they if you had?
+Any what? Experience? Yeah. Experience of, for example, building your own startup or
+participating some startup camp and so on. Yes, I tried a couple and I was rejected at both,
+I think. Again, there's a thing that we have in my city where it's basically a meeting that occurs
+this typically beginning of September where investors from all over Europe and more come to
+the place where I live. And there's a startup context. They select 100 very promising startups
+and then they compete, they pitch to an audience of investors. And then I think the best three or
+something, they receive some kind of financial backing up to, I think, 10 or 50,000 euros,
+I don't remember specifically. And yeah, and it's a good, so typically I attend there. I mean,
+I tried for the past two years to attend as a startup, but of course I am competing with
+people that already have a legal entity or have a team or as, so typically ideas only or things
+that are in the ideation stage are typically rejected. And yeah, but I still find it important
+to just simply be in this kind of environment so that you're either inspired by other people's
+ideas or inspired by how they solve or address certain issues or challenges. So yeah.
+Yeah. Okay. So in a sense, you had some knowledge about startups before.
+I would say very little knowledge. Sure.
+Okay. Then with this background information, now if you look at the picture in the courses,
+in this step, early stage step that from ideation to this problem solution feed,
+do you recall any AI, generative AI tools that you have used and how you use them?
+Yeah, we used ChadGBT to creating personas.
+That's the digital persona you refer to. Yeah, we did with ChadGBT. Of course,
+that's generative AI. As far as I'm concerned, we didn't really use the persona as much as we
+probably should have because we kind of forgot we were too focused on the presentation and
+the websites. And so we actually, I mean, I actually to a certain point after a few days,
+I just forgot about the fact that we had this tool, unfortunately, because there's just too many
+things to remember. When it comes to problem identification and validation and problem
+solution fit, as far as I remember, we didn't really use AI because when it comes to problem
+identification, I just simply piggybacked off of my own knowledge of the problem and my own knowledge.
+I'll
+Chando, did you lose the connection?
+Let's wait for him coming back.
+Yeah, okay. Now you're back. Yes. Oh, you are back also.
+Okay. So what I was saying is, for problem identification, validation, and problem solution
+fit, those steps, I typically used my own knowledge about the idea, the solution, and what I was trying
+to do. And also because as I said before, we kind of forgot the fact that we had a digital persona
+to use. So we didn't use AI for that. We did use AI for very briefly to create the mockup
+for the app, because the software that we used, it just can accept prompts. For example, build an app
+for ride hailing, and it just simply creates some very basic screens. Of course, this is just to have
+an idea of what kind of screens we would need in such an app. But of course, all of that is something
+that was done manually by me to just simply create the app itself. Is this Figma you are talking
+about? It's not Figma, it's Uizer. Uizer? Uizer, written like this, actually. It's the same thing
+that we used for the project of the other course, of which I have questions about too, actually. So
+maybe later we'll do that too. This is the thing. It's free. Yeah, it's free, but it's limited. But
+typically, they give you a lot of pro trials. We basically used it without paying, but it was
+the pro version. And it's nice because you can just insert a prompt, generate a website that is
+very elegant on the grayscale-ish that does this, this, and that. And of course, it will create some
+very wonky, some very weird websites. And of course, you're going to put your hands on it to
+make the style a bit better, a bit cleaner, but it just serves as a way to break the ice and just
+give you some inspiration at the beginning. So that's kind of what we use it for, both for this
+course, for the app, and for the other course, for the project. Okay. No other AI tool was used as
+far as I'm concerned. Okay. Yeah. This MAP, the landing page building.
+I don't remember if we, so we used, I think at the beginning, Netlify. So we chose some kind of
+template, if I don't remember correctly. Maybe we, at the beginning, we might have used, again,
+the digital persona to somewhat validate the texts that were being included in the website.
+But at the end, we actually decided to go with our own opinion of what the texts should look like.
+So, because if you look at the website, I think Fabio sent the website earlier, you have different
+sections and that's kind of it. You have sections with different texts and some of those texts,
+the initial drafts, they were built using inspiration from, I think,
+Chargbt and the digital persona in general. But I think the final texts, we just simply
+wrote ourselves and crafted ourselves. Right. Yeah. Going back to this digital persona,
+so how did you build this digital persona? So we actually used as data the description of the
+person, which we assumed would be some kind of a university student that goes to work.
+And then from work, they hang out with friends and they have a problem because in their city,
+there's too much traffic and the bus doesn't always work that well. And the bike cannot be
+used because it's dangerous in that city. And we used as knowledge the interviews that we collected.
+I think we collected nine or 10 interviews with questions and related answers and we just simply
+created a file with these and just simply used that as input. And so when we tested the persona,
+we would say, for example, what do you think of, so what is, for example,
+something that you find very hard when commuting? And of course, they replied, well, there's a lot
+of traffic, parking is very hard to find, and so on and so forth, which, of course, perfectly
+aligned with the answers that we had from the humans that we interviewed, so to say.
+Right. Yeah. Okay. So you said that you should have used it more. And if you could have used
+it more, where are you going to use this digital persona? So I would have used the digital persona
+to validate the Instagram page MVP. So I would have asked them, is it a good idea to start?
+What kind of content would you like to see? How active do you think this platform should be?
+Should we be posting, for example, things that are not necessarily urban related, maybe even
+extra urban related? Should we focus instead only on urban stuff? So this kind of content related
+and activity of the Instagram page, I think I would have asked because, of course, a university
+student or in general, a student, a high school student typically uses Instagram. And so that
+would have been helpful. But again, we were just simply too focused on doing the things that we
+needed to do that we forgot about the existence of our digital persona, actually.
+Yeah. Would you trust the answers given by digital persona in this case?
+To a certain extent, yes, because the digital persona is building on top of the answers given
+by the people that we interviewed. And the idea is we use the digital persona as
+an additional point of view to what we already know and what we already think.
+And so, yeah, I would say I trust the digital persona. Sure. I mean, of course, I would always
+second guess what the digital persona is saying because we shouldn't be running a company or a
+project just using AI. We should always use some kind of human intelligence. But yeah, I would
+definitely consider the AI's opinion on whatever we decide to embark on.
+Yeah. So the process of building this digital persona is not that I for taking all.
+Yeah, it's very easy. And it's something that I would definitely do for next year.
+Maybe if you can just remind the students that they have it a bit more, because at least for me,
+I was just too taken on delivering the MVPs and the mural boards and whatnot. And we just forgot.
+Yeah. Okay. So what are the tools, for example, this video you created?
+Yeah, we created not using AI. We just simply had a storyline. We discussed our storyline,
+me and Fabio, and then we went to the university. There's like a student university thing.
+The university is called, actually. So it's named Orm. And we filmed it there. And then we
+filmed it there. And we decided we... So you were the cameraman shooting?
+I was the cameraman. Yes. And the reason is because he was planning to go down to Ravenna
+and he had access to a car, whereas I wasn't going down home. And so he had to be the student
+entering the car. And therefore he had to be the student being filmed the whole time.
+Right. Yeah. So here, how would you see, because now with the wave of text to video,
+AI tools, do you see any place? To a certain extent, it could help just like the
+UISR thing helped us create the app. I mean, it could give some inspiration. It could be an
+additional tool in the toolbox. But as far as you said, the result looked professional. And
+the reason why it's probably because it was taught and filmed and edited and created by human beings.
+And that's why I think it felt a bit more professional. I think it connected very deeply
+with the audience or anyone who understands the problem would probably understand the video.
+That's kind of the assumption. And the reason is because it's not being made by some AI,
+but it's because it's made by humans. And of course, the problem currently,
+I mean, even Sora and all of those tools, the way they do video is kind of strange because they all
+look like, for example, cars look a bit wonky. So the idea of using AI to create a video, I think
+for the time being, it serves as an inspiration for sure. We didn't use that because we kind of
+had the problem clear to ourselves. And so we already knew the timeline to develop.
+But for other people, for other groups, I would definitely suggest them. Maybe if they don't have
+creativity, maybe they could just use tools just as an inspiration. Yes.
+Okay. Yeah. So more crap you did use, right? And how about law? Did you have law? This I
+don't remember actually. Did you have logo and the logo?
+The logo wasn't generated. It was taken from the app that I'm developing,
+which is taken from a PNG website stuff. So it's not generated by AI.
+Okay. So then what else in this process do you recall anything?
+AI related, nothing else.
+Especially gen-AI related.
+Nothing else.
+Okay. Then the conversation is shorter than I expected.
+Actually, here there's a question.
+I think Papi told you the same things, right?
+Right. Yeah. Yeah. No, no. Here we are getting the personal opinions. It's not that there's a
+right or wrong answer. It's just, you know, we genuinely wanted to get your opinion. So
+in this process from ideation to problem solution fit,
+which part personally you felt the most challenging, difficult to handle?
+So the idea is I was starting from a solution or from a thing that I wanted to see
+being built by someone somewhere. And to a certain extent, I am still 110% convinced that someone
+will build something like that or like whatever I have in my mind in some place, maybe not Italy,
+maybe somewhere else, but sure, someone will do it. Very certain of that. And the idea is
+based on the conversation with Nick and, you know, all the, and the other judges and mentors,
+the idea for me is that I grew up in a place where the problem is
+very known. And so I'm not used to the idea of explaining myself,
+which is something that I learned. So it's a very good learning point. And that is that
+the investors or in general, the people that you deal with may not,
+given that they live in different places, may not have the same problems
+or see the problems in the same way that you do. And so the first experimental part with me
+for me was actually explaining the problem. And so identifying the problem and framing it in such
+a way that, so to say, a five-year-old will understand it. So very simple. And so that was
+kind of the hard part. And of course, personally, I am including in the same problem, multiple sub
+problems, because the way I see a problem is problems are not separated, or it's very hard
+for me to separate the problem from other problems. For me, a problem is just a set of
+multiple problems. And thus a solution is a set of sub solutions. And so this focus of having to
+frame one problem and one solution in a very, very clear and defined way. I mean,
+to me, this sounds, I mean, that's one of the reasons why I'm doing this master course,
+just because I want to see what the professors and what the theory about this is. But to me,
+this sounds very strange and very fake and very non-realistic, because problems solutions are
+never that simple. Just to bring the same examples back, Microsoft is not addressing one problem,
+it's addressing multiple problems with multiple solutions. Apple is not addressing one problem,
+they're addressing multiple problems with multiple sub solutions.
+But when they are Apple and Microsoft, when they were a garage startup...
+And they were addressing multiple problems too, because when Apple created the computer,
+when Apple created the computer, they weren't trying to say, well, we're going to improve on
+the, so to say, on the typewriter, because you can't just simply type documents on a computer,
+you can do multiple things with a computer. So the idea is this trend towards making things
+simpler. I mean, I am one of those people that likes the idea of making things simple,
+I'm very minimalist, less is more for me, I believe that. But sometimes it's not possible to narrow
+something down or sub split it even further, because it's true, it's truly, it's indeed true.
+And it's not just me saying it, it's multiple researchers saying that traffic is correlated
+to congestion, which is correlated to stress, which is correlated to mental health issues.
+It's not one problem, it's connected to multiple other problems. And so the idea of someone saying,
+well, you have to frame it better. Well, the thing is the same problem is multiple sub problems.
+So problem identification and problem definition, I would say is kind of the issue.
+Yeah, and it will always be because when whatever I think, if there's a problem,
+I can already overthink all the problems and solutions that are linked and tethered
+to that other problem. So that's something if I were indeed going to launch a startup,
+I think I'm going to have a very serious issues discussing the problems with people,
+because to me, the problem is not just one problem, it's a set of problems, some problems.
+Yeah. So given this, given this challenge, do you see any general AI tool can help?
+Can any generative AI tool understand my brain? I don't know. Maybe. Well, do they know?
+Okay. I mean, there's always going to be space for humans. I mean, we can't solve each other's
+problems because if AI could solve all of our problems, there's still going to be other problems
+that we're going to create. I mean, people always create for themselves needs and problems that have
+to be solved. And so by the time AI catches up, there's going to be more problems and more needs
+worthy to be addressed. So, and this, this kind of problem
+of defining the problem better, it just depends because it's so subjective and it's so dependent
+and tethered to one's personal experience and personal knowledge that AI, I don't think,
+would help much. Not to, not to tell you which problem to focus on, but to support your thinking
+thought process. Do you think that, I mean, as a, again, assistant rather than, you know,
+doing things for you, do you see any scope here? Maybe. I don't know. Depends on where I would use
+my assistant and for what. Again, as I said before, would I run a company using AI? Maybe I
+would ask for help, but at the end of the day, the final call I make depending on my knowledge. And
+of course I'm biased because every person is biased. And so I may make mistakes, but when,
+when things go wrong, at least I wouldn't be able to say that I was in the driver's seat.
+Let's put it this way. Okay. Yeah. This, this saying I think I heard somewhere. It's an Italian
+saying. So if there's an accident or car accident, you want to be on the driver's side.
+No, it's just the thing that I say because I like being in the driver's side. Yeah, but okay. So the
+question is then in general, now not thinking this particular problem, but in general, the whole
+process you have been through and thinking about early stage startups, what's your opinion of
+the potential of gen AI? So this is a kind of concluding general statement that I think it
+can serve as a tool that accelerates development because it can help because you can have AI is
+building on the opinion of millions of people. And so depending on how you engineer your prompt,
+you're going to get an answer that is slightly biased towards one of the users opinions on the
+internet. And so it can ask, it can have some kind of help when it comes to suggesting. So for example,
+the idea of a digital persona is very helpful because you have some kind of direct conversation
+with a fake customer type person. But the reason, the major impact that I think AI will,
+generative AI will make on startups is not only as an assistant, but it's mainly going to be an
+accelerator of startups as a whole because the idea of generative AI is I'm going to get rid of
+things that are very manual or very boring. And what is going to be left for us to do is to be
+creative and push a lot more on the soft skills. And therefore there's going to be a lot more
+companies. I think the rate of creation of startups is going to be much faster, which of course means
+that the rate of failure is going to be much faster because I think the number of startups is
+going to increase over the next years. But that's kind of the major direct effect that I see from
+startups, from AI itself. So the idea that maybe 10 years ago, you were fine launching your company
+and making it work with a few employees. Now the idea of generative AI is you're on your own,
+make your own partita IVA. You have to make your own company and you don't necessarily need a full
+stack developer because you may have AI help you with deploying your website because you have the
+tools like Wix and you know, these kinds of things. So it's definitely going to replace
+and free up money from, and this is something that I actually said also in the other,
+in the feedback from the other course. So the fact that AI is going to help us better make
+our ideas reality simply because we will need less employees. And of course, humans are the major
+cost factor, cost driver. And so yeah, as an assistant and as a replacer for humans,
+so that the humans that are not employees anymore can become their own company,
+their own entity and start working on whatever they feel like working. That's, that's kind of
+where I see AI now. Do you see in the future that it actually can leave up to being the co-founder
+of, so as your co-founder?
+Well, so the idea is if AI is smart enough to randomly create ideas and patent them,
+then okay. But then how would a person less entity create something, market something? I mean,
+this is something that can probably be seen much better for software things. But I think this is
+something that is maybe 100, 200 years from now, and it still won't be anything similar to what
+you're describing now. I think there's still going to be people, because at the end of the day,
+people, you're trying to solve people's problems. And so you need to be able to truly connect with
+people to understand what their problem is and what kind of problems they have. And so an idea of AI
+developing an idea by itself is something that I see very
+unlikely, at least in the next 50 to 100 years, maybe.
+Maybe shorter. No, I'm not saying AI is a sole founder. I'm saying AI is a co-founder.
+So in a sense, still, there's a human agency.
+In that case, yes, because I mean, anybody can, I, for example, consider
+Chagibiti, Gemini, and Copilot to be my first employees to a certain extent. Because,
+I mean, an employee is supposed to be someone that helps you do something. And so, I mean,
+imagine if an employee like Chagibiti or Gemini existed. I mean, they would be the employee of
+the month for every month in any company. They're very useful. So, yeah, to an extent,
+sure. But as a founder themselves, maybe not. Okay. So I think these are all my questions.
+I just double checked with Trent, or did I forget to ask anything?
+No, I think it's okay. Everything is okay. Okay, good. So I think
+now we can at least, let me stop the recording now.
+Gianluca, you want to?

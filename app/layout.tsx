@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "./globals.css";
 import {PitchProvider} from "@/contexts/PitchContext";
-import {SideBar} from "@/components/nav/side-bar";
+import SideBar from "@/components/nav/side-bar";
 import {ConvexClientProvider} from "@/providers/convex-client-provider";
 
 const inter = Inter({subsets: ["latin"]});
