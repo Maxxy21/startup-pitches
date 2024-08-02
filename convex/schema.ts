@@ -1,6 +1,6 @@
 // convex/schema.ts
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import {defineSchema, defineTable} from "convex/server";
+import {v} from "convex/values";
 
 export default defineSchema({
     pitches: defineTable({
@@ -12,6 +12,11 @@ export default defineSchema({
             score: v.number(),
         })),
         userId: v.string(),
+        embedding: v.optional(v.array(v.float64()))
+    }).vectorIndex("by_embeddings", {
+        vectorField: "embedding",
+        dimensions: 1536,
+        filterFields: ["userId"],
     }),
     users: defineTable({
         name: v.string(),

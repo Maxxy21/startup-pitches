@@ -17,7 +17,7 @@ import {Input} from "@/components/ui/input"
 import {CardFooter} from "@/components/ui/card";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Textarea} from "@/components/ui/textarea";
-import {useMutation} from "convex/react";
+import {useAction, useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {evaluatePitch, transcribeAudio} from "@/actions/openai";
 import {fileToText} from "@/utils";
@@ -32,13 +32,12 @@ const FormSchema = z.object({
 })
 
 
-
 const AddPitchInline = ({
                             setShowAddPitch,
                         }: {
     setShowAddPitch: Dispatch<SetStateAction<boolean>>;
 }) => {
-    const createPitch = useMutation(api.pitches.create);
+    const createPitchEmbeddings = useAction(api.pitches.createPitchEmbeddings);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -68,7 +67,7 @@ const AddPitchInline = ({
 
         const evaluationResults = await evaluatePitch(transcriptionText);
 
-        await createPitch({
+        await createPitchEmbeddings({
             name: pitchName,
             text: transcriptionText,
             evaluation: evaluationResults
@@ -85,7 +84,7 @@ const AddPitchInline = ({
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-2 border-2 p-2 border-gray-200 my-2 rounded-xl px-3 pt-4 border-foreground/20">
+                    className="space-y-2 border-2 p-2 border-gray-200 my-2 rounded-xl px-3 pt-4 border-foreground/20 w-5/6">
                     <FormField
                         control={form.control}
                         name="pitchName"

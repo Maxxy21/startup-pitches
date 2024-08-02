@@ -2,6 +2,7 @@
 
 import fs from "fs/promises";
 import {createReadStream} from "fs";
+
 import OpenAI from "openai";
 
 let openai: OpenAI | null = null;
@@ -12,6 +13,7 @@ function getOpenAI() {
     }
     return openai;
 }
+
 
 export async function transcribeAudio(formData: FormData) {
     const audioFile = formData.get("audio") as File;
@@ -32,70 +34,12 @@ export async function transcribeAudio(formData: FormData) {
     return transcription.text
 }
 
-// export async function evaluatePitch(transcription: string): Promise<any> {
-//     const openai = getOpenAI();
-//     const prompts = [
-//         "Soundness of the project in terms of problem-solution-customer fit",
-//         "Potential of the project as a startup business",
-//         "Quality of the presentation"
-//     ];
-//
-//     return await Promise.all(prompts.map(async (prompt) => {
-//         const completion = await openai.chat.completions.create({
-//             messages: [
-//                 {
-//                     role: "system",
-//                     content: "You are an assistant that evaluates startup pitches.ts based on specific criteria."
-//                 },
-//                 {
-//                     role: "user",
-//                     content: `Evaluate this pitch based on the following criteria: ${prompt}\n\n"${transcription}"`
-//                 }
-//             ],
-//             model: "gpt-3.5-turbo",
-//         });
-//
-//         return {
-//             criteria: prompt,
-//             evaluation: completion.choices[0].message.content
-//         };
-//     }));
-// }
 
-
-// export async function evaluatePitch(transcription: string): Promise<any> {
-//     const openai = getOpenAI();
-//     const prompts = [
-//         "Soundness of the project in terms of problem-solution-customer fit",
-//         "Potential of the project as a startup business",
-//         "Quality of the presentation"
-//     ];
-//
-//     return await Promise.all(prompts.map(async (prompt) => {
-//         const completion = await openai.chat.completions.create({
-//             messages: [
-//                 {
-//                     role: "system",
-//                     content: "You are an assistant that evaluates startup pitches based on specific criteria."
-//                 },
-//                 {
-//                     role: "user",
-//                     content: `Evaluate this pitch based on the following criteria: ${prompt}\n\n"${transcription}"`
-//                 }
-//             ],
-//             model: "gpt-3.5-turbo",
-//         });
-//
-//         return {
-//             criteria: prompt,
-//             comment: completion.choices[0].message.content,
-//             score: Math.floor(Math.random() * 10) + 1  // Generating random scores for illustration
-//         };
-//     }));
-// }
-
-
-export async function evaluatePitch(transcription: string): Promise<{ criteria: string; comment: string; score: number; }[]> {
+export async function evaluatePitch(transcription: string): Promise<{
+    criteria: string;
+    comment: string;
+    score: number;
+}[]> {
     const openai = getOpenAI();
     const prompts = [
         "Soundness of the project in terms of problem-solution-customer fit. Provide comments and a score from 1 to 10.",
@@ -103,7 +47,7 @@ export async function evaluatePitch(transcription: string): Promise<{ criteria: 
         "Quality of the presentation. Provide comments and a score from 1 to 10."
     ];
 
-    const evaluations = await Promise.all(prompts.map(async (prompt) => {
+    return await Promise.all(prompts.map(async (prompt) => {
         const completion = await openai.chat.completions.create({
             messages: [
                 {
@@ -128,8 +72,6 @@ export async function evaluatePitch(transcription: string): Promise<{ criteria: 
             score: score
         };
     }));
-
-    return evaluations;
 }
 
 

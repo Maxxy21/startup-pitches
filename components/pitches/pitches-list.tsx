@@ -1,89 +1,46 @@
 "use client"
 
 import React from 'react'
-import {FaCircle} from "react-icons/fa";
-import {useQuery} from "convex/react";
-import {api} from "@/convex/_generated/api";
-import Pitches from "@/components/pitches/pitches";
-import AddPitchButton, {AddPitchWrapper} from "@/components/add-pitches/add-pitch-button";
+import {AddPitchWrapper} from "@/components/add-pitches/add-pitch-button";
 
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import EvaluationDetail from "@/components/pitches/evaluation-detail";
+import {formatDate} from "@/utils";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import {Button} from "@/components/ui/button";
+import {MoreHorizontal} from "lucide-react";
+import {Doc} from "@/convex/_generated/dataModel";
+import {useRouter} from "next/navigation";
 
-const invoices = [
-    {
-        invoice: "INV001",
-        paymentStatus: "Paid",
-        totalAmount: "$250.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        paymentMethod: "Credit Card",
-    },
-]
+interface Evaluation {
+    criteria: string;
+    comment: string;
+    score: number;
+}
 
-const PitchesList = () => {
-    const pitches = useQuery(api.pitches.get) ?? [];
+const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
+    const router = useRouter();
+    // router.push(`/dashboard/search/${searchText}`);
 
     if (
-        pitches === undefined
+        data === undefined
     ) {
         return <p>Loading...</p>;
     }
     return (
-        // <div className="xl:px-40">
-        //     <div className="flex items-center justify-between">
-        //         <h1 className="text-lg font-semibold md:text-2xl">Pitches</h1>
-        //     </div>
-        //     <div className="flex flex-col gap-1 py-4">
-        //         {pitches.map((pitch) => (
-        //             <Pitches key={pitch._id} data={pitch}/>
-        //         ))}
-        //     </div>
-        //     <AddPitchWrapper/>
-        // </div>
-
         <div>
             <div className="flex items-center justify-between">
                 <h1 className="text-lg font-semibold md:text-2xl">Pitches</h1>
@@ -92,23 +49,46 @@ const PitchesList = () => {
                 <TableHeader>
                     <TableRow>
                         <TableHead>Name</TableHead>
-                        <TableHead>Comment</TableHead>
-                        <TableHead>Avg. Score</TableHead>
-                        <TableHead>Creation Date</TableHead>
+                        <TableHead>Evaluation</TableHead>
+                        {/*<TableHead>Avg. Score</TableHead>*/}
+                        <TableHead>Created At</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {pitches.map((pitch) => (
+                    {data.map((pitch: Doc<"pitches">) => (
                         <TableRow key={pitch._id}>
                             <TableCell className="font-medium">{pitch.name}</TableCell>
-                            <TableCell>{"See more"}</TableCell>
-                            <TableCell className="items-center">{5}</TableCell>
-                            <TableCell>{"16/05/24"}</TableCell>
+                            <TableCell>
+                                <button
+                                    onClick={() => router.push(`/dashboard/pitch/${pitch._id}`)}>
+                                    See more
+                                </button>
+                            </TableCell>
+                            <TableCell>{formatDate(pitch._creationTime)}</TableCell>
+                            <TableCell>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            aria-haspopup="true"
+                                            size="icon"
+                                            variant="ghost"
+                                        >
+                                            <MoreHorizontal className="h-4 w-4"/>
+                                            <span className="sr-only">Toggle menu</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-           <AddPitchWrapper/>
+            <AddPitchWrapper/>
         </div>
 
     );

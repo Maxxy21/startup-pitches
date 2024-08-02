@@ -3,10 +3,14 @@ import Link from "next/link";
 
 import {Button} from "@/components/ui/button";
 import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet";
+import Image from "next/image";
 import {primaryNavItems} from "@/utils";
 
 
 import UserProfile from "@/components/nav/user-profile";
+import SearchForm from "@/components/nav/search-form";
+
+import logo from "@/public/logo.svg";
 
 export default function MobileNav({
                                       navTitle = "",
@@ -43,16 +47,11 @@ export default function MobileNav({
                 </SheetContent>
             </Sheet>
             <div className="flex items-center md:justify-between w-full gap-1 md:gap-2 py-2">
-                <div className="lg:flex-1">
-                    <Link href={navLink}>
-                        <p className="text-sm font-semibold text-foreground/70 w-24">
-                            {navTitle}
-                        </p>
-                    </Link>
-                </div>
-                <div className="place-content-center w-full flex-1">
+                <div className="place-content-center w-1/2 flex-1">
+                    <SearchForm/>
                 </div>
                 <div className="place-content-center w-12 h-12 lg:w-16 lg:h-20">
+                    <Image alt="logo" src={logo} />
                 </div>
             </div>
         </header>
