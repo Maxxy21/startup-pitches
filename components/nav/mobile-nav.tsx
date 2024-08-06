@@ -47,8 +47,11 @@ export default function MobileNav({
                 </SheetContent>
             </Sheet>
             <div className="flex items-center md:justify-between w-full gap-1 md:gap-2 py-2">
-                <div className="place-content-center w-1/2 flex-1">
+                <div className="place-content-center flex-1">
                     <SearchForm/>
+                </div >
+                <div className="w-12 h-12 lg:w-20 lg:h-20">
+
                 </div>
                 <div className="place-content-center w-12 h-12 lg:w-16 lg:h-20">
                     <Image alt="logo" src={logo} />
