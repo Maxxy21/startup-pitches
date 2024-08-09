@@ -11,7 +11,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import EvaluationDetail from "@/components/pitches/evaluation-detail";
 import {formatDate} from "@/utils";
 import {
     DropdownMenu,
@@ -25,15 +24,9 @@ import {MoreHorizontal} from "lucide-react";
 import {Doc} from "@/convex/_generated/dataModel";
 import {useRouter} from "next/navigation";
 
-interface Evaluation {
-    criteria: string;
-    comment: string;
-    score: number;
-}
 
 const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
     const router = useRouter();
-    // router.push(`/dashboard/search/${searchText}`);
 
     if (
         data === undefined
