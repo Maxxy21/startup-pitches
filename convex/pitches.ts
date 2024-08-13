@@ -33,14 +33,14 @@ export const getPitch = query({
 
 export const removePitch = mutation({
     args: {
-        id: v.id("pitches"),
+        pitchId: v.id("pitches"),
     },
-    handler: async (ctx, {id}) => {
+    handler: async (ctx, {pitchId}) => {
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
             throw new Error("Unauthorized");
         }
-        await ctx.db.delete(id);
+        await ctx.db.delete(pitchId);
     },
 });
 

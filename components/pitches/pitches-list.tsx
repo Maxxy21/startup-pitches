@@ -23,6 +23,7 @@ import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import {Doc} from "@/convex/_generated/dataModel";
 import {useRouter} from "next/navigation";
+import DeletePitch from "@/components/pitches/delete-pitch";
 
 
 const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
@@ -59,23 +60,7 @@ const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
                             </TableCell>
                             <TableCell>{formatDate(pitch._creationTime)}</TableCell>
                             <TableCell>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            aria-haspopup="true"
-                                            size="icon"
-                                            variant="ghost"
-                                        >
-                                            <MoreHorizontal className="h-4 w-4"/>
-                                            <span className="sr-only">Toggle menu</span>
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                                        <DropdownMenuItem>Delete</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <DeletePitch pitchId={pitch._id}/>
                             </TableCell>
                         </TableRow>
                     ))}
