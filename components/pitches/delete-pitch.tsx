@@ -23,7 +23,7 @@ const DeletePitch = ({pitchId}: {
     const deletePitch = useMutation(api.pitches.removePitch)
 
     const onSubmit = async () => {
-        const deleteTaskId = await deletePitch({pitchId});
+        await deletePitch({pitchId});
         router.push("/dashboard")
     }
 
@@ -41,11 +41,12 @@ const DeletePitch = ({pitchId}: {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <DropdownMenuItem>
-                        Delete
-                    </DropdownMenuItem>
-                </form>
+                <DropdownMenuItem>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <button type="submit">Delete</button>
+                    </form>
+                </DropdownMenuItem>
+
             </DropdownMenuContent>
         </DropdownMenu>
     )
