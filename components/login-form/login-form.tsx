@@ -1,6 +1,6 @@
 "use client";
 import {Button} from "@/components/ui/button";
-import logo from "@/public/logo2.webp";
+import logo from "@/public/logo.svg";
 import {Loader, StepForward} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
