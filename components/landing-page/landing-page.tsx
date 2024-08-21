@@ -148,7 +148,6 @@ const SignInBtn = () => {
     const {isSignedIn, user} = useUser()
     const router = useRouter();
 
-    if (!user) return null
 
     return (
 

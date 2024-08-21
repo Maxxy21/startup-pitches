@@ -54,7 +54,7 @@ export default function MobileNav({
 
                 </div>
                 <div className="place-content-center w-12 h-12 lg:w-16 lg:h-20">
-                    <Image alt="logo" src={logo} />
+                    <Image alt="logo" src={logo} width={50} height={50} className="w-100 "/>
                 </div>
             </div>
         </header>
