@@ -1,12 +1,12 @@
 'use client';
 
 import {SignInButton} from "@clerk/nextjs";
-import LoginForm from "@/components/login-form/login-form";
+import LandingPage from "@/components/landing-page/landing-page";
 
 export default function Home() {
 
     return (
-      <LoginForm/>
+      <LandingPage/>
 
     );
 }

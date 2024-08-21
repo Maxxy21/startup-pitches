@@ -1,11 +1,12 @@
 import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+import {Inter, Noto_Sans_Georgian} from "next/font/google";
 import "./globals.css";
 
 import {ConvexClientProvider} from "@/providers/convex-client-provider";
 import {ThemeProvider} from "@/providers/theme-provider";
 
-const inter = Inter({subsets: ["latin"]});
+// const inter = Inter({subsets: ["latin"]});
+const defaultFont = Noto_Sans_Georgian({ subsets: ["latin"] });
 
 const ORIGIN_URL =
     process.env.NODE === "production"
@@ -30,7 +31,7 @@ export default function RootLayout({
     return (
 
         <html lang="en">
-        <body className={inter.className}>
+        <body className={defaultFont.className}>
         <ConvexClientProvider>
             <ThemeProvider
                 attribute="class"

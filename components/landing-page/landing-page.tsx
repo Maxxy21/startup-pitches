@@ -1,18 +1,19 @@
 "use client";
-import {Button} from "@/components/ui/button";
 import logo from "@/public/logo.svg";
-import {Loader, StepForward} from "lucide-react";
+import {StepForward} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 
-import {SignUpButton} from "@clerk/clerk-react";
+import {SignUpButton, useUser} from "@clerk/clerk-react";
 
 import {useFormStatus} from "react-dom";
 import {SignInButton} from "@clerk/nextjs";
 import {clsx} from "clsx";
+import {FaMicrophone} from "react-icons/fa";
+import {useRouter} from "next/navigation";
 
-export default function LoginForm() {
+export default function LandingPage() {
     return (
         <main className="bg-gradient-to-r from-black-200 to-blue-200 h-full min-h-screen">
             <div className="container relative m-0 mx-auto py-10 md:px-10">
@@ -20,46 +21,27 @@ export default function LoginForm() {
                     <Link className="flex items-center gap-1" href="/">
                         <Image
                             src={logo}
-                            width="50"
-                            height="50"
+                            width="100"
+                            height="100"
                             alt="logo"
-                            className="h-16 w-20 md:h-16 md:w-20"
+                            className="h-50 w-60 md:h-50 md:w-60"
                         />
+
                     </Link>
+
                     <div className="hidden lg:flex w-fit items-center">
                         <SignInBtn/>
                     </div>
                 </div>
                 <div className="w-full px-4 pt pt-12 md:px-4 lg:px-8 xl:px-10 2xl:px-0">
                     <div className="flex h-full w-full flex-col items-center justify-center">
-            {/*<span*/}
-            {/*    rel="noreferrer"*/}
-            {/*    className="mb-6 cursor-pointer rounded-2xl border border-black px-4 py-1 text-xs text-slate-600 transition duration-300 ease-in-out hover:text-slate-700 sm:text-base text-center"*/}
-            {/*>*/}
-            {/*  Powered by{" "}*/}
-            {/*    <a*/}
-            {/*        className="font-bold"*/}
-            {/*        target="_blank"*/}
-            {/*        href="https://convex.dev/c/todovex"*/}
-            {/*    >*/}
-            {/*    Convex{" "}*/}
-            {/*  </a>*/}
-            {/*  and{" "}*/}
-            {/*    <a*/}
-            {/*        className="font-bold"*/}
-            {/*        target="_blank"*/}
-            {/*        href="https://www.openai.com/"*/}
-            {/*    >*/}
-            {/*    OpenAI ✨*/}
-            {/*  </a>*/}
-            {/*</span>*/}
                         <h1 className="inline-block text-center text-4xl font-medium tracking-tighter text-dark lg:text-7xl">
                             An AI-Powered{" "}
                             <br className="hidden lg:inline-block"/>
                             Startup Pitch Evaluation
                         </h1>
                         <h2 className="mt-8 text-center text-xl font-light tracking-tight lg:text-3xl">
-                            Startup Pitches{" "}
+                            Pitch Perfect{" "}
                             <span className="font-bold px-1">evaluates your pitches</span>
                             <br className="hidden lg:inline-block"/>
                             {/*<span className="font-bold px-1">predicts what&apos;s next</span>*/}
@@ -79,7 +61,7 @@ export default function LoginForm() {
                         width="500"
                         height="600"
                         className="z-10 max-w-[400px]"
-                        src={"/mobile.png"}
+                        src="/mobile.png"
                     />
                     <Image
                         src="/desktop.png"
@@ -120,39 +102,86 @@ export default function LoginForm() {
 }
 
 const GetStartedButton = () => {
+    const {isSignedIn} = useUser()
+    const router = useRouter();
     return (
-        <SignUpButton mode={"modal"}>
+
+        isSignedIn ? (
+
             <button
+                onClick={() => router.push("/dashboard")}
                 className="flex items-center justify-center px-8 py-4 mb-2 me-2 overflow-hidden
-                                    text-xl font-medium text-gray-100 rounded-xl group bg-gradient-to-br from-purple-600
-                                    to-orange-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none
-                                    focus:ring-yellow-300 dark:focus:ring-blue-800">
-                                    <span className="flex items-center gap-1">
-                                        <>
-                                         Get Started
-                                        <StepForward/>
-                                           </>
-                                    </span>
+                            text-xl font-medium text-gray-100 rounded-xl group bg-gradient-to-br from-purple-600
+                            to-orange-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none
+                            focus:ring-yellow-300 dark:focus:ring-blue-800">
+                            <span className="flex items-center gap-1">
+                                <>
+                                 Get Started
+                                <StepForward/>
+                                   </>
+                            </span>
 
             </button>
-        </SignUpButton>
+
+        ) : (
+            <SignUpButton mode={"modal"}>
+                <button
+                    className="flex items-center justify-center px-8 py-4 mb-2 me-2 overflow-hidden
+                            text-xl font-medium text-gray-100 rounded-xl group bg-gradient-to-br from-purple-600
+                            to-orange-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none
+                            focus:ring-yellow-300 dark:focus:ring-blue-800">
+                            <span className="flex items-center gap-1">
+                                <>
+                                 Get Started
+                                <StepForward/>
+                                   </>
+                            </span>
+
+                </button>
+            </SignUpButton>
+        )
+
     )
 }
 
 const SignInBtn = () => {
+    const {isSignedIn, user} = useUser()
+    const router = useRouter();
+
+    if (!user) return null
+
     return (
-        <SignInButton mode={"modal"}>
+
+        isSignedIn ? (
             <button
+                onClick={() => router.push("/dashboard")}
                 className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden
-                                text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
-                                    <span
-                                        className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                                        <>
-                                         Sign In
-                                           </>
-                                    </span>
+                            text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600
+                            group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                                <span
+                                    className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                                    <>
+                                    Hi {user?.firstName}
+                                       </>
+                                </span>
 
             </button>
-        </SignInButton>
+        ) : (
+            <SignInButton mode={"modal"}>
+                <button
+                    className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden
+                            text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600
+                            group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                                <span
+                                    className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                                    <>
+                                     Sign In
+                                       </>
+                                </span>
+
+                </button>
+            </SignInButton>
+        )
     )
 }
+
