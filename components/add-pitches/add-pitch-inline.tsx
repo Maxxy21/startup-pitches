@@ -21,6 +21,7 @@ import {useAction, useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {evaluatePitch, transcribeAudio} from "@/actions/openai";
 import {fileToText} from "@/utils";
+import {useFormStatus} from "react-dom";
 
 const FormSchema = z.object({
     pitchName: z.string().min(2, {
@@ -38,6 +39,8 @@ const AddPitchInline = ({
     setShowAddPitch: Dispatch<SetStateAction<boolean>>;
 }) => {
     const createPitchEmbeddings = useAction(api.pitches.createPitchEmbeddings);
+
+    const {pending} = useFormStatus();
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -208,10 +211,11 @@ const AddPitchInline = ({
                                     variant="outline"
                                     type="submit"
                                     onClick={() => setShowAddPitch(false)}
+                                    disabled={pending}
                             >
                                 Cancel
                             </Button>
-                            <Button className="px-6" type="submit">
+                            <Button className="px-6" type="submit" disabled={pending}>
                                 Add Pitch
                             </Button>
                         </div>
