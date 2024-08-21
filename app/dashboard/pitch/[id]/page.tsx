@@ -26,8 +26,8 @@ const PitchDetails = () => {
                 <MobileNav/>
                 <main className="flex flex-1 flex-col gap-4 p-4 lg:px-8">
                     <h1 className="text-2xl">{data.name} Evaluation</h1>
-                    {/*<h3>Transcript</h3>*/}
-                    {/*<p>{data.text}</p>*/}
+                    <h3>Transcript</h3>
+                    <p>{data.text}</p>
                     <Tabs defaultValue={data.evaluation.length > 0 ? getShortCriteriaName(data.evaluation[0].criteria) : ''}
                           className="w-full">
                         <TabsList>
