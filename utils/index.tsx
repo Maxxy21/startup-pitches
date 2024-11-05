@@ -1,6 +1,8 @@
 import {Calendar, CalendarDays, Grid2X2, Inbox} from "lucide-react";
 import {IconArrowLeft, IconBrandTabler, IconSettings, IconUserBolt} from "@tabler/icons-react";
 import React from "react";
+import {SignOutButton} from "@clerk/clerk-react";
+import UserProfile from "@/components/nav/user-profile";
 
 
 
@@ -20,7 +22,7 @@ export const links = [
     },
     {
         label: "Profile",
-        href: "#",
+        href: <UserProfile/>,
         icon: (
             <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
         ),
@@ -34,7 +36,7 @@ export const links = [
     },
     {
         label: "Logout",
-        href: "#",
+        href: <SignOutButton/>,
         icon: (
             <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
         ),

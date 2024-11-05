@@ -2,9 +2,9 @@ import {SignedIn, SignedOut, SignInButton, UserButton} from "@clerk/nextjs";
 
 const UserProfile = () => {
     return (
-        <div>
+        <div >
             <SignedIn>
-                <UserButton showName={true}/>
+                <UserButton/>
             </SignedIn>
             <SignedOut>
                 <SignInButton mode="modal"/>

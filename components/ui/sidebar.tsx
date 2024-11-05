@@ -1,13 +1,13 @@
 "use client";
-import { cn } from "@/lib/utils";
-import Link, { LinkProps } from "next/link";
-import React, { useState, createContext, useContext } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import {cn} from "@/lib/utils";
+import Link, {LinkProps} from "next/link";
+import React, {useState, createContext, useContext} from "react";
+import {AnimatePresence, motion} from "framer-motion";
+import {IconMenu2, IconX} from "@tabler/icons-react";
 
 interface Links {
-    label: string;
-    href: string;
+    label: string | null | undefined;
+    href: string | React.JSX.Element | React.ReactNode;
     icon: React.JSX.Element | React.ReactNode;
 }
 
@@ -29,6 +29,7 @@ export const useSidebar = () => {
     return context;
 };
 
+//TODO: Add animation to the sidebar
 export const SidebarProvider = ({
                                     children,
                                     open: openProp,
@@ -46,7 +47,7 @@ export const SidebarProvider = ({
     const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
 
     return (
-        <SidebarContext.Provider value={{ open, setOpen, animate: animate }}>
+        <SidebarContext.Provider value={{open, setOpen, animate: animate}}>
             {children}
         </SidebarContext.Provider>
     );
@@ -84,7 +85,7 @@ export const DesktopSidebar = ({
                                    children,
                                    ...props
                                }: React.ComponentProps<typeof motion.div>) => {
-    const { open, setOpen, animate } = useSidebar();
+    const {open, setOpen, animate} = useSidebar();
     return (
         <>
             <motion.div
@@ -110,7 +111,7 @@ export const MobileSidebar = ({
                                   children,
                                   ...props
                               }: React.ComponentProps<"div">) => {
-    const { open, setOpen } = useSidebar();
+    const {open, setOpen} = useSidebar();
     return (
         <>
             <div
@@ -128,9 +129,9 @@ export const MobileSidebar = ({
                 <AnimatePresence>
                     {open && (
                         <motion.div
-                            initial={{ x: "-100%", opacity: 0 }}
-                            animate={{ x: 0, opacity: 1 }}
-                            exit={{ x: "-100%", opacity: 0 }}
+                            initial={{x: "-100%", opacity: 0}}
+                            animate={{x: 0, opacity: 1}}
+                            exit={{x: "-100%", opacity: 0}}
                             transition={{
                                 duration: 0.3,
                                 ease: "easeInOut",
@@ -144,7 +145,7 @@ export const MobileSidebar = ({
                                 className="absolute right-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
                                 onClick={() => setOpen(!open)}
                             >
-                                <IconX />
+                                <IconX/>
                             </div>
                             {children}
                         </motion.div>
@@ -164,7 +165,7 @@ export const SidebarLink = ({
     className?: string;
     props?: LinkProps;
 }) => {
-    const { open, animate } = useSidebar();
+    const {open, animate} = useSidebar();
     return (
         <Link
             href={link.href}

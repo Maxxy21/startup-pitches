@@ -6,7 +6,7 @@ import {ConvexClientProvider} from "@/providers/convex-client-provider";
 import {ThemeProvider} from "@/providers/theme-provider";
 
 // const inter = Inter({subsets: ["latin"]});
-const defaultFont = Noto_Sans_Georgian({ subsets: ["latin"] });
+const defaultFont = Noto_Sans_Georgian({subsets: ["latin"]});
 
 const ORIGIN_URL =
     process.env.NODE === "production"
@@ -32,17 +32,16 @@ export default function RootLayout({
 
         <html lang="en">
         <body className={defaultFont.className}>
-        <ConvexClientProvider>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                enableSystem
-                disableTransitionOnChange
-            >
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+        >
+            <ConvexClientProvider>
                 {children}
-            </ThemeProvider>
-        </ConvexClientProvider>
-
+            </ConvexClientProvider>
+        </ThemeProvider>
         </body>
         </html>
 
