@@ -39,7 +39,7 @@ export function SidebarDemo() {
                         <SidebarLink
                             link={{
                                 label: userName,
-                                href: "#",
+                                href: "#" ,
                                 icon: (
                                     <UserProfile/>
                                 ),

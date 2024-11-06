@@ -7,7 +7,7 @@ import {IconMenu2, IconX} from "@tabler/icons-react";
 
 interface Links {
     label: string | null | undefined;
-    href: string | React.JSX.Element | React.ReactNode;
+    href: string;
     icon: React.JSX.Element | React.ReactNode;
 }
 
@@ -29,7 +29,6 @@ export const useSidebar = () => {
     return context;
 };
 
-//TODO: Add animation to the sidebar
 export const SidebarProvider = ({
                                     children,
                                     open: openProp,

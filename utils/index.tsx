@@ -3,8 +3,16 @@ import {IconArrowLeft, IconBrandTabler, IconSettings, IconUserBolt} from "@table
 import React from "react";
 import {SignOutButton} from "@clerk/clerk-react";
 import UserProfile from "@/components/nav/user-profile";
+import {UserButton} from "@clerk/nextjs";
+import MenuButton from "@/components/ui/menu-button";
 
-
+const DotIcon = () => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z" />
+        </svg>
+    )
+}
 
 interface Evaluation {
     criteria: string;
@@ -15,32 +23,36 @@ interface Evaluation {
 export const links = [
     {
         label: "Dashboard",
-        href: "#",
+        href: "/dashboard",
         icon: (
             <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
         ),
     },
     {
         label: "Profile",
-        href: <UserProfile/>,
-        icon: (
-            <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
-        ),
-    },
-    {
-        label: "Settings",
         href: "#",
         icon: (
-            <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            // <UserButton>
+            //     <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+            // </UserButton>
+            <MenuButton/>
+
         ),
     },
-    {
-        label: "Logout",
-        href: <SignOutButton/>,
-        icon: (
-            <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
-        ),
-    },
+    // {
+    //     label: "Settings",
+    //     href: "/settings",
+    //     icon: (
+    //         <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+    //     ),
+    // },
+    // {
+    //     label: "Logout",
+    //     href: "/",
+    //     icon: (
+    //         <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
+    //     ),
+    // },
 ];
 
 export const primaryNavItems = [
