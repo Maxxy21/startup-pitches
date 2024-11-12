@@ -53,7 +53,7 @@ export function Pages({
                                             src={userImage}
                                             alt={"UserAvatar"}
                                             width={32} height={32}
-                                            priority={false}
+
                                             className="rounded-xl"
                                         />
                                     ) : (
@@ -65,7 +65,10 @@ export function Pages({
                     </div>
                 </SidebarBody>
             </Sidebar>
-            {children}
+            <main
+                className="flex flex-1 flex-col gap-4 p-4 lg:px-8 rounded-tl-2xl border border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 w-full">
+                {children}
+            </main>
         </div>
     );
 }

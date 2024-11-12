@@ -13,13 +13,10 @@ const Dashboard = () => {
     return (
         <div>
             <Pages>
-                <div
-                    className="flex flex-1 flex-col gap-4 p-4 lg:px-8 rounded-tl-2xl border border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 w-full">
-                    <div className="p-4 lg:px-8">
-                        <SearchForm/>
-                    </div>
-                    <PitchesList data={pitches}/>
+                <div className="p-4 lg:px-8">
+                    <SearchForm/>
                 </div>
+                <PitchesList data={pitches}/>
             </Pages>
         </div>
 
@@ -28,4 +25,3 @@ const Dashboard = () => {
 
 
 export default Dashboard;
-

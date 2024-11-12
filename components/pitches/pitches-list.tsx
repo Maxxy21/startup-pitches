@@ -16,6 +16,7 @@ import {Doc} from "@/convex/_generated/dataModel";
 import {useRouter} from "next/navigation";
 import DeletePitch from "@/components/pitches/delete-pitch";
 import {Loading} from "@/components/auth/loading";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 
 const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
@@ -28,34 +29,38 @@ const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
             <div className="flex items-center justify-between">
                 <h1 className="text-lg font-semibold md:text-2xl">Pitches</h1>
             </div>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Evaluation</TableHead>
-                        {/*<TableHead>Avg. Score</TableHead>*/}
-                        <TableHead>Created At</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {data.map((pitch: Doc<"pitches">) => (
-                        <TableRow key={pitch._id}>
-                            <TableCell className="font-medium">{pitch.name}</TableCell>
-                            <TableCell>
-                                <button
-                                    onClick={() => router.push(`/dashboard/pitch/${pitch._id}`)}>
-                                    See more
-                                </button>
-                            </TableCell>
-                            <TableCell>{formatDate(pitch._creationTime)}</TableCell>
-                            <TableCell>
-                                <DeletePitch pitchId={pitch._id}/>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <AddPitchWrapper/>
+            <div>
+                <ScrollArea className="flex-1 w-full h-[calc(100vh-300px)] ">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Evaluation</TableHead>
+                                {/*<TableHead>Avg. Score</TableHead>*/}
+                                <TableHead>Created At</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {data.map((pitch: Doc<"pitches">) => (
+                                <TableRow key={pitch._id}>
+                                    <TableCell className="font-medium">{pitch.name}</TableCell>
+                                    <TableCell>
+                                        <button
+                                            onClick={() => router.push(`/dashboard/pitch/${pitch._id}`)}>
+                                            See more
+                                        </button>
+                                    </TableCell>
+                                    <TableCell>{formatDate(pitch._creationTime)}</TableCell>
+                                    <TableCell>
+                                        <DeletePitch pitchId={pitch._id}/>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </ScrollArea>
+                <AddPitchWrapper/>
+            </div>
         </div>
 
     );

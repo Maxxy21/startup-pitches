@@ -1,6 +1,4 @@
 "use client";
-import MobileNav from "@/components/nav/mobile-nav";
-import SideBar from "@/components/nav/side-bar";
 import {api} from "@/convex/_generated/api";
 import {useAction} from "convex/react";
 import {useParams} from "next/navigation";
@@ -43,25 +41,23 @@ export default function Search() {
     return (
         <div>
             <Pages>
-                <main className="flex flex-1 flex-col gap-4 p-4 lg:px-8 rounded-tl-2xl border border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 w-full">
-                    <div className="xl:px-40">
-                        <SearchForm/>
-                        <div className="flex items-center justify-between pt-2">
-                            <h1 className="text-lg font-semibold md:text-2xl">
-                                Search Results for{" "}
-                                <span>
+                <div className="xl:px-40">
+                    <SearchForm/>
+                    <div className="flex items-center justify-between pt-2">
+                        <h1 className="text-lg font-semibold md:text-2xl">
+                            Search Results for{" "}
+                            <span>
                   {`"`}
-                                    {decodeURI(searchQuery)}
-                                    {`"`}
+                                {decodeURI(searchQuery)}
+                                {`"`}
                 </span>
-                            </h1>
-                        </div>
-
-                        <div className="flex flex-col gap-1 py-4">
-                            <PitchesList data={searchResults}/>
-                        </div>
+                        </h1>
                     </div>
-                </main>
+
+                    <div className="flex flex-col gap-1 py-4">
+                        <PitchesList data={searchResults}/>
+                    </div>
+                </div>
             </Pages>
         </div>
     )
