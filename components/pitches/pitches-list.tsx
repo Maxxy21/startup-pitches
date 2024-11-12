@@ -17,6 +17,7 @@ import {useRouter} from "next/navigation";
 import DeletePitch from "@/components/pitches/delete-pitch";
 import {Loading} from "@/components/auth/loading";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import {FileUpload} from "@/components/add-pitches/file-upload";
 
 
 const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
@@ -59,7 +60,7 @@ const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
                         </TableBody>
                     </Table>
                 </ScrollArea>
-                <AddPitchWrapper/>
+                <FileUpload/>
             </div>
         </div>
 
