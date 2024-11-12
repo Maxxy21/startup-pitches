@@ -6,6 +6,8 @@ import {useAction} from "convex/react";
 import {useParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import PitchesList from "@/components/pitches/pitches-list";
+import {Pages} from "@/components/nav/pages";
+import SearchForm from "@/components/nav/search-form";
 
 export default function Search() {
     const {searchQuery} = useParams<{ searchQuery: string }>();
@@ -39,13 +41,12 @@ export default function Search() {
     }, [searchQuery, vectorSearch]);
 
     return (
-        <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-            <SideBar/>
-            <div className="flex flex-col">
-                <MobileNav/>
-                <main className="flex flex-1 flex-col gap-4 p-4 lg:px-8">
+        <div>
+            <Pages>
+                <main className="flex flex-1 flex-col gap-4 p-4 lg:px-8 rounded-tl-2xl border border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 w-full">
                     <div className="xl:px-40">
-                        <div className="flex items-center justify-between">
+                        <SearchForm/>
+                        <div className="flex items-center justify-between pt-2">
                             <h1 className="text-lg font-semibold md:text-2xl">
                                 Search Results for{" "}
                                 <span>
@@ -61,7 +62,8 @@ export default function Search() {
                         </div>
                     </div>
                 </main>
-            </div>
+            </Pages>
         </div>
-    );
+    )
+        ;
 }

@@ -12,28 +12,17 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import {formatDate} from "@/utils";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import {Button} from "@/components/ui/button";
-import {MoreHorizontal} from "lucide-react";
 import {Doc} from "@/convex/_generated/dataModel";
 import {useRouter} from "next/navigation";
 import DeletePitch from "@/components/pitches/delete-pitch";
+import {Loading} from "@/components/auth/loading";
 
 
 const PitchesList = ({data}: { data: Array<Doc<"pitches">> }) => {
     const router = useRouter();
 
-    if (
-        data === undefined
-    ) {
-        return <p>Loading...</p>;
-    }
+    if (!data) return <Loading/>
+
     return (
         <div>
             <div className="flex items-center justify-between">

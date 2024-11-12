@@ -10,10 +10,7 @@ import UserProfile from "@/components/nav/user-profile";
 import LogoIcon from "@/components/ui/logo-icon";
 import Logo from "@/components/ui/logo";
 import {cn} from "@/lib/utils";
-import {useQuery} from "convex/react";
-import {api} from "@/convex/_generated/api";
-import PitchesList from "@/components/pitches/pitches-list";
-import SearchForm from "@/components/nav/search-form";
+import Image from "next/image";
 
 
 interface PagesProps {
@@ -22,12 +19,12 @@ interface PagesProps {
 
 
 export function Pages({
-                                children
-                            }: PagesProps) {
+                          children
+                      }: PagesProps) {
     const {user} = useUser()
     const userName = user?.fullName
+    const userImage = user?.imageUrl
     const [open, setOpen] = useState(false);
-    const pitches = useQuery(api.pitches.getPitches) ?? [];
 
     return (
         <div
@@ -51,8 +48,17 @@ export function Pages({
                             link={{
                                 label: userName,
                                 href: "#",
-                                icon: (
-                                    <UserProfile/>
+                                icon: (userImage ? (
+                                        <Image
+                                            src={userImage}
+                                            alt={"UserAvatar"}
+                                            width={32} height={32}
+                                            priority={false}
+                                            className="rounded-xl"
+                                        />
+                                    ) : (
+                                        <UserProfile/>
+                                    )
                                 ),
                             }}
                         />

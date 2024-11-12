@@ -18,7 +18,7 @@ const SearchForm = () => {
     return (
         <Form {...form} >
             <form
-                className="lg:flex lg:items-center justify-end w-full "
+                className="lg:flex lg:items-center justify-end "
                 onSubmit={form.handleSubmit(onSubmit)}
             >
                 <div className="relative flex gap-2 items-center w-full ">
@@ -34,7 +34,7 @@ const SearchForm = () => {
                                         type="search"
                                         required
                                         placeholder="Search pitches..."
-                                        className="w-full appearance-none pl-8 shadow-none h-10 rounded-xl border border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900"
+                                        className="w-full appearance-none pl-8 shadow-none h-10 rounded-xl border border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 "
                                         {...field}
                                     />
                                 </FormControl>

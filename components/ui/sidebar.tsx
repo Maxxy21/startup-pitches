@@ -90,7 +90,7 @@ export const DesktopSidebar = ({
         <>
             <motion.div
                 className={cn(
-                    "h-full px-4 py-4 hidden  md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[300px] flex-shrink-0",
+                    "h-full px-4 py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[300px] flex-shrink-0",
                     className
                 )}
                 animate={{
@@ -100,6 +100,7 @@ export const DesktopSidebar = ({
                 onMouseLeave={() => setOpen(false)}
                 {...props}
             >
+
                 {children}
             </motion.div>
         </>
@@ -121,7 +122,6 @@ export const MobileSidebar = ({
                 {...props}
             >
                 {/* Wrapper div for logo and title */}
-
                 <Link href="/dashboard" className="flex items-center flex-1 justify-center gap-2">
                     <LogoIcon/>
                     <h1 className="text-lg font-semibold">Pitch Perfect</h1>
