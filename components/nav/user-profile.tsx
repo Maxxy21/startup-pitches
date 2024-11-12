@@ -9,7 +9,7 @@ const UserProfile = () => {
     return (
         <div >
             <SignedIn>
-                <UserButton appearance={{ baseTheme: isDark ? dark : undefined }}/>
+                <UserButton  appearance={{ baseTheme: isDark ? dark : undefined }}/>
             </SignedIn>
             <SignedOut>
                 <SignInButton mode="modal"/>

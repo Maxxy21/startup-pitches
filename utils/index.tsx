@@ -1,15 +1,14 @@
 import {Calendar, CalendarDays, Grid2X2, Inbox} from "lucide-react";
 import {IconArrowLeft, IconBrandTabler, IconSettings, IconUserBolt} from "@tabler/icons-react";
 import React from "react";
-import {SignOutButton} from "@clerk/clerk-react";
-import UserProfile from "@/components/nav/user-profile";
-import {UserButton} from "@clerk/nextjs";
-import MenuButton from "@/components/ui/menu-button";
+import Profile from "@/components/nav/profile";
+import Logout from "@/components/nav/logout";
+import Link from "next/link";
 
 const DotIcon = () => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
-            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z" />
+            <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"/>
         </svg>
     )
 }
@@ -32,10 +31,7 @@ export const links = [
         label: "Profile",
         href: "#",
         icon: (
-            // <UserButton>
-            //     <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
-            // </UserButton>
-            <MenuButton/>
+            <Profile/>
 
         ),
     },
@@ -46,13 +42,13 @@ export const links = [
     //         <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
     //     ),
     // },
-    // {
-    //     label: "Logout",
-    //     href: "/",
-    //     icon: (
-    //         <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
-    //     ),
-    // },
+    {
+        label: "Logout",
+        href: "/",
+        icon: (
+            <Logout/>
+        ),
+    },
 ];
 
 export const primaryNavItems = [
@@ -85,6 +81,7 @@ export function fileToText(file: File): Promise<string> {
         reader.readAsText(file);
     });
 }
+
 
 export const getShortCriteriaName = (criteria: string) => {
     switch (criteria) {

@@ -4,6 +4,7 @@ import Link, {LinkProps} from "next/link";
 import React, {useState, createContext, useContext} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import {IconMenu2, IconX} from "@tabler/icons-react";
+import LogoIcon from "@/components/ui/logo-icon";
 
 interface Links {
     label: string | null | undefined;
@@ -115,16 +116,25 @@ export const MobileSidebar = ({
         <>
             <div
                 className={cn(
-                    "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full"
+                    "h-10 px-4 py-4 flex md:hidden items-center bg-neutral-100 dark:bg-neutral-800 w-full"
                 )}
                 {...props}
             >
-                <div className="flex justify-end z-20 w-full">
+                {/* Wrapper div for logo and title */}
+
+                <Link href="/dashboard" className="flex items-center flex-1 justify-center gap-2">
+                    <LogoIcon/>
+                    <h1 className="text-lg font-semibold">Pitch Perfect</h1>
+                </Link>
+
+                {/* Menu icon container */}
+                <div className="absolute right-4">
                     <IconMenu2
-                        className="text-neutral-800 dark:text-neutral-200"
+                        className="text-neutral-800 dark:text-neutral-200 cursor-pointer"
                         onClick={() => setOpen(!open)}
                     />
                 </div>
+
                 <AnimatePresence>
                     {open && (
                         <motion.div
