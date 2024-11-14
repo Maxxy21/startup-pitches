@@ -4,6 +4,7 @@ import React from "react";
 import Profile from "@/components/nav/profile";
 import Logout from "@/components/nav/logout";
 import Link from "next/link";
+import {z} from "zod";
 
 const DotIcon = () => {
     return (
@@ -12,6 +13,15 @@ const DotIcon = () => {
         </svg>
     )
 }
+
+export const FormSchema = z.object({
+    pitchName: z.string().min(2, {
+        message: "Pitch name must be at least 2 characters.",
+    }),
+    contentType: z.enum(['audio', 'textFile', 'text']),
+    content: z.string().optional(),
+    file: z.any().optional(),
+});
 
 interface Evaluation {
     criteria: string;

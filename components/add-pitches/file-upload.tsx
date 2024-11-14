@@ -19,7 +19,6 @@ import {api} from "@/convex/_generated/api";
 import {useFormStatus} from "react-dom";
 import React, {useRef, useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
-import {IconUpload} from "@tabler/icons-react";
 import {useDropzone} from "react-dropzone";
 import {
     Dialog,
@@ -34,6 +33,7 @@ import {Plus} from "lucide-react";
 import {evaluatePitch, transcribeAudio} from "@/actions/openai";
 import {fileToText} from "@/utils";
 import {useForm} from "react-hook-form";
+import {Dropzone} from "@/components/add-pitches/dropzone";
 
 const mainVariant = {
     initial: {
@@ -67,9 +67,8 @@ const FormSchema = z.object({
 
 export const FileUpload = () => {
     const createPitchEmbeddings = useAction(api.pitches.createPitchEmbeddings);
-    const {pending} = useFormStatus();
+    const { pending } = useFormStatus();
     const [files, setFiles] = useState<File[]>([]);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -83,21 +82,20 @@ export const FileUpload = () => {
 
     const handleFileChange = (newFiles: File[]) => {
         setFiles(newFiles);
-        // Set the file in the form
         form.setValue("file", newFiles);
     };
 
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    const dropzoneProps = useDropzone({
         multiple: false,
         onDrop: handleFileChange,
         accept: form.watch("contentType") === "audio"
-            ? {'audio/*': ['.mp3', '.wav', '.m4a']}
-            : {'text/plain': ['.txt']},
+            ? { 'audio/*': ['.mp3', '.wav', '.m4a'] }
+            : { 'text/plain': ['.txt'] },
         noClick: false,
     });
 
-    async function onSubmit(data: z.infer<typeof FormSchema>) {
-        const {pitchName, contentType, content} = data;
+    const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
+        const { pitchName, contentType, content } = data;
         let transcriptionText = content || "";
 
         if (files.length > 0) {
@@ -119,198 +117,113 @@ export const FileUpload = () => {
 
         setFiles([]);
         form.reset();
-    }
+    };
 
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <motion.button
                     className="pl-2 flex mt-2 flex-1"
-                    whileHover={{scale: 1.02}}
-                    whileTap={{scale: 0.98}}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                 >
-                    <div className="flex flex-col items-center justify-center gap-1 text-center">
-                        <div className="flex items-center gap-2 justify-center">
-                            <Plus className="h-4 w-4 text-primary hover:bg-primary hover:rounded-xl hover:text-white"/>
-                            <h3 className="text-base font-light tracking-tight text-foreground/70">
-                                Add Pitch
-                            </h3>
-                        </div>
+                    <div className="flex items-center gap-2 justify-center">
+                        <Plus className="h-4 w-4 text-primary hover:bg-primary hover:rounded-xl hover:text-white"/>
+                        <h3 className="text-base font-light tracking-tight text-foreground/70">
+                            Add Pitch
+                        </h3>
                     </div>
                 </motion.button>
             </DialogTrigger>
             <DialogContent className="border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900">
                 <DialogHeader>
                     <DialogTitle>Upload your file</DialogTitle>
+                    <DialogDescription>
+                       You can upload your audio or text file here.
+                    </DialogDescription>
                 </DialogHeader>
-                <motion.div
-                    className="w-full"
-                    initial={{opacity: 0, y: 20}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.3}}
-                >
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <motion.div
-                                className="space-y-4"
-                                initial={{opacity: 0}}
-                                animate={{opacity: 1}}
-                                transition={{delay: 0.1}}
-                            >
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+                        <FormField
+                            control={form.control}
+                            name="pitchName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Enter your pitch name"
+                                            className="border-0 font-semibold text-lg border-neutral-500 dark:border-neutral-800 dark:bg-neutral-900"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="contentType"
+                            render={({ field }) => (
+                                <FormItem className="flex-1">
+                                    <Select
+                                        onValueChange={(value) => {
+                                            field.onChange(value);
+                                            setFiles([]);
+                                        }}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl className="border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900">
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select upload type"/>
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="audio">Audio</SelectItem>
+                                            <SelectItem value="textFile">Text File</SelectItem>
+                                            <SelectItem value="text">Text</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
+                        />
+
+                        <AnimatePresence mode="wait">
+                            {form.watch("contentType") !== "text" ? (
+                                <Dropzone
+                                    contentType={form.watch("contentType")}
+                                    files={files}
+                                    {...dropzoneProps}
+                                />
+                            ) : (
                                 <FormField
                                     control={form.control}
-                                    name="pitchName"
-                                    render={({field}) => (
+                                    name="content"
+                                    render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input
-                                                    placeholder="Enter your pitch name"
-                                                    className="border-0 font-semibold text-lg border-neutral-500 dark:border-neutral-800 dark:bg-neutral-900"
+                                                <Textarea
+                                                    className="min-h-[200px] resize-none"
+                                                    placeholder="Enter your pitch text here..."
                                                     {...field}
                                                 />
                                             </FormControl>
                                         </FormItem>
                                     )}
                                 />
+                            )}
+                        </AnimatePresence>
 
-                                <div className="flex gap-4">
-                                    <FormField
-                                        control={form.control}
-                                        name="contentType"
-                                        render={({field}) => (
-                                            <FormItem className="flex-1">
-                                                <Select  onValueChange={(value) => {
-                                                    field.onChange(value);
-                                                    setFiles([]); // Clear files when changing type
-                                                }} defaultValue={field.value} >
-                                                    <FormControl className="border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900">
-                                                        <SelectTrigger>
-                                                            <SelectValue placeholder="Select upload type"/>
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        <SelectItem value="audio">Audio</SelectItem>
-                                                        <SelectItem value="textFile">Text File</SelectItem>
-                                                        <SelectItem value="text">Text</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-
-                                <AnimatePresence mode="wait">
-                                    {(form.watch("contentType") !== "text") && (
-                                        <motion.div
-                                            className="w-full"
-                                            initial={{opacity: 0, height: 0}}
-                                            animate={{opacity: 1, height: "auto"}}
-                                            exit={{opacity: 0, height: 0}}
-                                        >
-                                            <div {...getRootProps()}
-                                                 className="p-8 rounded-lg border-2 border-dashed cursor-pointer
-                                                         hover:border-primary transition-colors">
-                                                <input {...getInputProps()} />
-                                                <div className="flex flex-col items-center justify-center gap-4">
-                                                    <IconUpload className="h-8 w-8 text-primary"/>
-                                                    <p className="text-sm text-muted-foreground text-center">
-                                                        {isDragActive
-                                                            ? "Drop the files here..."
-                                                            : `Drag & drop or click to select ${form.watch("contentType") === "audio" ? "audio" : "text"} files`
-                                                        }
-                                                    </p>
-                                                </div>
-                                                {files.length > 0 && (
-                                                    <motion.div
-                                                        className="mt-4 p-4 bg-muted rounded-lg"
-                                                        initial={{opacity: 0}}
-                                                        animate={{opacity: 1}}
-                                                    >
-
-                                                        <div className="flex justify-between w-full items-center gap-4">
-                                                            <motion.p
-                                                                initial={{opacity: 0}}
-                                                                animate={{opacity: 1}}
-                                                                layout
-                                                                className="text-base text-neutral-700 dark:text-neutral-300 truncate max-w-xs"
-                                                            >
-                                                                {files[0].name}
-                                                            </motion.p>
-                                                            <motion.p
-                                                                initial={{opacity: 0}}
-                                                                animate={{opacity: 1}}
-                                                                layout
-                                                                className="rounded-lg px-2 py-1 w-fit flex-shrink-0 text-sm text-neutral-600 dark:bg-neutral-800 dark:text-white shadow-input"
-                                                            >
-                                                                {(files[0].size / (1024 * 1024)).toFixed(2)} MB
-                                                            </motion.p>
-                                                        </div>
-
-                                                        <div
-                                                            className="flex text-sm md:flex-row flex-col items-start md:items-center w-full mt-2 justify-between text-neutral-600 dark:text-neutral-400">
-                                                            <motion.p
-                                                                initial={{opacity: 0}}
-                                                                animate={{opacity: 1}}
-                                                                layout
-                                                                className="px-1 py-0.5 rounded-md bg-gray-100 dark:bg-neutral-800 "
-                                                            >
-                                                                {files[0].type}
-                                                            </motion.p>
-
-                                                            <motion.p
-                                                                initial={{opacity: 0}}
-                                                                animate={{opacity: 1}}
-                                                                layout
-                                                            >
-                                                                modified{" "}
-                                                                {new Date(files[0].lastModified).toLocaleDateString()}
-                                                            </motion.p>
-                                                        </div>
-                                                    </motion.div>
-                                                )}
-
-                                            </div>
-                                        </motion.div>
-                                    )}
-
-                                    {form.watch("contentType") === "text" && (
-                                        <motion.div
-                                            initial={{opacity: 0}}
-                                            animate={{opacity: 1}}
-                                            exit={{opacity: 0}}
-                                        >
-                                            <FormField
-                                                control={form.control}
-                                                name="content"
-                                                render={({field}) => (
-                                                    <FormItem>
-                                                        <FormControl>
-                                                            <Textarea
-                                                                className="min-h-[200px] resize-none"
-                                                                placeholder="Enter your pitch text here..."
-                                                                {...field}
-                                                            />
-                                                        </FormControl>
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </motion.div>
-
-                            <DialogFooter>
-                                <Button
-                                    type="submit"
-                                    disabled={pending}
-                                    className="w-full sm:w-auto"
-                                >
-                                    {pending ? "Adding..." : "Add Pitch"}
-                                </Button>
-                            </DialogFooter>
-                        </form>
-                    </Form>
-                </motion.div>
+                        <DialogFooter>
+                            <Button
+                                type="submit"
+                                disabled={pending}
+                                className="w-full sm:w-auto"
+                            >
+                                {pending ? "Adding..." : "Add Pitch"}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     );
