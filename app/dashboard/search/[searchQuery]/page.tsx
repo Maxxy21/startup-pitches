@@ -3,9 +3,9 @@ import {api} from "@/convex/_generated/api";
 import {useAction} from "convex/react";
 import {useParams} from "next/navigation";
 import {useEffect, useState} from "react";
-import PitchesList from "@/components/pitches/pitches-list";
 import {Pages} from "@/components/nav/pages";
 import SearchForm from "@/components/nav/search-form";
+import PitchCard from "@/components/pitches/pitch-card";
 
 export default function Search() {
     const {searchQuery} = useParams<{ searchQuery: string }>();
@@ -55,7 +55,7 @@ export default function Search() {
                     </div>
 
                     <div className="flex flex-col gap-1 py-4">
-                        <PitchesList data={searchResults}/>
+                        <PitchCard data={searchResults}/>
                     </div>
                 </div>
             </Pages>

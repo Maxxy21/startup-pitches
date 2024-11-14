@@ -1,11 +1,11 @@
 "use client"
 import React from 'react';
 
-import PitchesList from "@/components/pitches/pitches-list";
 import {useQuery} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {Pages} from "@/components/nav/pages";
 import SearchForm from "@/components/nav/search-form";
+import PitchCard from "@/components/pitches/pitch-card";
 
 const Dashboard = () => {
     const pitches = useQuery(api.pitches.getPitches) ?? [];
@@ -16,7 +16,7 @@ const Dashboard = () => {
                 <div className="p-4 lg:px-8">
                     <SearchForm/>
                 </div>
-                <PitchesList data={pitches}/>
+                <PitchCard data={pitches}/>
             </Pages>
         </div>
 

@@ -20,14 +20,18 @@ import {useFormStatus} from "react-dom";
 import React, {useRef, useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import {useDropzone} from "react-dropzone";
+
+import {FormSchema} from "@/components/add-pitches/form-schema";
+
 import {
-    Dialog,
+    Dialog, DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader, DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
+import {Label} from "@/components/ui/label"
 import {Button} from "@/components/ui/button";
 import {Plus} from "lucide-react";
 import {evaluatePitch, transcribeAudio} from "@/actions/openai";
@@ -35,39 +39,10 @@ import {fileToText} from "@/utils";
 import {useForm} from "react-hook-form";
 import {Dropzone} from "@/components/add-pitches/dropzone";
 
-const mainVariant = {
-    initial: {
-        x: 0,
-        y: 0,
-    },
-    animate: {
-        x: 20,
-        y: -20,
-        opacity: 0.9,
-    },
-};
-
-const secondaryVariant = {
-    initial: {
-        opacity: 0,
-    },
-    animate: {
-        opacity: 1,
-    },
-};
-
-const FormSchema = z.object({
-    pitchName: z.string().min(2, {
-        message: "Pitch name must be at least 2 characters.",
-    }),
-    contentType: z.enum(['audio', 'textFile', 'text']),
-    content: z.string().optional(),
-    file: z.any().optional(),
-})
 
 export const FileUpload = () => {
     const createPitchEmbeddings = useAction(api.pitches.createPitchEmbeddings);
-    const { pending } = useFormStatus();
+    const {pending} = useFormStatus();
     const [files, setFiles] = useState<File[]>([]);
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -89,13 +64,13 @@ export const FileUpload = () => {
         multiple: false,
         onDrop: handleFileChange,
         accept: form.watch("contentType") === "audio"
-            ? { 'audio/*': ['.mp3', '.wav', '.m4a'] }
-            : { 'text/plain': ['.txt'] },
+            ? {'audio/*': ['.mp3', '.wav', '.m4a']}
+            : {'text/plain': ['.txt']},
         noClick: false,
     });
 
     const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
-        const { pitchName, contentType, content } = data;
+        const {pitchName, contentType, content} = data;
         let transcriptionText = content || "";
 
         if (files.length > 0) {
@@ -124,8 +99,8 @@ export const FileUpload = () => {
             <DialogTrigger asChild>
                 <motion.button
                     className="pl-2 flex mt-2 flex-1"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{scale: 1.02}}
+                    whileTap={{scale: 0.98}}
                 >
                     <div className="flex items-center gap-2 justify-center">
                         <Plus className="h-4 w-4 text-primary hover:bg-primary hover:rounded-xl hover:text-white"/>
@@ -137,9 +112,9 @@ export const FileUpload = () => {
             </DialogTrigger>
             <DialogContent className="border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900">
                 <DialogHeader>
-                    <DialogTitle>Upload your file</DialogTitle>
+                    <DialogTitle>Create a Pitch</DialogTitle>
                     <DialogDescription>
-                       You can upload your audio or text file here.
+                        You can upload your audio or text file here.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -147,14 +122,16 @@ export const FileUpload = () => {
                         <FormField
                             control={form.control}
                             name="pitchName"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input
-                                            placeholder="Enter your pitch name"
-                                            className="border-0 font-semibold text-lg border-neutral-500 dark:border-neutral-800 dark:bg-neutral-900"
-                                            {...field}
-                                        />
+                                        <div className="flex flex-col space-y-1.5">
+                                            <Label htmlFor="name">Name</Label>
+                                            <Input
+                                                placeholder="Name of your pitch"
+                                                {...field}
+                                            />
+                                        </div>
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -163,26 +140,29 @@ export const FileUpload = () => {
                         <FormField
                             control={form.control}
                             name="contentType"
-                            render={({ field }) => (
-                                <FormItem className="flex-1">
-                                    <Select
-                                        onValueChange={(value) => {
-                                            field.onChange(value);
-                                            setFiles([]);
-                                        }}
-                                        defaultValue={field.value}
-                                    >
-                                        <FormControl className="border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900">
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select upload type"/>
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="audio">Audio</SelectItem>
-                                            <SelectItem value="textFile">Text File</SelectItem>
-                                            <SelectItem value="text">Text</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                            render={({field}) => (
+                                <FormItem>
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="contentType">Content Type</Label>
+                                        <Select
+                                            onValueChange={(value) => {
+                                                field.onChange(value);
+                                                setFiles([]);
+                                            }}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select upload type"/>
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="audio">Audio</SelectItem>
+                                                <SelectItem value="textFile">Text File</SelectItem>
+                                                <SelectItem value="text">Text</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </FormItem>
                             )}
                         />
@@ -198,7 +178,7 @@ export const FileUpload = () => {
                                 <FormField
                                     control={form.control}
                                     name="content"
-                                    render={({ field }) => (
+                                    render={({field}) => (
                                         <FormItem>
                                             <FormControl>
                                                 <Textarea
@@ -214,13 +194,19 @@ export const FileUpload = () => {
                         </AnimatePresence>
 
                         <DialogFooter>
-                            <Button
-                                type="submit"
-                                disabled={pending}
-                                className="w-full sm:w-auto"
-                            >
-                                {pending ? "Adding..." : "Add Pitch"}
-                            </Button>
+                            <div className="flex w-full justify-between">
+                                <DialogClose asChild>
+                                    <Button type="button" variant="secondary">
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <Button
+                                    type="submit"
+                                    disabled={pending}
+                                >
+                                    {pending ? "Adding..." : "Add Pitch"}
+                                </Button>
+                            </div>
                         </DialogFooter>
                     </form>
                 </Form>

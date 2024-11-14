@@ -1,9 +1,10 @@
 import type {Metadata} from "next";
-import {Inter, Noto_Sans_Georgian} from "next/font/google";
+import {Noto_Sans_Georgian} from "next/font/google";
 import "./globals.css";
 
 import {ConvexClientProvider} from "@/providers/convex-client-provider";
 import {ThemeProvider} from "@/providers/theme-provider";
+import React from "react";
 
 // const inter = Inter({subsets: ["latin"]});
 const defaultFont = Noto_Sans_Georgian({subsets: ["latin"]});
