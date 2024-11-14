@@ -203,6 +203,7 @@ export const FileUpload = () => {
                                 <Button
                                     type="submit"
                                     disabled={pending}
+                                    className="bg-gradient-to-b from-blue-500 to-blue-600"
                                 >
                                     {pending ? "Adding..." : "Add Pitch"}
                                 </Button>

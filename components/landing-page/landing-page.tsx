@@ -12,21 +12,17 @@ import {SignInButton} from "@clerk/nextjs";
 import {clsx} from "clsx";
 import {FaMicrophone} from "react-icons/fa";
 import {useRouter} from "next/navigation";
+import LogoIcon from "@/components/ui/logo-icon";
+import React from "react";
 
 export default function LandingPage() {
     return (
         <main className="bg-gradient-to-r from-black-200 to-blue-200 h-full min-h-screen">
             <div className="container relative m-0 mx-auto py-10 md:px-10">
                 <div className="max-width flex items-center justify-center lg:justify-between">
-                    <Link className="flex items-center gap-1" href="/">
-                        <Image
-                            src={logo}
-                            width="100"
-                            height="100"
-                            alt="logo"
-                            className="h-50 w-60 md:h-50 md:w-60"
-                        />
-
+                    <Link href="/" className="flex items-center flex-1 justify-center gap-2">
+                        <LogoIcon/>
+                        <h1 className="text-lg font-semibold">Pitch Perfect</h1>
                     </Link>
 
                     <div className="hidden lg:flex w-fit items-center">
