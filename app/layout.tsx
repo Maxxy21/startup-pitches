@@ -35,7 +35,7 @@ export default function RootLayout({
         <body className={defaultFont.className}>
         <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="system"
             enableSystem
             disableTransitionOnChange
         >

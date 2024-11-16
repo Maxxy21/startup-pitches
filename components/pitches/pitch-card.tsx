@@ -67,7 +67,7 @@ const EmptyState = () => {
                     Get started by creating your first pitch
                 </p>
                 <motion.div
-                    animate={{ y: [0, -5, 0] }}
+                    animate={{y: [0, -5, 0]}}
                     transition={{
                         duration: 2,
                         repeat: Infinity,
@@ -98,10 +98,10 @@ const PitchesGrid = ({data}: { data: Array<Doc<"pitches">> }) => {
 
             {!data ? (
                 <ScrollArea className="flex-1 w-full h-[calc(100vh-175px)]">
-                    <PitchCard.Skeleton/>
+                    <PitchCardSkeleton/>
                 </ScrollArea>
             ) : data.length === 0 ? (
-                <EmptyState />
+                <EmptyState/>
             ) : (
                 <ScrollArea className="flex-1 w-full h-[calc(100vh-175px)]">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
@@ -121,11 +121,12 @@ const PitchesGrid = ({data}: { data: Array<Doc<"pitches">> }) => {
     );
 };
 
-PitchCard.Skeleton = function PitchCardSkeleton() {
+const PitchCardSkeleton = () => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             {[1, 2, 3, 4, 5, 6].map((index) => (
-                <Card key={index} className="mb-4 hover:shadow-lg transition-shadow duration-200 dark:bg-neutral-800/50">
+                <Card key={index}
+                      className="mb-4 hover:shadow-lg transition-shadow duration-200 dark:bg-neutral-800/50">
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <Skeleton className="h-7 w-1/2"/> {/* Title */}

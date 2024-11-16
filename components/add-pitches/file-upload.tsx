@@ -17,7 +17,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {useAction, useMutation} from "convex/react";
 import {api} from "@/convex/_generated/api";
 import {useFormStatus} from "react-dom";
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import {useDropzone} from "react-dropzone";
 
@@ -40,8 +40,39 @@ import {useForm} from "react-hook-form";
 import {Dropzone} from "@/components/add-pitches/dropzone";
 
 
+export const mockEvaluation = {
+    evaluations: [
+        {
+            criteria: "Problem-Solution Fit",
+            comment: "The pitch demonstrates a clear understanding of the problem and presents a viable solution.",
+            score: 8,
+            strengths: ["Clear problem identification", "Innovative solution", "Market understanding"],
+            improvements: ["Add more market validation", "Expand on competitive analysis"],
+            aspects: ["Problem clarity", "Solution viability", "Market fit", "Innovation"]
+        },
+        {
+            criteria: "Business Potential",
+            comment: "Strong business model with good growth potential.",
+            score: 7,
+            strengths: ["Scalable model", "Clear revenue streams", "Large market opportunity"],
+            improvements: ["More financial projections", "Detailed go-to-market strategy"],
+            aspects: ["Market size", "Revenue model", "Scalability", "Growth strategy"]
+        },
+        {
+            criteria: "Presentation Quality",
+            comment: "Well-structured presentation with clear communication.",
+            score: 8,
+            strengths: ["Clear structure", "Engaging delivery", "Professional presentation"],
+            improvements: ["Add more visual aids", "Include more data points"],
+            aspects: ["Clarity", "Structure", "Engagement", "Professionalism"]
+        }
+    ],
+    overallScore: 7.7,
+    overallFeedback: "This is a strong pitch with clear potential. The problem-solution fit is well-defined, and the business model shows promise. Some improvements in market validation and financial projections would strengthen the pitch further."
+};
+
 export const FileUpload = () => {
-    const createPitchEmbeddings = useAction(api.pitches.createPitchEmbeddings);
+    const createPitch = useMutation(api.pitches.createPitch);
     const {pending} = useFormStatus();
     const [files, setFiles] = useState<File[]>([]);
 
@@ -69,29 +100,100 @@ export const FileUpload = () => {
         noClick: false,
     });
 
+    // const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
+    //     try {
+    //         const {pitchName, contentType, content} = data;
+    //         let transcriptionText = "";  // Initialize as empty string
+    //
+    //         if (contentType === 'text') {
+    //             transcriptionText = content || "";  // Use content for text input
+    //         } else if (files.length > 0) {
+    //             if (contentType === 'audio') {
+    //                 const formData = new FormData();
+    //                 formData.append('audio', files[0]);
+    //                 transcriptionText = await transcribeAudio(formData);
+    //             } else if (contentType === 'textFile') {
+    //                 transcriptionText = await fileToText(files[0]);
+    //             }
+    //         }
+    //
+    //         // Make sure we have text before proceeding
+    //         if (!transcriptionText) {
+    //             throw new Error("No text content provided");
+    //         }
+    //
+    //         const evaluationResults = await evaluatePitch(transcriptionText);
+    //
+    //         await createPitch({
+    //             name: pitchName,
+    //             text: transcriptionText,  // Make sure this is always provided
+    //             type: contentType,
+    //             status: "evaluated",
+    //             evaluation: {
+    //                 evaluations: evaluationResults.evaluations,
+    //                 overallScore: evaluationResults.overallScore,
+    //                 overallFeedback: evaluationResults.overallFeedback,
+    //             },
+    //             createdAt: Date.now(),
+    //             updatedAt: Date.now(),
+    //         });
+    //
+    //         setFiles([]);
+    //         form.reset();
+    //     } catch (error) {
+    //         console.error("Error creating pitch:", error);
+    //         // TODO: Show error message and Toast notification
+    //     }
+    // };
+
     const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
-        const {pitchName, contentType, content} = data;
-        let transcriptionText = content || "";
+        try {
+            console.log("Form data:", data);
+            const {pitchName, contentType, content} = data;
+            let transcriptionText = "";
 
-        if (files.length > 0) {
-            if (contentType === 'audio') {
-                const formData = new FormData();
-                formData.append('audio', files[0]);
-                transcriptionText = await transcribeAudio(formData);
-            } else if (contentType === 'textFile') {
-                transcriptionText = await fileToText(files[0]);
+            console.log("Content type:", contentType);
+            console.log("Files:", files);
+
+            if (contentType === 'text') {
+                transcriptionText = content || "";
+                console.log("Text content:", transcriptionText);
+            } else if (files.length > 0) {
+                transcriptionText = "This is a dummy transcription for testing purposes...";
+                console.log("Using dummy transcription");
             }
+
+            if (!transcriptionText) {
+                console.log("No transcription text available");
+                throw new Error("No text content provided");
+            }
+
+            console.log("Final transcription:", transcriptionText);
+            console.log("Mock evaluation:", mockEvaluation);
+
+            // Use mock evaluation instead of API call
+            const evaluationResults = mockEvaluation;
+            // const evaluationResults = await evaluatePitch(transcriptionText);
+
+            await createPitch({
+                name: pitchName,
+                text: transcriptionText,
+                type: contentType,
+                status: "evaluated",
+                evaluation: {
+                    evaluations: evaluationResults.evaluations,
+                    overallScore: evaluationResults.overallScore,
+                    overallFeedback: evaluationResults.overallFeedback,
+                },
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+            });
+
+            setFiles([]);
+            form.reset();
+        } catch (error) {
+            console.error("Error creating pitch:", error);
         }
-
-        const evaluationResults = await evaluatePitch(transcriptionText);
-        await createPitchEmbeddings({
-            name: pitchName,
-            text: transcriptionText,
-            evaluation: evaluationResults
-        });
-
-        setFiles([]);
-        form.reset();
     };
 
     return (
@@ -114,7 +216,7 @@ export const FileUpload = () => {
                 <DialogHeader>
                     <DialogTitle>Create a Pitch</DialogTitle>
                     <DialogDescription>
-                        You can upload your audio or text file here.
+                        Upload your audio, text file, or write your pitch directly.
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -133,6 +235,7 @@ export const FileUpload = () => {
                                             />
                                         </div>
                                     </FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -185,8 +288,10 @@ export const FileUpload = () => {
                                                     className="min-h-[200px] resize-none"
                                                     placeholder="Enter your pitch text here..."
                                                     {...field}
+                                                    required={form.watch("contentType") === "text"}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -202,7 +307,7 @@ export const FileUpload = () => {
                                 </DialogClose>
                                 <Button
                                     type="submit"
-                                    disabled={pending}
+                                    disabled={pending || !form.formState.isValid}
                                     className="bg-gradient-to-b from-blue-500 to-blue-600"
                                 >
                                     {pending ? "Adding..." : "Add Pitch"}
@@ -215,28 +320,3 @@ export const FileUpload = () => {
         </Dialog>
     );
 };
-
-export function GridPattern() {
-    const columns = 41;
-    const rows = 11;
-    return (
-        <div
-            className="flex bg-gray-100 dark:bg-neutral-900 flex-shrink-0 flex-wrap justify-center items-center gap-x-px gap-y-px  scale-105">
-            {Array.from({length: rows}).map((_, row) =>
-                Array.from({length: columns}).map((_, col) => {
-                    const index = row * columns + col;
-                    return (
-                        <div
-                            key={`${col}-${row}`}
-                            className={`w-10 h-10 flex flex-shrink-0 rounded-[2px] ${
-                                index % 2 === 0
-                                    ? "bg-gray-50 dark:bg-neutral-950"
-                                    : "bg-gray-50 dark:bg-neutral-950 shadow-[0px_0px_1px_3px_rgba(255,255,255,1)_inset] dark:shadow-[0px_0px_1px_3px_rgba(0,0,0,1)_inset]"
-                            }`}
-                        />
-                    );
-                })
-            )}
-        </div>
-    );
-}
