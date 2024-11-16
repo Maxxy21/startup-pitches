@@ -4,7 +4,6 @@ import {useQuery} from "convex/react";
 import {useParams, useRouter} from "next/navigation";
 import SearchForm from "@/components/nav/search-form";
 
-import {Loading} from "@/components/auth/loading";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {AnimatePresence} from "framer-motion";
 import {PitchCard} from "@/components/pitches/pitch-card/pitch-card";
@@ -16,7 +15,6 @@ export default function Search() {
     const { searchQuery } = useParams<{ searchQuery: string }>();
     const decodedQuery = decodeURI(searchQuery);
 
-    // Add loading state
     const searchResults = useQuery(api.pitches.searchPitches, {
         searchTerm: decodedQuery
     });

@@ -7,7 +7,7 @@ import {api} from "@/convex/_generated/api";
 import {Loading} from "@/components/auth/loading";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {EvaluationContent} from "@/app/pitch/_components/evaluation-content";
+import {EvaluationContent} from "@/app/pitch/[id]/_components/evaluation-content";
 
 
 const PitchDetails = () => {

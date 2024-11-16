@@ -1,25 +1,25 @@
 import React from "react";
+
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {ScoreCard} from "@/app/pitch/_components/score-card";
+import {ScoreCard} from "@/app/pitch/[id]/_components/score-card";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {getShortCriteriaName} from "@/utils";
-import {Doc} from "@/convex/_generated/dataModel";
-import {EvaluationContentProps} from "@/app/pitch/_components/types";
-import {CriteriaProgress} from "@/app/pitch/_components/criteria-progress";
+import {EvaluationContentProps} from "@/app/pitch/[id]/_components/types";
+import {CriteriaProgress} from "@/app/pitch/[id]/_components/criteria-progress";
 
 
-export const EvaluationContent: React.FC<EvaluationContentProps> = ({ data }) => (
+export const EvaluationContent = ({data}: EvaluationContentProps) => (
     <div className="space-y-4 p-2"> {/* Reduced spacing and added padding */}
         {/* Score Section - Make it more compact */}
         <div className="grid gap-2 md:grid-cols-2"> {/* Reduced gap */}
-            <ScoreCard score={data.evaluation.overallScore} />
+            <ScoreCard score={data.evaluation.overallScore}/>
             <Card>
                 <CardHeader className="pb-1"> {/* Reduced padding */}
                     <CardTitle className="text-sm text-muted-foreground">Evaluation Progress</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-2"> {/* Adjusted padding */}
-                    <CriteriaProgress evaluations={data.evaluation.evaluations} />
+                    <CriteriaProgress evaluations={data.evaluation.evaluations}/>
                 </CardContent>
             </Card>
         </div>
@@ -50,7 +50,14 @@ export const EvaluationContent: React.FC<EvaluationContentProps> = ({ data }) =>
                     ))}
                 </TabsList>
 
-                {data.evaluation.evaluations.map(({criteria, comment, score, strengths, improvements, aspects}, index) => (
+                {data.evaluation.evaluations.map(({
+                                                      criteria,
+                                                      comment,
+                                                      score,
+                                                      strengths,
+                                                      improvements,
+                                                      aspects
+                                                  }, index) => (
                     <TabsContent key={index} value={getShortCriteriaName(criteria)}>
                         <Card>
                             <CardHeader className="pb-2">

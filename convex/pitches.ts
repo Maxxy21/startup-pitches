@@ -1,9 +1,9 @@
-
-import {mutation, query} from "./_generated/server";
-import {v} from "convex/values";
+import {DatabaseReader, DatabaseWriter, mutation, MutationCtx, query, QueryCtx} from "./_generated/server";
+import {ConvexError, v} from "convex/values";
+import {Doc} from "@/convex/_generated/dataModel";
 
 // Types
-const evaluationObject = v.object({
+export const evaluationObject = v.object({
     criteria: v.string(),
     comment: v.string(),
     score: v.number(),
@@ -12,18 +12,20 @@ const evaluationObject = v.object({
     aspects: v.array(v.string()),
 });
 
-const evaluationArgs = v.object({
+export const evaluationArgs = v.object({
     evaluations: v.array(evaluationObject),
     overallScore: v.number(),
     overallFeedback: v.string(),
 });
 
+type Pitch = Doc<"pitches">;
+
 
 // Helper function for auth check
-const validateUser = async (ctx) => {
+const validateUser = async (ctx: { auth: any, db: DatabaseReader | DatabaseWriter }) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-        throw new Error("Unauthorized: Please log in to continue");
+        throw new ConvexError("Unauthorized: Please log in to continue");
     }
     return identity;
 };
@@ -35,45 +37,50 @@ export const getPitches = query({
         sortBy: v.optional(v.string()),
         limit: v.optional(v.number()),
     },
-    handler: async (ctx, args) => {
+    handler: async (ctx: QueryCtx, args) => {
         const identity = await validateUser(ctx);
 
-        let queryBuilder = ctx.db
+        // Let TypeScript infer the type
+        const queryBuilder = ctx.db
             .query("pitches")
             .filter((q) => q.eq(q.field("userId"), identity.subject));
 
         if (args.status) {
-            queryBuilder = queryBuilder.filter((q) =>
+            queryBuilder.filter((q) =>
                 q.eq(q.field("status"), args.status)
             );
         }
 
-        if (args.sortBy === "recent") {
-            queryBuilder = queryBuilder.order("desc");
-        }
+        // Chain the queries directly
+        const finalQuery = args.sortBy === "recent"
+            ? queryBuilder.order("desc")
+            : queryBuilder.order("asc");
 
-        if (args.limit) {
-            queryBuilder = queryBuilder.take(args.limit);
-        }
+        const result = args.limit
+            ? await finalQuery.take(args.limit)
+            : await finalQuery.collect();
 
-        return await queryBuilder.collect();
+        return result;
     },
 });
 
 export const searchPitches = query({
-    args: { searchTerm: v.string() },
-    handler: async (ctx, args) => {
+    args: {
+        searchTerm: v.string(),
+        sortBy: v.optional(v.string())
+    },
+    handler: async (ctx: QueryCtx, args) => {
         const identity = await validateUser(ctx);
         const searchTerm = args.searchTerm.toLowerCase();
-        console.log("Searching for:", searchTerm);
 
-        const allPitches = await ctx.db
+        let queryBuilder = ctx.db
             .query("pitches")
             .filter((q) => q.eq(q.field("userId"), identity.subject))
-            .collect();
+            .order("desc"); // Get newest first
 
-        console.log("All pitches:", allPitches);
+        const allPitches = await queryBuilder.collect();
 
+        // Filter for search
         const filteredPitches = allPitches.filter(pitch =>
             pitch.name.toLowerCase().includes(searchTerm) ||
             pitch.text.toLowerCase().includes(searchTerm) ||
@@ -83,15 +90,21 @@ export const searchPitches = query({
             )
         );
 
-        console.log("Filtered pitches:", filteredPitches);
+        if (args.sortBy === "score") {
+            return filteredPitches.sort((a, b) =>
+                b.evaluation.overallScore - a.evaluation.overallScore
+            );
+        }
+
         return filteredPitches;
     },
 });
+
 export const getPitch = query({
     args: {
         id: v.id("pitches"),
     },
-    handler: async (ctx, {id}) => {
+    handler: async (ctx: QueryCtx, {id}) => {
         const identity = await validateUser(ctx);
 
         const pitch = await ctx.db.get(id);
@@ -118,10 +131,9 @@ export const createPitch = mutation({
         createdAt: v.number(),
         updatedAt: v.number(),
     },
-    handler: async (ctx, args) => {
+    handler: async (ctx: MutationCtx, args) => {
         const identity = await validateUser(ctx);
 
-        // Simplified to just create the pitch without user stats
         return await ctx.db.insert("pitches", {
             ...args,
             userId: identity.subject,
@@ -137,7 +149,7 @@ export const updatePitch = mutation({
         status: v.optional(v.string()),
         evaluation: v.optional(evaluationArgs),
     },
-    handler: async (ctx, args) => {
+    handler: async (ctx: MutationCtx, args) => {
         const identity = await validateUser(ctx);
 
         const pitch = await ctx.db.get(args.id);
@@ -150,10 +162,12 @@ export const updatePitch = mutation({
         }
 
         const updates = {
-            ...args,
+            ...(args.name && {name: args.name}),
+            ...(args.text && {text: args.text}),
+            ...(args.status && {status: args.status}),
+            ...(args.evaluation && {evaluation: args.evaluation}),
             updatedAt: Date.now(),
         };
-        delete updates.id;
 
         return await ctx.db.patch(args.id, updates);
     },
@@ -163,7 +177,7 @@ export const removePitch = mutation({
     args: {
         pitchId: v.id("pitches"),
     },
-    handler: async (ctx, {pitchId}) => {
+    handler: async (ctx: MutationCtx, {pitchId}) => {
         const identity = await validateUser(ctx);
 
         const pitch = await ctx.db.get(pitchId);
@@ -176,5 +190,202 @@ export const removePitch = mutation({
         }
 
         await ctx.db.delete(pitchId);
+    },
+});
+
+
+interface PitchStats {
+    totalPitches: number;
+    averageScore: number;
+    bestPitch: Doc<"pitches"> | undefined;
+    recentPitches: Doc<"pitches">[];
+    scoreDistribution: Record<number, number>;
+}
+
+export const getPitchStats = query({
+    args: {},
+    handler: async (ctx: QueryCtx): Promise<PitchStats> => {
+        const identity = await validateUser(ctx);
+
+        const pitches = await ctx.db
+            .query("pitches")
+            .filter((q) => q.eq(q.field("userId"), identity.subject))
+            .collect();
+
+        // Handle empty pitches case
+        if (pitches.length === 0) {
+            return {
+                totalPitches: 0,
+                averageScore: 0,
+                bestPitch: undefined,
+                recentPitches: [],
+                scoreDistribution: {},
+            };
+        }
+        // Calculate stats for non-empty pitches
+        const totalScores = pitches.reduce((acc, pitch) => acc + pitch.evaluation.overallScore, 0);
+
+        const bestPitch = pitches.reduce((best, current) => {
+            if (!best) return current;
+            return current.evaluation.overallScore > best.evaluation.overallScore ? current : best;
+        }, pitches[0]);
+
+        return {
+            totalPitches: pitches.length,
+            averageScore: totalScores / pitches.length,
+            bestPitch,
+            recentPitches: pitches.slice(-5),
+            scoreDistribution: pitches.reduce((acc, pitch) => {
+                const score = Math.floor(pitch.evaluation.overallScore);
+                acc[score] = (acc[score] || 0) + 1;
+                return acc;
+            }, {} as Record<number, number>),
+        };
+    },
+});
+
+// Get trending or popular pitches
+export const getTrendingPitches = query({
+    args: {
+        limit: v.optional(v.number()),
+    },
+    handler: async (ctx, args) => {
+        const identity = await validateUser(ctx);
+
+        let query = ctx.db
+            .query("pitches")
+            .filter((q) => q.eq(q.field("userId"), identity.subject))
+            .order("desc");
+
+        const results = await query.collect();
+
+        // Apply limit after collection if needed
+        if (args.limit) {
+            return results.slice(0, args.limit);
+        }
+
+        return results;
+    },
+});
+
+// Add categories/tags to pitches
+export const updatePitchCategories = mutation({
+    args: {
+        id: v.id("pitches"),
+        categories: v.array(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const identity = await validateUser(ctx);
+
+        const pitch = await ctx.db.get(args.id);
+        if (!pitch) throw new Error("Pitch not found");
+        if (pitch.userId !== identity.subject) {
+            throw new Error("Unauthorized");
+        }
+
+        return await ctx.db.patch(args.id, {
+            categories: args.categories,
+            updatedAt: Date.now(),
+        });
+    },
+});
+
+// Add ability to favorite/bookmark pitches
+export const togglePitchFavorite = mutation({
+    args: {
+        pitchId: v.id("pitches"),
+    },
+    handler: async (ctx, args) => {
+        const identity = await validateUser(ctx);
+
+        const pitch = await ctx.db.get(args.pitchId);
+        if (!pitch) throw new Error("Pitch not found");
+        if (pitch.userId !== identity.subject) {
+            throw new Error("Unauthorized");
+        }
+
+        return await ctx.db.patch(args.pitchId, {
+            isFavorite: !pitch.isFavorite,
+            updatedAt: Date.now(),
+        });
+    },
+});
+
+// Add comments/notes to pitches
+export const addPitchNote = mutation({
+    args: {
+        pitchId: v.id("pitches"),
+        note: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const identity = await validateUser(ctx);
+
+        const pitch = await ctx.db.get(args.pitchId);
+        if (!pitch) throw new Error("Pitch not found");
+        if (pitch.userId !== identity.subject) {
+            throw new Error("Unauthorized");
+        }
+
+        const notes = pitch.notes || [];
+        notes.push({
+            content: args.note,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+        });
+
+        return await ctx.db.patch(args.pitchId, {
+            notes,
+            updatedAt: Date.now(),
+        });
+    },
+});
+
+// Get pitch history/versions
+export const getPitchHistory = query({
+    args: {
+        pitchId: v.id("pitches"),
+    },
+    handler: async (ctx, args) => {
+        const identity = await validateUser(ctx);
+
+        const pitch = await ctx.db.get(args.pitchId);
+        if (!pitch) throw new Error("Pitch not found");
+        if (pitch.userId !== identity.subject) {
+            throw new Error("Unauthorized");
+        }
+
+        // Assuming you store versions in the pitch document
+        return pitch.versions || [];
+    },
+});
+
+// Compare two pitches
+export const comparePitches = query({
+    args: {
+        pitchId1: v.id("pitches"),
+        pitchId2: v.id("pitches"),
+    },
+    handler: async (ctx, args) => {
+        const identity = await validateUser(ctx);
+
+        const pitch1 = await ctx.db.get(args.pitchId1);
+        const pitch2 = await ctx.db.get(args.pitchId2);
+
+        if (!pitch1 || !pitch2) throw new Error("Pitch not found");
+        if (pitch1.userId !== identity.subject || pitch2.userId !== identity.subject) {
+            throw new Error("Unauthorized");
+        }
+
+        return {
+            pitch1,
+            pitch2,
+            comparison: {
+                scoreDifference: pitch2.evaluation.overallScore - pitch1.evaluation.overallScore,
+                improvements: pitch2.evaluation.evaluations.map((eval2, index) => ({
+                    criteria: eval2.criteria,
+                    scoreDifference: eval2.score - pitch1.evaluation.evaluations[index].score,
+                })),
+            },
+        };
     },
 });

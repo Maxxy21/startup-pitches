@@ -27,3 +27,7 @@ export interface EvaluationContentProps {
 export interface CriteriaProgressProps {
     evaluations: Evaluation[];
 }
+
+export interface ScoreCardProps {
+    score: number;
+}

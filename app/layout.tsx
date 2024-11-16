@@ -4,7 +4,8 @@ import "./globals.css";
 
 import {ConvexClientProvider} from "@/providers/convex-client-provider";
 import {ThemeProvider} from "@/providers/theme-provider";
-import React from "react";
+import React, {Suspense} from "react";
+import {Loading} from "@/components/auth/loading";
 
 const defaultFont = Noto_Sans_Georgian({subsets: ["latin"]});
 
@@ -32,16 +33,18 @@ export default function RootLayout({
 
         <html lang="en">
         <body className={defaultFont.className}>
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-        >
-            <ConvexClientProvider>
-                {children}
-            </ConvexClientProvider>
-        </ThemeProvider>
+        <Suspense fallback={<Loading/>}>
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+            >
+                <ConvexClientProvider>
+                    {children}
+                </ConvexClientProvider>
+            </ThemeProvider>
+        </Suspense>
         </body>
         </html>
 
