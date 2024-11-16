@@ -46,7 +46,6 @@ const DeletePitch = ({pitchId}: {
                         <button type="submit">Delete</button>
                     </form>
                 </DropdownMenuItem>
-
             </DropdownMenuContent>
         </DropdownMenu>
     )

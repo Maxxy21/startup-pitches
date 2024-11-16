@@ -59,29 +59,34 @@ export const getPitches = query({
         return await queryBuilder.collect();
     },
 });
+
 export const searchPitches = query({
     args: { searchTerm: v.string() },
     handler: async (ctx, args) => {
         const identity = await validateUser(ctx);
         const searchTerm = args.searchTerm.toLowerCase();
+        console.log("Searching for:", searchTerm);
 
-        return await ctx.db
+        const allPitches = await ctx.db
             .query("pitches")
             .filter((q) => q.eq(q.field("userId"), identity.subject))
-            .collect()
-            .then(pitches =>
-                pitches.filter(pitch =>
-                    pitch.name.toLowerCase().includes(searchTerm) ||
-                    pitch.text.toLowerCase().includes(searchTerm) ||
-                    pitch.evaluation.overallFeedback.toLowerCase().includes(searchTerm) ||
-                    pitch.evaluation.evaluations.some(evali =>
-                        evali.comment.toLowerCase().includes(searchTerm)
-                    )
-                )
-            );
+            .collect();
+
+        console.log("All pitches:", allPitches);
+
+        const filteredPitches = allPitches.filter(pitch =>
+            pitch.name.toLowerCase().includes(searchTerm) ||
+            pitch.text.toLowerCase().includes(searchTerm) ||
+            pitch.evaluation.overallFeedback.toLowerCase().includes(searchTerm) ||
+            pitch.evaluation.evaluations.some(evali =>
+                evali.comment.toLowerCase().includes(searchTerm)
+            )
+        );
+
+        console.log("Filtered pitches:", filteredPitches);
+        return filteredPitches;
     },
 });
-
 export const getPitch = query({
     args: {
         id: v.id("pitches"),

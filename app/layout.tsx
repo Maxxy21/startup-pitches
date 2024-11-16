@@ -6,7 +6,6 @@ import {ConvexClientProvider} from "@/providers/convex-client-provider";
 import {ThemeProvider} from "@/providers/theme-provider";
 import React from "react";
 
-// const inter = Inter({subsets: ["latin"]});
 const defaultFont = Noto_Sans_Georgian({subsets: ["latin"]});
 
 const ORIGIN_URL =

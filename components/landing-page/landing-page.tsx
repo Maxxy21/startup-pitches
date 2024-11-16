@@ -1,5 +1,4 @@
 "use client";
-import logo from "@/public/logo.svg";
 import {StepForward} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,10 +6,7 @@ import Link from "next/link";
 
 import {SignUpButton, useUser} from "@clerk/clerk-react";
 
-import {useFormStatus} from "react-dom";
 import {SignInButton} from "@clerk/nextjs";
-import {clsx} from "clsx";
-import {FaMicrophone} from "react-icons/fa";
 import {useRouter} from "next/navigation";
 import LogoIcon from "@/components/ui/logo-icon";
 import React from "react";

@@ -45,16 +45,9 @@ export const links = [
 
         ),
     },
-    // {
-    //     label: "Settings",
-    //     href: "/settings",
-    //     icon: (
-    //         <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"/>
-    //     ),
-    // },
     {
         label: "Logout",
-        href: "/",
+        href: "#",
         icon: (
             <Logout/>
         ),
@@ -95,11 +88,11 @@ export function fileToText(file: File): Promise<string> {
 
 export const getShortCriteriaName = (criteria: string) => {
     switch (criteria) {
-        case "Soundness of the project in terms of problem-solution-customer fit":
+        case "Problem-Solution Fit":
             return "Soundness";
-        case "Potential of the project as a startup business":
+        case "Business Potential":
             return "Potential";
-        case "Quality of the presentation":
+        case "Presentation Quality":
             return "Presentation Quality";
         default:
             return criteria;
