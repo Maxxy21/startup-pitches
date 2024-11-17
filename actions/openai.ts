@@ -28,7 +28,6 @@ type EvaluationResponse = {
 }
 
 
-// Improved audio transcription with error handling
 export async function transcribeAudio(formData: FormData) {
     try {
         const audioFile = formData.get("audio") as File;
@@ -56,7 +55,6 @@ export async function transcribeAudio(formData: FormData) {
     }
 }
 
-// Define evaluation criteria structure
 const evaluationCriteria = {
     problemSolutionFit: {
         name: "Problem-Solution Fit",
