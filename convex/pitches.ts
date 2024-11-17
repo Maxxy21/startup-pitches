@@ -244,29 +244,6 @@ export const getPitchStats = query({
     },
 });
 
-// Get trending or popular pitches
-export const getTrendingPitches = query({
-    args: {
-        limit: v.optional(v.number()),
-    },
-    handler: async (ctx, args) => {
-        const identity = await validateUser(ctx);
-
-        let query = ctx.db
-            .query("pitches")
-            .filter((q) => q.eq(q.field("userId"), identity.subject))
-            .order("desc");
-
-        const results = await query.collect();
-
-        // Apply limit after collection if needed
-        if (args.limit) {
-            return results.slice(0, args.limit);
-        }
-
-        return results;
-    },
-});
 
 // Add categories/tags to pitches
 export const updatePitchCategories = mutation({

@@ -1,30 +1,34 @@
 import React from 'react';
-import { useRouter } from "next/navigation";
-import { Doc } from "@/convex/_generated/dataModel";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileUpload } from "@/components/add-pitches/file-upload";
-import { AnimatePresence } from "framer-motion";
-import { PitchCard } from "./pitch-card";
-import { PitchCardSkeleton } from "./pitch-card-skeleton";
-import { EmptyState } from "./empty-state";
+import {useRouter} from "next/navigation";
+import {Doc} from "@/convex/_generated/dataModel";
+import {ScrollArea} from "@/components/ui/scroll-area";
+import {FileUpload} from "@/components/add-pitches/file-upload";
+import {AnimatePresence} from "framer-motion";
+import {PitchCard} from "./pitch-card";
+import {PitchCardSkeleton} from "./pitch-card-skeleton";
+import {EmptyState} from "./empty-state";
 
 interface PitchesGridProps {
     data: Array<Doc<"pitches">>;
 }
 
-export const PitchesGrid: React.FC<PitchesGridProps> = ({ data }) => {
+export const PitchesGrid: React.FC<PitchesGridProps> = ({data}) => {
     const router = useRouter();
 
     if (!data) {
         return (
             <ScrollArea className="flex-1 w-full h-[calc(100vh-175px)]">
-                <PitchCardSkeleton />
+                <PitchCardSkeleton/>
             </ScrollArea>
         );
     }
 
     if (data.length === 0) {
-        return <EmptyState />;
+        return (
+            <ScrollArea className="flex-1">
+                <EmptyState/>
+            </ScrollArea>
+        );
     }
 
     return (
@@ -32,7 +36,7 @@ export const PitchesGrid: React.FC<PitchesGridProps> = ({ data }) => {
             <div className="flex items-center justify-between">
                 <h1 className="text-lg font-semibold md:text-2xl">Pitches</h1>
                 <div className="flex-shrink-0">
-                    <FileUpload />
+                    <FileUpload/>
                 </div>
             </div>
 
