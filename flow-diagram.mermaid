@@ -1,0 +1,75 @@
+flowchart TB
+    subgraph Authentication
+        Start(User Visits Site)
+        Start --> Auth{Authenticated?}
+        Auth -->|No| ClerkAuth[Clerk Authentication]
+        ClerkAuth -->|Sign Up| NewUser[Create User]
+        ClerkAuth -->|Login| ExistingUser[Existing User]
+        NewUser --> StoreUser[Store User in Convex]
+        ExistingUser --> Dashboard
+        StoreUser --> Dashboard
+    end
+
+    subgraph Main Flow
+        Dashboard[Dashboard]
+        Dashboard -->|Create New| PitchForm[Pitch Creation Form]
+        Dashboard -->|View| PitchList[List of Pitches]
+
+        PitchForm -->|Submit| SavePitch[Save to Convex DB]
+        SavePitch -->|Trigger| ConvexFunction[Convex Server Function]
+    end
+
+    subgraph AI Evaluation Process
+        ConvexFunction -->|Send Pitch Data| OpenAI[OpenAI API]
+
+        subgraph OpenAI Processing
+            OpenAI -->|Analyze| BusinessModel[Business Model Analysis]
+            OpenAI -->|Analyze| Market[Market Analysis]
+            OpenAI -->|Analyze| Innovation[Innovation Score]
+            OpenAI -->|Analyze| Risk[Risk Assessment]
+            OpenAI -->|Analyze| Feasibility[Technical Feasibility]
+
+            BusinessModel & Market & Innovation & Risk & Feasibility -->|Generate| DetailedFeedback[Detailed Feedback]
+            DetailedFeedback -->|Calculate| FinalScore[Final Score]
+        end
+
+        OpenAI -->|Return| ProcessResponse[Process AI Response]
+        ProcessResponse -->|Format| PrepareData[Prepare Data for Storage]
+    end
+
+    subgraph Database Operations
+        PrepareData -->|Store Results| UpdatePitch[Update Pitch in Convex]
+
+        Convex[(Convex Database)]
+        SavePitch -.->|Write| Convex
+        UpdatePitch -.->|Write| Convex
+        PitchList -.->|Read| Convex
+
+        UpdatePitch --> Notify[Notify User]
+        Notify --> PitchList
+    end
+
+    subgraph Pitch Details
+        PitchList -->|Select| PitchDetails[Pitch Details View]
+        PitchDetails -->|View| AIFeedback[AI Analysis Results]
+        subgraph Results Display
+            AIFeedback -->|Show| Score[Overall Score]
+            AIFeedback -->|Show| Breakdown[Criteria Breakdown]
+            AIFeedback -->|Show| Suggestions[Improvement Suggestions]
+        end
+        PitchDetails -->|Edit| PitchForm
+    end
+
+    classDef authNode fill:#e1f5fe,stroke:#0288d1
+    classDef mainNode fill:#f3e5f5,stroke:#7b1fa2
+    classDef aiNode fill:#fff3e0,stroke:#ff9800
+    classDef openaiNode fill:#fce4ec,stroke:#e91e63
+    classDef dbNode fill:#e8f5e9,stroke:#388e3c
+    classDef displayNode fill:#f1f8e9,stroke:#689f38
+
+    class Start,Auth,ClerkAuth,NewUser,ExistingUser,StoreUser authNode
+    class Dashboard,PitchForm,PitchList,ConvexFunction mainNode
+    class BusinessModel,Market,Innovation,Risk,Feasibility,DetailedFeedback,FinalScore aiNode
+    class OpenAI,ProcessResponse openaiNode
+    class SavePitch,UpdatePitch,Convex,PrepareData,Notify dbNode
+    class PitchDetails,AIFeedback,Score,Breakdown,Suggestions displayNode
