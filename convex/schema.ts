@@ -17,7 +17,6 @@ export default defineSchema({
             createdAt: v.number(),
             updatedAt: v.number(),
         }))),
-
         versions: v.optional(v.array(v.object({
             text: v.string(),
             evaluation: evaluationArgs,
@@ -27,7 +26,17 @@ export default defineSchema({
         updatedAt: v.number(),
     })
         .index("by_userId", ["userId"])
+        .searchIndex("search_name", {
+            searchField: "name",
+            filterFields: ["userId"]
+        })
         .index("by_status", ["status"])
         .index("by_categories", ["categories"])
         .index("by_score", ["evaluation.overallScore"]),
+    userFavorites: defineTable({
+        userId: v.string(),
+        pitchId: v.id("pitches"),
+    })
+        .index("by_user", ["userId"])
+        .index("by_pitch", ["pitchId"])
 });

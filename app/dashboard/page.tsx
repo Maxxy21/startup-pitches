@@ -11,7 +11,7 @@ const Dashboard = () => {
     const pitches = useQuery(api.pitches.getPitches, {}) ?? [];
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-[calc(100%-80px)]">
             {/* Fixed Header Section */}
             <div className="p-4 space-y-6">
                 {/* Header Bar */}

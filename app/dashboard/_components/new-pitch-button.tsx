@@ -8,15 +8,15 @@ import { cn } from "@/lib/utils";
 import { api } from "@/convex/_generated/api";
 import { useApiMutation } from "@/hooks/use-api-mutation";
 
-interface NewPitchButtonProps {
+interface NewBoardButtonProps {
     orgId: string;
     disabled?: boolean;
 };
 
-export const NewPitchButton = ({
+export const NewBoardButton = ({
                                    orgId,
                                    disabled,
-                               }: NewPitchButtonProps) => {
+                               }: NewBoardButtonProps) => {
     const router = useRouter();
     const { mutate, pending } = useApiMutation(api.board.create);
 

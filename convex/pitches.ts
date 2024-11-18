@@ -1,6 +1,7 @@
 import {DatabaseReader, DatabaseWriter, mutation, MutationCtx, query, QueryCtx} from "./_generated/server";
 import {ConvexError, v} from "convex/values";
 import {Doc} from "@/convex/_generated/dataModel";
+import {getAllOrThrow} from "convex-helpers/server/relationships";
 
 // Types
 export const evaluationObject = v.object({
@@ -97,6 +98,71 @@ export const searchPitches = query({
         }
 
         return filteredPitches;
+    },
+});
+
+
+export const get = query({
+    args: {
+        search: v.optional(v.string()),
+        favorites: v.optional(v.string()),
+    },
+    handler: async (ctx: QueryCtx, args) => {
+        const identity = await validateUser(ctx);
+
+        if (args.favorites) {
+            const favoritedPitches = await ctx.db
+                .query("userFavorites")
+                .withIndex("by_user", (q) =>
+                    q
+                        .eq("userId", identity.subject)
+                )
+                .order("desc")
+                .collect();
+
+            const ids = favoritedPitches.map((p) => p.pitchId);
+
+            const pitches = await getAllOrThrow(ctx.db, ids);
+
+            return pitches.map((pitch) => ({
+                ...pitch,
+                isFavorite: true,
+            }));
+        }
+
+        const title = args.search as string;
+        let pitches = [];
+
+        if (title) {
+            pitches = await ctx.db
+                .query("pitches")
+                .withSearchIndex("search_name", (q) =>
+                    q
+                        .search("name", title)
+                )
+                .collect();
+        } else {
+            pitches = await ctx.db
+                .query("pitches")
+                .filter((q) => q.eq(q.field("userId"), identity.subject))
+                .order("desc")
+                .collect();
+        }
+
+        const pitchesWithFavoriteRelation = pitches.map((pitch) => {
+            return ctx.db
+                .query("userFavorites")
+
+                .unique()
+                .then((favorite) => {
+                    return {
+                        ...pitch,
+                        isFavorite: !!favorite,
+                    };
+                });
+        });
+
+        return Promise.all(pitchesWithFavoriteRelation);
     },
 });
 
