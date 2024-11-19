@@ -1,9 +1,9 @@
-import {Pages} from "@/components/nav/pages";
+import { Pages } from "@/components/nav/pages";
 
-export default function Layout({children}: { children: React.ReactNode }) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
         <Pages>
             {children}
         </Pages>
-    )
+    );
 }

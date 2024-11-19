@@ -12,7 +12,7 @@ interface PitchesGridProps {
     data: Array<Doc<"pitches">>;
 }
 
-export const PitchesGrid: React.FC<PitchesGridProps> = ({data}) => {
+export const PitchesGrid = ({data}: PitchesGridProps) => {
     const router = useRouter();
 
     if (!data) {

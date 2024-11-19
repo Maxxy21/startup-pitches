@@ -13,7 +13,7 @@ export const EmptyFavorites = () => {
         No favorite pitches!
       </h2>
       <p className="text-muted-foreground textg-sm mt-2">
-        Try favoriting a pitch to see it here
+        Try favouring a pitch to see it here
       </p>
     </div>
   );

@@ -38,6 +38,9 @@ import {evaluatePitch, transcribeAudio} from "@/actions/openai";
 import {fileToText} from "@/utils";
 import {useForm} from "react-hook-form";
 import {Dropzone} from "@/components/add-pitches/dropzone";
+import {useApiMutation} from "@/hooks/use-api-mutation";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
 
 
 export const mockEvaluation = {
@@ -71,9 +74,16 @@ export const mockEvaluation = {
     overallFeedback: "This is a strong pitch with clear potential. The problem-solution fit is well-defined, and the business model shows promise. Some improvements in market validation and financial projections would strengthen the pitch further."
 };
 
-export const FileUpload = () => {
-    const createPitch = useMutation(api.pitches.createPitch);
-    const {pending} = useFormStatus();
+
+interface FileUploadProps {
+    disabled?: boolean;
+};
+
+
+export const FileUpload = ({disabled}: FileUploadProps) => {
+    const router = useRouter();
+    const {mutate, pending} = useApiMutation(api.pitches.createPitch);
+
     const [files, setFiles] = useState<File[]>([]);
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -147,53 +157,52 @@ export const FileUpload = () => {
     // };
 
     const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
-        try {
-            console.log("Form data:", data);
-            const {pitchName, contentType, content} = data;
-            let transcriptionText = "";
+        console.log("Form data:", data);
+        const {pitchName, contentType, content} = data;
+        let transcriptionText = "";
 
-            console.log("Content type:", contentType);
-            console.log("Files:", files);
+        console.log("Content type:", contentType);
+        console.log("Files:", files);
 
-            if (contentType === 'text') {
-                transcriptionText = content || "";
-                console.log("Text content:", transcriptionText);
-            } else if (files.length > 0) {
-                transcriptionText = "This is a dummy transcription for testing purposes...";
-                console.log("Using dummy transcription");
-            }
-
-            if (!transcriptionText) {
-                console.log("No transcription text available");
-                throw new Error("No text content provided");
-            }
-
-            console.log("Final transcription:", transcriptionText);
-            console.log("Mock evaluation:", mockEvaluation);
-
-            // Use mock evaluation instead of API call
-            const evaluationResults = mockEvaluation;
-            // const evaluationResults = await evaluatePitch(transcriptionText);
-
-            await createPitch({
-                name: pitchName,
-                text: transcriptionText,
-                type: contentType,
-                status: "evaluated",
-                evaluation: {
-                    evaluations: evaluationResults.evaluations,
-                    overallScore: evaluationResults.overallScore,
-                    overallFeedback: evaluationResults.overallFeedback,
-                },
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-            });
-
-            setFiles([]);
-            form.reset();
-        } catch (error) {
-            console.error("Error creating pitch:", error);
+        if (contentType === 'text') {
+            transcriptionText = content || "";
+            console.log("Text content:", transcriptionText);
+        } else if (files.length > 0) {
+            transcriptionText = "This is a dummy transcription for testing purposes...";
+            console.log("Using dummy transcription");
         }
+
+        if (!transcriptionText) {
+            console.log("No transcription text available");
+            throw new Error("No text content provided");
+        }
+
+        console.log("Final transcription:", transcriptionText);
+        console.log("Mock evaluation:", mockEvaluation);
+
+        // Use mock evaluation instead of API call
+        const evaluationResults = mockEvaluation;
+        // const evaluationResults = await evaluatePitch(transcriptionText);
+        mutate({
+            name: pitchName,
+            text: transcriptionText,
+            type: contentType,
+            status: "evaluated",
+            evaluation: {
+                evaluations: evaluationResults.evaluations,
+                overallScore: evaluationResults.overallScore,
+                overallFeedback: evaluationResults.overallFeedback,
+            },
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+        })
+            .then((id) => {
+                toast.success("Board created");
+                router.push(`/board/${id}`);
+                setFiles([]);
+                form.reset();
+            })
+            .catch(() => toast.error("Failed to create pitch"));
     };
 
     return (
@@ -204,12 +213,19 @@ export const FileUpload = () => {
                     whileHover={{scale: 1.02}}
                     whileTap={{scale: 0.98}}
                 >
-                    <div className="flex items-center gap-2 justify-center">
-                        <Plus className="h-4 w-4 text-primary hover:bg-primary hover:rounded-xl hover:text-white"/>
-                        <h3 className="text-base font-light tracking-tight text-foreground/70">
-                            Add Pitch
-                        </h3>
-                    </div>
+                    <button
+                        disabled={pending || disabled}
+                        className={cn(
+                            "col-span-1 aspect-[100/127] bg-blue-600 rounded-lg hover:bg-blue-800 flex flex-col items-center justify-center py-6",
+                            (pending || disabled) && "opacity-75 hover:bg-blue-600 cursor-not-allowed"
+                        )}
+                    >
+                        <div/>
+                        <Plus className="h-12 w-12 text-white stroke-1"/>
+                        <p className="text-sm text-white font-light">
+                            New pitch
+                        </p>
+                    </button>
                 </motion.button>
             </DialogTrigger>
             <DialogContent className="border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900">
@@ -235,7 +251,7 @@ export const FileUpload = () => {
                                             />
                                         </div>
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -291,7 +307,7 @@ export const FileUpload = () => {
                                                     required={form.watch("contentType") === "text"}
                                                 />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage/>
                                         </FormItem>
                                     )}
                                 />

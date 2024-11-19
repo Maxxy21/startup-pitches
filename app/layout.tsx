@@ -6,6 +6,7 @@ import {ConvexClientProvider} from "@/providers/convex-client-provider";
 import {ThemeProvider} from "@/providers/theme-provider";
 import React, {Suspense} from "react";
 import {Loading} from "@/components/auth/loading";
+import {Toaster} from "sonner";
 
 const defaultFont = Noto_Sans_Georgian({subsets: ["latin"]});
 
@@ -41,6 +42,7 @@ export default function RootLayout({
                 disableTransitionOnChange
             >
                 <ConvexClientProvider>
+                    <Toaster/>
                     {children}
                 </ConvexClientProvider>
             </ThemeProvider>

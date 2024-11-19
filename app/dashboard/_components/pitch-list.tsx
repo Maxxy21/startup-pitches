@@ -1,12 +1,15 @@
 "use client";
-
-import {useQuery} from "convex/react";
-import {api} from "@/convex/_generated/api";
-import {NewBoardButton} from "@/app/dashboard/_components/new-pitch-button";
-import {EmptySearch} from "@/app/dashboard/_components/empty-search";
-import {EmptyFavorites} from "@/app/dashboard/_components/empty-favorites";
-import {EmptyBoards} from "@/app/dashboard/_components/empty-pitches";
-
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { NewPitchButton } from "./new-pitch-button";
+import { EmptySearch } from "./empty-search";
+import { EmptyFavorites } from "./empty-favorites";
+import { EmptyPitches } from "./empty-pitches";
+import { PitchCardSkeleton } from "./pitch-card/pitch-card-skeleton";
+import { PitchCard } from "./pitch-card/pitch-card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface PitchListProps {
     query: {
@@ -15,63 +18,63 @@ interface PitchListProps {
     }
 }
 
-export const PitchList = ({query}: PitchListProps) => {
+export const PitchList = ({ query }: PitchListProps) => {
+    const router = useRouter();
     const data = useQuery(api.pitches.get, {
         ...query,
     });
 
     if (data === undefined) {
         return (
-            <div>
-                <h2 className="text-3xl">
-                    {query.favorites ? "Favorite Pitches" : "Pitches"}
-                </h2>
-                <div
-                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
-                    <NewBoardButton orgId={orgId} disabled/>
-                    <BoardCard.Skeleton/>
-                    <BoardCard.Skeleton/>
-                    <BoardCard.Skeleton/>
-                    <BoardCard.Skeleton/>
+            <div className="p-4">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-3xl font-semibold">
+                        {query.favorites ? "Favorite Pitches" : "Pitches"}
+                    </h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
+                    <NewPitchButton disabled />
+                    {[...Array(4)].map((_, index) => (
+                        <PitchCardSkeleton key={index} />
+                    ))}
                 </div>
             </div>
-        )
+        );
     }
 
     if (!data?.length && query.search) {
-        return <EmptySearch/>;
+        return <EmptySearch />;
     }
 
     if (!data?.length && query.favorites) {
-        return <EmptyFavorites/>
+        return <EmptyFavorites />;
     }
 
     if (!data?.length) {
-        return <EmptyBoards/>
+        return <EmptyPitches />;
     }
 
     return (
-        <div>
-            <h2 className="text-3xl">
-                {query.favorites ? "Favorite boards" : "Team boards"}
-            </h2>
+        <div className="p-4">
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-semibold">
+                    {query.favorites ? "Favorite Pitches" : "Pitches"}
+                </h2>
+            </div>
             <div
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
-                <NewBoardButton orgId={orgId}/>
-                {data?.map((board) => (
-                    <BoardCard
-                        key={board._id}
-                        id={board._id}
-                        title={board.title}
-                        imageUrl={board.imageUrl}
-                        authorId={board.authorId}
-                        authorName={board.authorName}
-                        createdAt={board._creationTime}
-                        orgId={board.orgId}
-                        isFavorite={board.isFavorite}
-                    />
-                ))}
+                <NewPitchButton/>
+                <AnimatePresence mode="popLayout">
+                    {data.map((pitch) => (
+                        <PitchCard
+                            key={pitch._id}
+                            pitch={pitch}
+                            onClick={() => router.push(`/pitch/${pitch._id}`)}
+                        />
+                    ))}
+                </AnimatePresence>
             </div>
-        </div>
-    );
+</div>
+)
+    ;
 };
