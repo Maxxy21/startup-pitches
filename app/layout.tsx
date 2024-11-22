@@ -6,7 +6,8 @@ import {ConvexClientProvider} from "@/providers/convex-client-provider";
 import {ThemeProvider} from "@/providers/theme-provider";
 import React, {Suspense} from "react";
 import {Loading} from "@/components/auth/loading";
-import {Toaster} from "sonner";
+import {Toaster} from "@/components/ui/sonner";
+import {ModalProvider} from "@/providers/modal-provider";
 
 const defaultFont = Noto_Sans_Georgian({subsets: ["latin"]});
 
@@ -43,6 +44,7 @@ export default function RootLayout({
             >
                 <ConvexClientProvider>
                     <Toaster/>
+                    <ModalProvider/>
                     {children}
                 </ConvexClientProvider>
             </ThemeProvider>

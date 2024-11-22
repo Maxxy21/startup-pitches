@@ -1,4 +1,5 @@
 "use client";
+
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { NewPitchButton } from "./new-pitch-button";
@@ -31,9 +32,9 @@ export const PitchList = ({ query }: PitchListProps) => {
                     <h2 className="text-3xl font-semibold">
                         {query.favorites ? "Favorite Pitches" : "Pitches"}
                     </h2>
+                    <NewPitchButton disabled />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
-                    <NewPitchButton disabled />
                     {[...Array(4)].map((_, index) => (
                         <PitchCardSkeleton key={index} />
                     ))}
@@ -60,10 +61,9 @@ export const PitchList = ({ query }: PitchListProps) => {
                 <h2 className="text-3xl font-semibold">
                     {query.favorites ? "Favorite Pitches" : "Pitches"}
                 </h2>
+                <NewPitchButton />
             </div>
-            <div
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
-                <NewPitchButton/>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-5">
                 <AnimatePresence mode="popLayout">
                     {data.map((pitch) => (
                         <PitchCard
@@ -74,7 +74,6 @@ export const PitchList = ({ query }: PitchListProps) => {
                     ))}
                 </AnimatePresence>
             </div>
-</div>
-)
-    ;
+        </div>
+    );
 };

@@ -1,29 +1,82 @@
 "use client";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import DeletePitch from "@/components/pitches/delete-pitch";
-import { formatDate } from "@/utils";
-import { Button } from "@/components/ui/button";
-import { Doc } from "@/convex/_generated/dataModel";
+import {motion} from "framer-motion";
+import {toast} from "sonner";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {formatDate} from "@/utils";
+import {Button} from "@/components/ui/button";
+import {Doc} from "@/convex/_generated/dataModel";
+import {Actions} from "@/components/actions";
+import {MoreHorizontal, Star} from "lucide-react";
+import React from "react";
+import {useApiMutation} from "@/hooks/use-api-mutation";
+import {api} from "@/convex/_generated/api";
+import {cn} from "@/lib/utils";
 
 interface PitchCardProps {
     pitch: Doc<"pitches">;
     onClick: () => void;
 }
 
-export const PitchCard = ({ pitch, onClick }: PitchCardProps) => {
+export const PitchCard = ({pitch, onClick}: PitchCardProps) => {
+    const {mutate: onFavorite, pending: pendingFavorite} = useApiMutation(api.pitches.favorite);
+    const {mutate: onUnfavorite, pending: pendingUnfavorite} = useApiMutation(api.pitches.unfavorite);
+
+    const toggleFavorite = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (pitch.isFavorite) {
+            onUnfavorite({id: pitch._id})
+                .catch(() => toast.error("Failed to unfavorite"));
+        } else {
+            onFavorite({id: pitch._id})
+                .catch(() => toast.error("Failed to favorite"));
+        }
+    };
+
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            exit={{opacity: 0, y: -20}}
             layout
+            className="group"
         >
             <Card className="mb-4 hover:shadow-lg transition-shadow duration-200 dark:bg-neutral-800/50">
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle className="text-xl font-semibold">{pitch.name}</CardTitle>
-                        <DeletePitch pitchId={pitch._id} />
+                        <CardTitle className="text-xl font-semibold">{pitch.title}</CardTitle>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={toggleFavorite}
+                                disabled={pendingFavorite || pendingUnfavorite}
+                                className={cn(
+                                    "focus:outline-none",
+                                    (pendingFavorite || pendingUnfavorite) && "cursor-not-allowed opacity-75"
+                                )}
+                            >
+                                <Star
+                                    className={cn(
+                                        "h-4 w-4 hover:text-blue-600 transition",
+                                        pitch.isFavorite && "fill-blue-600 text-blue-600"
+                                    )}
+                                />
+                            </button>
+                            <Actions
+                                id={pitch._id}
+                                title={pitch.title}
+                                side="right"
+                            >
+                                <Button
+                                    aria-haspopup="true"
+                                    size="icon"
+                                    variant="ghost"
+                                >
+                                    <MoreHorizontal className="h-4 w-4"/>
+                                    <span className="sr-only">Toggle menu</span>
+                                </Button>
+                            </Actions>
+                        </div>
                     </div>
                     <CardDescription>
                         Created {formatDate(pitch._creationTime)}

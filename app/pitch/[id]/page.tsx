@@ -8,6 +8,7 @@ import {Loading} from "@/components/auth/loading";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {EvaluationContent} from "@/app/pitch/[id]/_components/evaluation-content";
+import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable";
 
 
 const PitchDetails = () => {
@@ -40,33 +41,36 @@ const PitchDetails = () => {
     );
 
     const desktopView = (
-
-        <div className="flex-1 flex h-screen overflow-hidden">
-            <div className="w-1/2 p-4 border-r dark:border-neutral-800">
-                <h2 className="font-semibold mb-2">Transcript</h2>
-                <ScrollArea className="h-[calc(100vh-100px)]">
-                    <p className="whitespace-pre-wrap">{data.text}</p>
-                </ScrollArea>
-            </div>
-
-            <div className="w-1/2 p-4">
-                <ScrollArea className="h-[calc(100vh-100px)]">
-                    <EvaluationContent data={data} />
-                </ScrollArea>
-            </div>
-        </div>
+        <ResizablePanelGroup direction="horizontal" className="h-[calc(100vh-100px)]">
+            <ResizablePanel defaultSize={50} minSize={30}>
+                <div className="h-full p-4">
+                    <h2 className="font-semibold mb-2">Transcript</h2>
+                    <ScrollArea className="h-[calc(100%-2rem)]">
+                        <p className="whitespace-pre-wrap">{data.text}</p>
+                    </ScrollArea>
+                </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={50} minSize={30}>
+                <div className="h-full p-4">
+                    <ScrollArea className="h-full">
+                        <EvaluationContent data={data} />
+                    </ScrollArea>
+                </div>
+            </ResizablePanel>
+        </ResizablePanelGroup>
     );
 
     return (
-        <>
-            <h1 className="">
-                {data.name} Evaluation
+        <div className="h-screen flex flex-col">
+            <h1 className="p-4 text-xl font-semibold">
+                {data.title} Evaluation
             </h1>
-            <div className="flex h-screen">
-                <div className="md:hidden w-full">{mobileView}</div>
-                <div className="hidden md:flex w-full">{desktopView}</div>
+            <div className="flex-1 overflow-hidden">
+                <div className="md:hidden h-full">{mobileView}</div>
+                <div className="hidden md:block h-full">{desktopView}</div>
             </div>
-        </>
+        </div>
     );
 };
 

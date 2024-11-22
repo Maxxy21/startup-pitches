@@ -1,5 +1,5 @@
 "use client";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { ModeToggle } from "@/components/mode-toggle";
 import { SearchInput } from "@/app/dashboard/_components/search-input";
 
 export const DashboardHeader = () => {

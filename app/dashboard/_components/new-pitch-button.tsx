@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { FileDialog } from "@/components/add-pitches/file-dialog";
+import {Button} from "@/components/ui/button";
 
 interface NewPitchButtonProps {
     disabled?: boolean;
@@ -14,22 +15,17 @@ export const NewPitchButton = ({ disabled }: NewPitchButtonProps) => {
             <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="aspect-[100/127] h-full"
             >
-                <button
+                <Button
                     disabled={disabled}
                     className={cn(
-                        "w-full h-full bg-blue-600 rounded-lg hover:bg-blue-800 flex flex-col items-center justify-center",
+                        "flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-gradient-to-b from-blue-500 to-blue-600 hover:bg-blue-700",
                         disabled && "opacity-75 hover:bg-blue-600 cursor-not-allowed"
                     )}
                 >
-                    <div className="flex flex-col items-center gap-2">
-                        <Plus className="h-12 w-12 text-white stroke-1" />
-                        <p className="text-sm text-white font-light">
-                            New pitch
-                        </p>
-                    </div>
-                </button>
+                    <Plus className="h-4 w-4" />
+                    Add Pitch
+                </Button>
             </motion.div>
         </FileDialog>
     );

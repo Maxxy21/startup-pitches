@@ -20,7 +20,7 @@ export const FileDialog = ({children, disabled}: FileDialogProps) => {
                         Upload your audio, text file, or write your pitch directly.
                     </DialogDescription>
                 </DialogHeader>
-                <UploadForm disabled={disabled} />
+                <UploadForm/>
             </DialogContent>
         </Dialog>
     );

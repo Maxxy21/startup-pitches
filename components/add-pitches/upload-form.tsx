@@ -51,11 +51,9 @@ export const mockEvaluation = {
 };
 
 
-interface UploadFormProps {
-    disabled?: boolean;
-}
 
-export const UploadForm = ({disabled}: UploadFormProps) => {
+
+export const UploadForm = () => {
     const router = useRouter();
     const [files, setFiles] = useState<File[]>([]);
     const {mutate, pending} = useApiMutation(api.pitches.createPitch);
@@ -63,7 +61,7 @@ export const UploadForm = ({disabled}: UploadFormProps) => {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            pitchName: "",
+            pitchTitle: "",
             contentType: "audio",
             content: "",
             file: null,
@@ -85,7 +83,7 @@ export const UploadForm = ({disabled}: UploadFormProps) => {
     });
 
     const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
-        const {pitchName, contentType, content} = data;
+        const {pitchTitle, contentType, content} = data;
         let transcriptionText = contentType === 'text' ? content : "This is a dummy transcription for testing purposes...";
 
         if (!transcriptionText) {
@@ -95,7 +93,7 @@ export const UploadForm = ({disabled}: UploadFormProps) => {
         const evaluationResults = mockEvaluation;
 
         mutate({
-            name: pitchName,
+            title: pitchTitle,
             text: transcriptionText,
             type: contentType,
             status: "evaluated",
@@ -117,14 +115,14 @@ export const UploadForm = ({disabled}: UploadFormProps) => {
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
                 <FormField
                     control={form.control}
-                    name="pitchName"
+                    name="pitchTitle"
                     render={({field}) => (
                         <FormItem>
                             <FormControl>
                                 <div className="flex flex-col space-y-1.5">
-                                    <Label htmlFor="name">Name</Label>
+                                    <Label htmlFor="title">Title</Label>
                                     <Input
-                                        placeholder="Name of your pitch"
+                                        placeholder="Title of your pitch"
                                         {...field}
                                     />
                                 </div>

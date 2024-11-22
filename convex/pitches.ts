@@ -41,7 +41,6 @@ export const getPitches = query({
     handler: async (ctx: QueryCtx, args) => {
         const identity = await validateUser(ctx);
 
-        // Let TypeScript infer the type
         const queryBuilder = ctx.db
             .query("pitches")
             .filter((q) => q.eq(q.field("userId"), identity.subject));
@@ -52,7 +51,6 @@ export const getPitches = query({
             );
         }
 
-        // Chain the queries directly
         const finalQuery = args.sortBy === "recent"
             ? queryBuilder.order("desc")
             : queryBuilder.order("asc");
@@ -77,13 +75,13 @@ export const searchPitches = query({
         let queryBuilder = ctx.db
             .query("pitches")
             .filter((q) => q.eq(q.field("userId"), identity.subject))
-            .order("desc"); // Get newest first
+            .order("desc");
 
         const allPitches = await queryBuilder.collect();
 
         // Filter for search
         const filteredPitches = allPitches.filter(pitch =>
-            pitch.name.toLowerCase().includes(searchTerm) ||
+            pitch.title.toLowerCase().includes(searchTerm) ||
             pitch.text.toLowerCase().includes(searchTerm) ||
             pitch.evaluation.overallFeedback.toLowerCase().includes(searchTerm) ||
             pitch.evaluation.evaluations.some(evali =>
@@ -109,25 +107,31 @@ export const get = query({
     },
     handler: async (ctx: QueryCtx, args) => {
         const identity = await validateUser(ctx);
+        const userId = identity.subject;
+
+        // Get user's favorited pitches
+        const userFavorites = await ctx.db
+            .query("userFavorites")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .collect();
+
+        // Create a Set of favorited pitch IDs for efficient lookup
+        const favoritedPitchIds = new Set(userFavorites.map(f => f.pitchId));
 
         if (args.favorites) {
-            const favoritedPitches = await ctx.db
-                .query("userFavorites")
-                .withIndex("by_user", (q) =>
-                    q
-                        .eq("userId", identity.subject)
+            // If viewing favorites, only get the favorited pitches
+            const pitches = await Promise.all(
+                userFavorites.map(favorite =>
+                    ctx.db.get(favorite.pitchId)
                 )
-                .order("desc")
-                .collect();
+            );
 
-            const ids = favoritedPitches.map((p) => p.pitchId);
-
-            const pitches = await getAllOrThrow(ctx.db, ids);
-
-            return pitches.map((pitch) => ({
-                ...pitch,
-                isFavorite: true,
-            }));
+            return pitches
+                .filter(Boolean) // Remove any null values
+                .map(pitch => ({
+                    ...pitch,
+                    isFavorite: true
+                }));
         }
 
         const title = args.search as string;
@@ -136,33 +140,26 @@ export const get = query({
         if (title) {
             pitches = await ctx.db
                 .query("pitches")
-                .withSearchIndex("search_name", (q) =>
-                    q
-                        .search("name", title)
+                .withSearchIndex("search_title", (q) =>
+                    q.search("title", title)
+                        .eq("userId", userId)
                 )
                 .collect();
         } else {
             pitches = await ctx.db
                 .query("pitches")
-                .filter((q) => q.eq(q.field("userId"), identity.subject))
+                .withIndex("by_userId", (q) =>
+                    q.eq("userId", userId)
+                )
                 .order("desc")
                 .collect();
         }
 
-        const pitchesWithFavoriteRelation = pitches.map((pitch) => {
-            return ctx.db
-                .query("userFavorites")
-
-                .unique()
-                .then((favorite) => {
-                    return {
-                        ...pitch,
-                        isFavorite: !!favorite,
-                    };
-                });
-        });
-
-        return Promise.all(pitchesWithFavoriteRelation);
+        // Map the pitches with their favorite status
+        return pitches.map(pitch => ({
+            ...pitch,
+            isFavorite: favoritedPitchIds.has(pitch._id)
+        }));
     },
 });
 
@@ -189,7 +186,7 @@ export const getPitch = query({
 // Mutations
 export const createPitch = mutation({
     args: {
-        name: v.string(),
+        title: v.string(),
         text: v.string(),
         type: v.string(),
         status: v.string(),
@@ -210,7 +207,7 @@ export const createPitch = mutation({
 export const updatePitch = mutation({
     args: {
         id: v.id("pitches"),
-        name: v.optional(v.string()),
+        title: v.optional(v.string()),
         text: v.optional(v.string()),
         status: v.optional(v.string()),
         evaluation: v.optional(evaluationArgs),
@@ -228,7 +225,7 @@ export const updatePitch = mutation({
         }
 
         const updates = {
-            ...(args.name && {name: args.name}),
+            ...(args.title && {title: args.title}),
             ...(args.text && {text: args.text}),
             ...(args.status && {status: args.status}),
             ...(args.evaluation && {evaluation: args.evaluation}),
@@ -241,12 +238,12 @@ export const updatePitch = mutation({
 
 export const removePitch = mutation({
     args: {
-        pitchId: v.id("pitches"),
+        id: v.id("pitches"),
     },
-    handler: async (ctx: MutationCtx, {pitchId}) => {
+    handler: async (ctx: MutationCtx, {id}) => {
         const identity = await validateUser(ctx);
 
-        const pitch = await ctx.db.get(pitchId);
+        const pitch = await ctx.db.get(id);
         if (!pitch) {
             throw new Error("Pitch not found");
         }
@@ -255,7 +252,7 @@ export const removePitch = mutation({
             throw new Error("Unauthorized: You don't have permission to delete this pitch");
         }
 
-        await ctx.db.delete(pitchId);
+        await ctx.db.delete(id);
     },
 });
 
@@ -430,5 +427,58 @@ export const comparePitches = query({
                 })),
             },
         };
+    },
+});
+
+export const favorite = mutation({
+    args: {id: v.id("pitches")},
+    handler: async (ctx, args) => {
+        const identity = await validateUser(ctx);
+        const userId = identity.subject;
+
+        const existingFavorite = await ctx.db
+            .query("userFavorites")
+            .withIndex("by_user_pitch", (q) =>
+                q
+                    .eq("userId", userId)
+                    .eq("pitchId", args.id)
+            )
+            .unique();
+
+        if (existingFavorite) {
+            throw new Error("Pitch already favorited");
+        }
+
+        await ctx.db.insert("userFavorites", {
+            userId,
+            pitchId: args.id,
+        });
+
+        return await ctx.db.get(args.id);
+    },
+});
+
+export const unfavorite = mutation({
+    args: {id: v.id("pitches")},
+    handler: async (ctx, args) => {
+        const identity = await validateUser(ctx);
+        const userId = identity.subject;
+
+        const existingFavorite = await ctx.db
+            .query("userFavorites")
+            .withIndex("by_user_pitch", (q) =>
+                q
+                    .eq("userId", userId)
+                    .eq("pitchId", args.id)
+            )
+            .unique();
+
+        if (!existingFavorite) {
+            throw new Error("Favorited pitch not found");
+        }
+
+        await ctx.db.delete(existingFavorite._id);
+
+        return await ctx.db.get(args.id);
     },
 });

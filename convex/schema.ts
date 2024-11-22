@@ -4,7 +4,7 @@ import {evaluationArgs} from "./pitches";
 
 export default defineSchema({
     pitches: defineTable({
-        name: v.string(),
+        title: v.string(),
         text: v.string(),
         type: v.string(),
         status: v.string(),
@@ -26,8 +26,8 @@ export default defineSchema({
         updatedAt: v.number(),
     })
         .index("by_userId", ["userId"])
-        .searchIndex("search_name", {
-            searchField: "name",
+        .searchIndex("search_title", {
+            searchField: "title",
             filterFields: ["userId"]
         })
         .index("by_status", ["status"])
@@ -38,5 +38,6 @@ export default defineSchema({
         pitchId: v.id("pitches"),
     })
         .index("by_user", ["userId"])
-        .index("by_pitch", ["pitchId"])
+        .index("by_user_pitch", ["userId", "pitchId"])
+        .index("by_pitch", ["pitchId"]),
 });

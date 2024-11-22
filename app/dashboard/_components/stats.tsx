@@ -1,11 +1,8 @@
 "use client"
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import {cn} from "@/lib/utils";
 
-// _components/stats.tsx
 export function DashboardStats() {
     const stats = useQuery(api.pitches.getPitchStats);
 
@@ -28,7 +25,7 @@ export function DashboardStats() {
             />
             <StatCard
                 title="Best Pitch"
-                value={stats.bestPitch?.name ?? "None"}
+                value={stats.bestPitch?.title ?? "None"}
                 subValue={stats.bestPitch?.evaluation.overallScore.toFixed(1) ?? "0.0"}
                 icon="🏆"
                 className="bg-card dark:bg-neutral-800/50 border dark:border-neutral-700"
