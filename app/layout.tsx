@@ -4,9 +4,11 @@ import "./globals.css";
 
 import {ConvexClientProvider} from "@/providers/convex-client-provider";
 import {ThemeProvider} from "@/providers/theme-provider";
-import React from "react";
+import React, {Suspense} from "react";
+import {Loading} from "@/components/auth/loading";
+import {Toaster} from "@/components/ui/sonner";
+import {ModalProvider} from "@/providers/modal-provider";
 
-// const inter = Inter({subsets: ["latin"]});
 const defaultFont = Noto_Sans_Georgian({subsets: ["latin"]});
 
 const ORIGIN_URL =
@@ -33,16 +35,20 @@ export default function RootLayout({
 
         <html lang="en">
         <body className={defaultFont.className}>
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-        >
-            <ConvexClientProvider>
-                {children}
-            </ConvexClientProvider>
-        </ThemeProvider>
+        <Suspense fallback={<Loading/>}>
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+            >
+                <ConvexClientProvider>
+                    <Toaster/>
+                    <ModalProvider/>
+                    {children}
+                </ConvexClientProvider>
+            </ThemeProvider>
+        </Suspense>
         </body>
         </html>
 

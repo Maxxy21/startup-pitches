@@ -14,9 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as openAIEmbeddings from "../openAIEmbeddings.js";
 import type * as pitches from "../pitches.js";
-import type * as search from "../search.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -27,9 +25,7 @@ import type * as search from "../search.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  openAIEmbeddings: typeof openAIEmbeddings;
   pitches: typeof pitches;
-  search: typeof search;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

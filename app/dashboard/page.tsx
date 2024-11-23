@@ -1,27 +1,28 @@
-"use client"
+"use client";
 import React from 'react';
+import { DashboardStats } from "./_components/stats";
+import { DashboardHeader } from "./_components/layout/dashboard-header";
+import { PitchList } from "./_components/pitch-list";
 
-import {useQuery} from "convex/react";
-import {api} from "@/convex/_generated/api";
-import {Pages} from "@/components/nav/pages";
-import SearchForm from "@/components/nav/search-form";
-import PitchCard from "@/components/pitches/pitch-card";
+interface DashboardPageProps {
+    searchParams: {
+        search?: string;
+        favorites?: string;
+    };
+}
 
-const Dashboard = () => {
-    const pitches = useQuery(api.pitches.getPitches) ?? [];
-
+const DashboardPage = ({ searchParams }: DashboardPageProps) => {
     return (
-        <div>
-            <Pages>
-                <div className="p-4 lg:px-8">
-                    <SearchForm/>
-                </div>
-                <PitchCard data={pitches}/>
-            </Pages>
+        <div className="flex flex-col h-[calc(100vh-2rem)]">
+            <div className="flex-none p-4 space-y-6">
+                <DashboardHeader />
+                <DashboardStats />
+            </div>
+            <div className="flex-1 min-h-0"> {/* min-h-0 is important for nested flexbox scrolling */}
+                <PitchList query={searchParams} />
+            </div>
         </div>
-
     );
 };
 
-
-export default Dashboard;
+export default DashboardPage;
