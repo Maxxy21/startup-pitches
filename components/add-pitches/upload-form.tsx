@@ -15,9 +15,14 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {Textarea} from "@/components/ui/textarea";
 import {Dropzone} from "@/components/add-pitches/dropzone";
 import {useApiMutation} from "@/hooks/use-api-mutation";
-import {FormSchema} from "@/components/add-pitches/form-schema";;
+import {FormSchema} from "@/components/add-pitches/form-schema";
+
+;
 import {api} from "@/convex/_generated/api";
 import {AnimatePresence} from "framer-motion";
+import {evaluatePitch, transcribeAudio} from "@/actions/openai";
+import {fileToText} from "@/utils";
+import {Loader2} from "lucide-react";
 
 export const mockEvaluation = {
     evaluations: [
@@ -51,12 +56,11 @@ export const mockEvaluation = {
 };
 
 
-
-
 export const UploadForm = () => {
     const router = useRouter();
     const [files, setFiles] = useState<File[]>([]);
     const {mutate, pending} = useApiMutation(api.pitches.createPitch);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -109,6 +113,54 @@ export const UploadForm = () => {
             })
             .catch(() => toast.error("Failed to create pitch"));
     };
+
+
+
+    // const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
+    //     try {
+    //         setIsProcessing(true); // Start processing
+    //         const {pitchTitle, contentType, content} = data;
+    //         let transcriptionText = "";
+    //
+    //         if (contentType === 'text') {
+    //             transcriptionText = content || "";
+    //         } else if (files.length > 0) {
+    //             if (contentType === 'audio') {
+    //                 const formData = new FormData();
+    //                 formData.append('audio', files[0]);
+    //                 transcriptionText = await transcribeAudio(formData);
+    //             } else if (contentType === 'textFile') {
+    //                 transcriptionText = await fileToText(files[0]);
+    //             }
+    //         }
+    //         if (!transcriptionText) {
+    //             throw new Error("No text content provided");
+    //         }
+    //
+    //         const evaluationResults = await evaluatePitch(transcriptionText);
+    //
+    //         await mutate({
+    //             title: pitchTitle,
+    //             text: transcriptionText,
+    //             type: contentType,
+    //             status: "evaluated",
+    //             evaluation: evaluationResults,
+    //             createdAt: Date.now(),
+    //             updatedAt: Date.now(),
+    //         })
+    //             .then((id) => {
+    //                 toast.success("Pitch created");
+    //                 router.push(`/pitch/${id}`);
+    //                 setFiles([]);
+    //                 form.reset();
+    //             })
+    //     } catch (error) {
+    //         toast.error("Failed to create pitch");
+    //         console.error(error);
+    //     } finally {
+    //         setIsProcessing(false);
+    //     }
+    // };
 
     return (
         <Form {...form}>
@@ -193,16 +245,29 @@ export const UploadForm = () => {
                 <DialogFooter>
                     <div className="flex w-full justify-between">
                         <DialogClose asChild>
-                            <Button type="button" variant="secondary">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                disabled={isProcessing}
+                            >
                                 Cancel
                             </Button>
                         </DialogClose>
                         <Button
                             type="submit"
-                            disabled={pending || !form.formState.isValid}
+                            disabled={pending || !form.formState.isValid || isProcessing}
                             className="bg-gradient-to-b from-blue-500 to-blue-600"
                         >
-                            {pending ? "Adding..." : "Add Pitch"}
+                            {isProcessing ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Analyzing...
+                                </>
+                            ) : pending ? (
+                                "Adding..."
+                            ) : (
+                                "Add Pitch"
+                            )}
                         </Button>
                     </div>
                 </DialogFooter>

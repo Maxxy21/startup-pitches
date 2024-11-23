@@ -53,7 +53,7 @@ const PitchDetails = () => {
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={50} minSize={30}>
                 <div className="h-full p-4">
-                    <ScrollArea className="h-full">
+                    <ScrollArea className="h-flex-1">
                         <EvaluationContent data={data} />
                     </ScrollArea>
                 </div>

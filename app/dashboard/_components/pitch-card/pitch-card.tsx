@@ -1,67 +1,59 @@
 "use client";
-import {motion} from "framer-motion";
-import {toast} from "sonner";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {formatDate} from "@/utils";
-import {Button} from "@/components/ui/button";
-import {Doc} from "@/convex/_generated/dataModel";
-import {Actions} from "@/components/actions";
-import {MoreHorizontal, Star} from "lucide-react";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate } from "@/utils";
+import { Button } from "@/components/ui/button";
+import { Doc } from "@/convex/_generated/dataModel";
+import { Actions } from "@/components/actions";
+import { MoreHorizontal, Star } from "lucide-react";
 import React from "react";
-import {useApiMutation} from "@/hooks/use-api-mutation";
-import {api} from "@/convex/_generated/api";
-import {cn} from "@/lib/utils";
+import { useApiMutation } from "@/hooks/use-api-mutation";
+import { api } from "@/convex/_generated/api";
+import { cn } from "@/lib/utils";
 
 interface PitchCardProps {
     pitch: Doc<"pitches">;
     onClick: () => void;
 }
 
-export const PitchCard = ({pitch, onClick}: PitchCardProps) => {
-    const {mutate: onFavorite, pending: pendingFavorite} = useApiMutation(api.pitches.favorite);
-    const {mutate: onUnfavorite, pending: pendingUnfavorite} = useApiMutation(api.pitches.unfavorite);
+interface PitchCardProps {
+    pitch: Doc<"pitches">;
+    onClick: () => void;
+}
+
+export const PitchCard = ({ pitch, onClick }: PitchCardProps) => {
+    const { mutate: onFavorite, pending: pendingFavorite } = useApiMutation(api.pitches.favorite);
+    const { mutate: onUnfavorite, pending: pendingUnfavorite } = useApiMutation(api.pitches.unfavorite);
 
     const toggleFavorite = (e: React.MouseEvent) => {
         e.stopPropagation();
         e.preventDefault();
 
         if (pitch.isFavorite) {
-            onUnfavorite({id: pitch._id})
+            onUnfavorite({ id: pitch._id })
                 .catch(() => toast.error("Failed to unfavorite"));
         } else {
-            onFavorite({id: pitch._id})
+            onFavorite({ id: pitch._id })
                 .catch(() => toast.error("Failed to favorite"));
         }
     };
 
     return (
         <motion.div
-            initial={{opacity: 0, y: 20}}
-            animate={{opacity: 1, y: 0}}
-            exit={{opacity: 0, y: -20}}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
             layout
-            className="group"
+            className="group h-[250px]" // Fixed height container
         >
-            <Card className="mb-4 hover:shadow-lg transition-shadow duration-200 dark:bg-neutral-800/50">
-                <CardHeader>
+            <Card className="flex flex-col h-full hover:shadow-lg transition-shadow duration-200 dark:bg-neutral-800/50">
+                <CardHeader className="flex-none"> {/* flex-none to prevent header from growing */}
                     <div className="flex items-center justify-between">
-                        <CardTitle className="text-xl font-semibold">{pitch.title}</CardTitle>
+                        <CardTitle className="text-xl font-semibold truncate">
+                            {pitch.title}
+                        </CardTitle>
                         <div className="flex items-center gap-2">
-                            <button
-                                onClick={toggleFavorite}
-                                disabled={pendingFavorite || pendingUnfavorite}
-                                className={cn(
-                                    "focus:outline-none",
-                                    (pendingFavorite || pendingUnfavorite) && "cursor-not-allowed opacity-75"
-                                )}
-                            >
-                                <Star
-                                    className={cn(
-                                        "h-4 w-4 hover:text-blue-600 transition",
-                                        pitch.isFavorite && "fill-blue-600 text-blue-600"
-                                    )}
-                                />
-                            </button>
                             <Actions
                                 id={pitch._id}
                                 title={pitch.title}
@@ -82,12 +74,12 @@ export const PitchCard = ({pitch, onClick}: PitchCardProps) => {
                         Created {formatDate(pitch._creationTime)}
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                <CardContent className="flex-1"> {/* flex-1 to take remaining space */}
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 ">
                         {pitch.text}
                     </p>
                 </CardContent>
-                <CardFooter className="flex justify-start">
+                <CardFooter className="flex-none justify-between"> {/* flex-none to prevent footer from growing */}
                     <Button
                         variant="outline"
                         onClick={onClick}
@@ -96,8 +88,28 @@ export const PitchCard = ({pitch, onClick}: PitchCardProps) => {
                     >
                         View
                     </Button>
+                    <button
+                        onClick={toggleFavorite}
+                        disabled={pendingFavorite || pendingUnfavorite}
+                        className={cn(
+                            "focus:outline-none",
+                            (pendingFavorite || pendingUnfavorite) && "cursor-not-allowed opacity-75"
+                        )}
+                    >
+                        <Star
+                            className={cn(
+                                "h-4 w-4 hover:text-blue-600 transition",
+                                pitch.isFavorite && "fill-blue-600 text-blue-600"
+                            )}
+                        />
+                    </button>
                 </CardFooter>
             </Card>
         </motion.div>
     );
 };
+
+
+
+
+

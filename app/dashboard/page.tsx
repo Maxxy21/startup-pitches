@@ -13,12 +13,12 @@ interface DashboardPageProps {
 
 const DashboardPage = ({ searchParams }: DashboardPageProps) => {
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-[calc(100vh-2rem)]">
             <div className="flex-none p-4 space-y-6">
                 <DashboardHeader />
                 <DashboardStats />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-h-0"> {/* min-h-0 is important for nested flexbox scrolling */}
                 <PitchList query={searchParams} />
             </div>
         </div>

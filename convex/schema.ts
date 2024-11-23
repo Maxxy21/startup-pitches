@@ -10,8 +10,8 @@ export default defineSchema({
         status: v.string(),
         evaluation: evaluationArgs,
         userId: v.string(),
-        categories: v.optional(v.array(v.string())),
         isFavorite: v.optional(v.boolean()),
+        categories: v.optional(v.array(v.string())),
         notes: v.optional(v.array(v.object({
             content: v.string(),
             createdAt: v.number(),
@@ -31,13 +31,21 @@ export default defineSchema({
             filterFields: ["userId"]
         })
         .index("by_status", ["status"])
-        .index("by_categories", ["categories"])
-        .index("by_score", ["evaluation.overallScore"]),
+        .index("by_categories", ["categories"]),
+
+    categories: defineTable({
+        userId: v.string(),
+        name: v.string(),
+        color: v.optional(v.string()),
+        createdAt: v.number(),
+    })
+        .index("by_user", ["userId"])
+        .index("by_user_name", ["userId", "name"]),
+
     userFavorites: defineTable({
         userId: v.string(),
         pitchId: v.id("pitches"),
     })
         .index("by_user", ["userId"])
         .index("by_user_pitch", ["userId", "pitchId"])
-        .index("by_pitch", ["pitchId"]),
 });
