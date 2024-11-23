@@ -86,81 +86,81 @@ export const UploadForm = () => {
         noClick: false,
     });
 
-    const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
-        const {pitchTitle, contentType, content} = data;
-        let transcriptionText = contentType === 'text' ? content : "This is a dummy transcription for testing purposes...";
-
-        if (!transcriptionText) {
-            throw new Error("No text content provided");
-        }
-
-        const evaluationResults = mockEvaluation;
-
-        mutate({
-            title: pitchTitle,
-            text: transcriptionText,
-            type: contentType,
-            status: "evaluated",
-            evaluation: evaluationResults,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-        })
-            .then((id) => {
-                toast.success("Pitch created");
-                router.push(`/pitch/${id}`);
-                setFiles([]);
-                form.reset();
-            })
-            .catch(() => toast.error("Failed to create pitch"));
-    };
-
-
-
     // const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
-    //     try {
-    //         setIsProcessing(true); // Start processing
-    //         const {pitchTitle, contentType, content} = data;
-    //         let transcriptionText = "";
+    //     const {pitchTitle, contentType, content} = data;
+    //     let transcriptionText = contentType === 'text' ? content : "This is a dummy transcription for testing purposes...";
     //
-    //         if (contentType === 'text') {
-    //             transcriptionText = content || "";
-    //         } else if (files.length > 0) {
-    //             if (contentType === 'audio') {
-    //                 const formData = new FormData();
-    //                 formData.append('audio', files[0]);
-    //                 transcriptionText = await transcribeAudio(formData);
-    //             } else if (contentType === 'textFile') {
-    //                 transcriptionText = await fileToText(files[0]);
-    //             }
-    //         }
-    //         if (!transcriptionText) {
-    //             throw new Error("No text content provided");
-    //         }
-    //
-    //         const evaluationResults = await evaluatePitch(transcriptionText);
-    //
-    //         await mutate({
-    //             title: pitchTitle,
-    //             text: transcriptionText,
-    //             type: contentType,
-    //             status: "evaluated",
-    //             evaluation: evaluationResults,
-    //             createdAt: Date.now(),
-    //             updatedAt: Date.now(),
-    //         })
-    //             .then((id) => {
-    //                 toast.success("Pitch created");
-    //                 router.push(`/pitch/${id}`);
-    //                 setFiles([]);
-    //                 form.reset();
-    //             })
-    //     } catch (error) {
-    //         toast.error("Failed to create pitch");
-    //         console.error(error);
-    //     } finally {
-    //         setIsProcessing(false);
+    //     if (!transcriptionText) {
+    //         throw new Error("No text content provided");
     //     }
+    //
+    //     const evaluationResults = mockEvaluation;
+    //
+    //     mutate({
+    //         title: pitchTitle,
+    //         text: transcriptionText,
+    //         type: contentType,
+    //         status: "evaluated",
+    //         evaluation: evaluationResults,
+    //         createdAt: Date.now(),
+    //         updatedAt: Date.now(),
+    //     })
+    //         .then((id) => {
+    //             toast.success("Pitch created");
+    //             router.push(`/pitch/${id}`);
+    //             setFiles([]);
+    //             form.reset();
+    //         })
+    //         .catch(() => toast.error("Failed to create pitch"));
     // };
+
+
+
+    const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
+        try {
+            setIsProcessing(true); // Start processing
+            const {pitchTitle, contentType, content} = data;
+            let transcriptionText = "";
+
+            if (contentType === 'text') {
+                transcriptionText = content || "";
+            } else if (files.length > 0) {
+                if (contentType === 'audio') {
+                    const formData = new FormData();
+                    formData.append('audio', files[0]);
+                    transcriptionText = await transcribeAudio(formData);
+                } else if (contentType === 'textFile') {
+                    transcriptionText = await fileToText(files[0]);
+                }
+            }
+            if (!transcriptionText) {
+                throw new Error("No text content provided");
+            }
+
+            const evaluationResults = await evaluatePitch(transcriptionText);
+
+            await mutate({
+                title: pitchTitle,
+                text: transcriptionText,
+                type: contentType,
+                status: "evaluated",
+                evaluation: evaluationResults,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+            })
+                .then((id) => {
+                    toast.success("Pitch created");
+                    router.push(`/pitch/${id}`);
+                    setFiles([]);
+                    form.reset();
+                })
+        } catch (error) {
+            toast.error("Failed to create pitch");
+            console.error(error);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
     return (
         <Form {...form}>
