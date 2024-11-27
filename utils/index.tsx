@@ -6,6 +6,18 @@ import Logout from "@/components/nav/logout";
 import Link from "next/link";
 import {z} from "zod";
 
+import OpenAI from "openai";
+
+let openai: OpenAI | null = null;
+
+export function getOpenAI() {
+    if (openai === null) {
+        openai = new OpenAI();
+    }
+    return openai;
+}
+
+
 const DotIcon = () => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">

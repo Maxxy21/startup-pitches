@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import {getOpenAI} from "@/app/api/openai";
+import {getOpenAI} from "@/utils";
 
 export async function POST(req: Request) {
     try {
+        const openai = getOpenAI();
         const formData = await req.formData();
         const audioFile = formData.get('audio') as File;
 
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
 
         const audioBuffer = Buffer.from(await audioFile.arrayBuffer());
 
-        const transcription = await getOpenAI().audio.transcriptions.create({
+        const transcription = await openai.audio.transcriptions.create({
             file: new File([audioBuffer], audioFile.name, { type: audioFile.type }),
             model: "whisper-1",
             language: "en",

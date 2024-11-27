@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import OpenAI from "openai";
+import {getOpenAI} from "@/utils";
+
 
 type EvaluationResult = {
     criteria: string;
@@ -16,14 +17,6 @@ type EvaluationResponse = {
     overallFeedback: string;
 }
 
-let openai: OpenAI | null = null;
-
-export function getOpenAI() {
-    if (openai === null) {
-        openai = new OpenAI();
-    }
-    return openai;
-}
 
 const evaluationCriteria = {
     problemSolutionFit: {
