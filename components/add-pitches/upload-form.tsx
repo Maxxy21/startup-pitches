@@ -115,11 +115,57 @@ export const UploadForm = () => {
     // };
 
 
+    // const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
+    //     try {
+    //         setIsProcessing(true); // Start processing
+    //         const {pitchTitle, contentType, content} = data;
+    //         let transcriptionText = "";
+    //
+    //         if (contentType === 'text') {
+    //             transcriptionText = content || "";
+    //         } else if (files.length > 0) {
+    //             if (contentType === 'audio') {
+    //                 const formData = new FormData();
+    //                 formData.append('audio', files[0]);
+    //                 transcriptionText = await transcribeAudio(formData);
+    //             } else if (contentType === 'textFile') {
+    //                 transcriptionText = await fileToText(files[0]);
+    //             }
+    //         }
+    //         if (!transcriptionText) {
+    //             throw new Error("No text content provided");
+    //         }
+    //
+    //         const evaluationResults = await evaluatePitch(transcriptionText);
+    //
+    //         await mutate({
+    //             title: pitchTitle,
+    //             text: transcriptionText,
+    //             type: contentType,
+    //             status: "evaluated",
+    //             evaluation: evaluationResults,
+    //             createdAt: Date.now(),
+    //             updatedAt: Date.now(),
+    //         })
+    //             .then((id) => {
+    //                 toast.success("Pitch created");
+    //                 router.push(`/pitch/${id}`);
+    //                 setFiles([]);
+    //                 form.reset();
+    //             })
+    //     } catch (error) {
+    //         toast.error("Failed to create pitch");
+    //         console.error(error);
+    //     } finally {
+    //         setIsProcessing(false);
+    //     }
+    // };
+
 
     const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
         try {
-            setIsProcessing(true); // Start processing
-            const {pitchTitle, contentType, content} = data;
+            setIsProcessing(true);
+            const { pitchTitle, contentType, content } = data;
             let transcriptionText = "";
 
             if (contentType === 'text') {
@@ -129,17 +175,24 @@ export const UploadForm = () => {
                     const formData = new FormData();
                     formData.append('audio', files[0]);
                     transcriptionText = await transcribeAudio(formData);
+
+                    if (!transcriptionText) {
+                        throw new Error("Failed to transcribe audio");
+                    }
+
+                    console.log("Transcription successful:", transcriptionText.substring(0, 100) + "...");
                 } else if (contentType === 'textFile') {
                     transcriptionText = await fileToText(files[0]);
                 }
             }
-            if (!transcriptionText) {
+
+            if (!transcriptionText || transcriptionText.trim().length === 0) {
                 throw new Error("No text content provided");
             }
 
             const evaluationResults = await evaluatePitch(transcriptionText);
 
-            await mutate({
+            const mutationData = {
                 title: pitchTitle,
                 text: transcriptionText,
                 type: contentType,
@@ -147,16 +200,16 @@ export const UploadForm = () => {
                 evaluation: evaluationResults,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
-            })
-                .then((id) => {
-                    toast.success("Pitch created");
-                    router.push(`/pitch/${id}`);
-                    setFiles([]);
-                    form.reset();
-                })
-        } catch (error) {
-            toast.error("Failed to create pitch");
-            console.error(error);
+            };
+
+            const id = await mutate(mutationData);
+            toast.success("Pitch created");
+            router.push(`/pitch/${id}`);
+            setFiles([]);
+            form.reset();
+        } catch (error: any) {
+            console.error("Submission error:", error);
+            toast.error(error.message || "Failed to create pitch");
         } finally {
             setIsProcessing(false);
         }
@@ -260,7 +313,7 @@ export const UploadForm = () => {
                         >
                             {isProcessing ? (
                                 <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
                                     Analyzing...
                                 </>
                             ) : pending ? (

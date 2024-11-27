@@ -1,7 +1,9 @@
 "use server";
 import fs from "fs/promises";
+import path from "path";
 import {createReadStream} from "fs";
 import OpenAI from "openai";
+import os from "os";
 
 let openai: OpenAI | null = null;
 
@@ -33,27 +35,84 @@ export async function transcribeAudio(formData: FormData) {
         const audioFile = formData.get("audio") as File;
         if (!audioFile) throw new Error("No audio file provided");
 
-        const buffer = await audioFile.arrayBuffer();
-        const audioBuffer = Buffer.from(buffer);
-        const tempFilePath = `temp_${Date.now()}_${audioFile.name}`;
+        console.log("Processing audio file:", audioFile.name, audioFile.type);
 
-        await fs.writeFile(tempFilePath, audioBuffer);
+        const tempDir = os.tmpdir();
+        const fileName = `${Date.now()}-${audioFile.name}`;
+        const filePath = path.join(tempDir, fileName);
 
-        const transcription = await getOpenAI().audio.transcriptions.create({
-            file: createReadStream(tempFilePath),
-            model: "whisper-1",
-            language: "en", // Specify language
-            response_format: "text", // Get plain text
-            temperature: 0.3, // Lower temperature for more accurate transcription
+        // Convert File to buffer
+        const arrayBuffer = await audioFile.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        // Write file
+        await fs.writeFile(filePath, buffer);
+        console.log("Temp file created at:", filePath);
+
+        const openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY,
         });
 
-        await fs.unlink(tempFilePath);
-        return transcription.text;
+        // Log before API call
+        console.log("Calling OpenAI API...");
+
+        try {
+            const transcription = await openai.audio.transcriptions.create({
+                file: createReadStream(filePath),
+                model: "whisper-1",
+                language: "en",
+                response_format: "text",
+            });
+
+            // Log the raw response
+            console.log("OpenAI Response:", transcription);
+
+            // Clean up temp file
+            await fs.unlink(filePath);
+
+            // Return the text directly as the API returns it as a string
+            return transcription;
+
+        } catch (apiError:any) {
+            console.error("OpenAI API Error:", apiError);
+            throw new Error(`OpenAI API Error: ${apiError.message}`);
+        }
+
     } catch (error) {
-        console.error("Transcription error:", error);
-        throw new Error("Failed to transcribe audio");
+        console.error("Detailed transcription error:", error);
+        if (error instanceof Error) {
+            throw new Error(`Transcription failed: ${error.message}`);
+        }
+        throw new Error("Transcription failed with unknown error");
     }
 }
+
+// export async function transcribeAudio(formData: FormData) {
+//     try {
+//         const audioFile = formData.get("audio") as File;
+//         if (!audioFile) throw new Error("No audio file provided");
+//
+//         const buffer = await audioFile.arrayBuffer();
+//         const audioBuffer = Buffer.from(buffer);
+//         const tempFilePath = `temp_${Date.now()}_${audioFile.name}`;
+//
+//         await fs.writeFile(tempFilePath, audioBuffer);
+//
+//         const transcription = await getOpenAI().audio.transcriptions.create({
+//             file: createReadStream(tempFilePath),
+//             model: "whisper-1",
+//             language: "en", // Specify language
+//             response_format: "text", // Get plain text
+//             temperature: 0.3, // Lower temperature for more accurate transcription
+//         });
+//
+//         await fs.unlink(tempFilePath);
+//         return transcription.text;
+//     } catch (error) {
+//         console.error("Transcription error:", error);
+//         throw new Error("Failed to transcribe audio");
+//     }
+// }
 
 const evaluationCriteria = {
     problemSolutionFit: {
