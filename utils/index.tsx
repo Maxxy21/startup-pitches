@@ -142,3 +142,34 @@ export const calculateAverageScore = (evaluations: Evaluation[]): string => {
     const averageScore = evaluations.length > 0 ? totalScore / evaluations.length : 0;
     return averageScore.toFixed(1); // Keeping one decimal for the average score display
 }
+
+export const mockEvaluation = {
+    evaluations: [
+        {
+            criteria: "Problem-Solution Fit",
+            comment: "The pitch demonstrates a clear understanding of the problem and presents a viable solution.",
+            score: 8,
+            strengths: ["Clear problem identification", "Innovative solution", "Market understanding"],
+            improvements: ["Add more market validation", "Expand on competitive analysis"],
+            aspects: ["Problem clarity", "Solution viability", "Market fit", "Innovation"]
+        },
+        {
+            criteria: "Business Potential",
+            comment: "Strong business model with good growth potential.",
+            score: 7,
+            strengths: ["Scalable model", "Clear revenue streams", "Large market opportunity"],
+            improvements: ["More financial projections", "Detailed go-to-market strategy"],
+            aspects: ["Market size", "Revenue model", "Scalability", "Growth strategy"]
+        },
+        {
+            criteria: "Presentation Quality",
+            comment: "Well-structured presentation with clear communication.",
+            score: 8,
+            strengths: ["Clear structure", "Engaging delivery", "Professional presentation"],
+            improvements: ["Add more visual aids", "Include more data points"],
+            aspects: ["Clarity", "Structure", "Engagement", "Professionalism"]
+        }
+    ],
+    overallScore: 7.7,
+    overallFeedback: "This is a strong pitch with clear potential. The problem-solution fit is well-defined, and the business model shows promise. Some improvements in market validation and financial projections would strengthen the pitch further."
+};

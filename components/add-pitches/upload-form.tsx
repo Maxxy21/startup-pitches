@@ -23,36 +23,7 @@ import {AnimatePresence} from "framer-motion";
 import {fileToText} from "@/utils";
 import {Loader2} from "lucide-react";
 
-export const mockEvaluation = {
-    evaluations: [
-        {
-            criteria: "Problem-Solution Fit",
-            comment: "The pitch demonstrates a clear understanding of the problem and presents a viable solution.",
-            score: 8,
-            strengths: ["Clear problem identification", "Innovative solution", "Market understanding"],
-            improvements: ["Add more market validation", "Expand on competitive analysis"],
-            aspects: ["Problem clarity", "Solution viability", "Market fit", "Innovation"]
-        },
-        {
-            criteria: "Business Potential",
-            comment: "Strong business model with good growth potential.",
-            score: 7,
-            strengths: ["Scalable model", "Clear revenue streams", "Large market opportunity"],
-            improvements: ["More financial projections", "Detailed go-to-market strategy"],
-            aspects: ["Market size", "Revenue model", "Scalability", "Growth strategy"]
-        },
-        {
-            criteria: "Presentation Quality",
-            comment: "Well-structured presentation with clear communication.",
-            score: 8,
-            strengths: ["Clear structure", "Engaging delivery", "Professional presentation"],
-            improvements: ["Add more visual aids", "Include more data points"],
-            aspects: ["Clarity", "Structure", "Engagement", "Professionalism"]
-        }
-    ],
-    overallScore: 7.7,
-    overallFeedback: "This is a strong pitch with clear potential. The problem-solution fit is well-defined, and the business model shows promise. Some improvements in market validation and financial projections would strengthen the pitch further."
-};
+
 
 
 export const UploadForm = () => {
@@ -167,7 +138,6 @@ export const UploadForm = () => {
             const {pitchTitle, contentType, content} = data;
             let transcriptionText = "";
 
-            // Get text content based on type
             if (contentType === 'text') {
                 transcriptionText = content || "";
             } else if (files.length > 0) {
@@ -175,42 +145,59 @@ export const UploadForm = () => {
                     const formData = new FormData();
                     formData.append('audio', files[0]);
 
-                    const transcriptionResponse = await fetch('/api/transcribe', {
-                        method: 'POST',
-                        body: formData,
-                    });
+                    try {
+                        const transcriptionResponse = await fetch('/api/transcribe', {
+                            method: 'POST',
+                            body: formData,
+                        });
 
-                    if (!transcriptionResponse.ok) {
-                        throw new Error('Failed to transcribe audio');
+                        if (!transcriptionResponse.ok) {
+                            throw new Error('Transcription failed: ' + (await transcriptionResponse.text()));
+                        }
+
+                        const transcriptionData = await transcriptionResponse.json();
+                        transcriptionText = transcriptionData.text;
+                    } catch (error) {
+                        console.error('Audio processing error:', error);
+                        throw new Error('Failed to process audio file');
                     }
-
-                    const transcriptionData = await transcriptionResponse.json();
-                    transcriptionText = transcriptionData.text;
                 } else if (contentType === 'textFile') {
                     transcriptionText = await fileToText(files[0]);
                 }
             }
 
-            if (!transcriptionText) {
-                throw new Error("No text content provided");
+            if (!transcriptionText?.trim()) {
+                throw new Error("No valid text content provided");
             }
 
-            // Get evaluation
-            const evaluationResponse = await fetch('/api/evaluate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({text: transcriptionText}),
-            });
+            // Evaluate with timeout handling
+            let evaluationResults;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 240000); // 4 minutes
 
-            if (!evaluationResponse.ok) {
-                throw new Error('Failed to evaluate pitch');
+                const evaluationResponse = await fetch('/api/evaluate', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({text: transcriptionText}),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!evaluationResponse.ok) {
+                    throw new Error('Evaluation failed');
+                }
+
+                evaluationResults = await evaluationResponse.json();
+            } catch (error: any) {
+                if (error.name === 'AbortError') {
+                    throw new Error('Evaluation timed out');
+                } else {
+                    throw error;
+                }
             }
 
-            const evaluationResults = await evaluationResponse.json();
-
-            // Create pitch with evaluation
             const id = await mutate({
                 title: pitchTitle,
                 text: transcriptionText,
@@ -232,6 +219,8 @@ export const UploadForm = () => {
             setIsProcessing(false);
         }
     };
+
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">

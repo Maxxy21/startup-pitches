@@ -1,6 +1,6 @@
+//evaluations/index.ts
+
 import {getOpenAI} from "@/utils";
-
-
 type EvaluationResult = {
     criteria: string;
     comment: string;
