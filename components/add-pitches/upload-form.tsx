@@ -20,7 +20,6 @@ import {FormSchema} from "@/components/add-pitches/form-schema";
 ;
 import {api} from "@/convex/_generated/api";
 import {AnimatePresence} from "framer-motion";
-import {evaluatePitch, transcribeAudio} from "@/actions/openai";
 import {fileToText} from "@/utils";
 import {Loader2} from "lucide-react";
 
@@ -165,34 +164,54 @@ export const UploadForm = () => {
     const handleSubmit = async (data: z.infer<typeof FormSchema>) => {
         try {
             setIsProcessing(true);
-            const { pitchTitle, contentType, content } = data;
+            const {pitchTitle, contentType, content} = data;
             let transcriptionText = "";
 
+            // Get text content based on type
             if (contentType === 'text') {
                 transcriptionText = content || "";
             } else if (files.length > 0) {
                 if (contentType === 'audio') {
                     const formData = new FormData();
                     formData.append('audio', files[0]);
-                    transcriptionText = await transcribeAudio(formData);
 
-                    if (!transcriptionText) {
-                        throw new Error("Failed to transcribe audio");
+                    const transcriptionResponse = await fetch('/api/transcribe', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (!transcriptionResponse.ok) {
+                        throw new Error('Failed to transcribe audio');
                     }
 
-                    console.log("Transcription successful:", transcriptionText.substring(0, 100) + "...");
+                    const transcriptionData = await transcriptionResponse.json();
+                    transcriptionText = transcriptionData.text;
                 } else if (contentType === 'textFile') {
                     transcriptionText = await fileToText(files[0]);
                 }
             }
 
-            if (!transcriptionText || transcriptionText.trim().length === 0) {
+            if (!transcriptionText) {
                 throw new Error("No text content provided");
             }
 
-            const evaluationResults = await evaluatePitch(transcriptionText);
+            // Get evaluation
+            const evaluationResponse = await fetch('/api/evaluate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({text: transcriptionText}),
+            });
 
-            const mutationData = {
+            if (!evaluationResponse.ok) {
+                throw new Error('Failed to evaluate pitch');
+            }
+
+            const evaluationResults = await evaluationResponse.json();
+
+            // Create pitch with evaluation
+            const id = await mutate({
                 title: pitchTitle,
                 text: transcriptionText,
                 type: contentType,
@@ -200,10 +219,9 @@ export const UploadForm = () => {
                 evaluation: evaluationResults,
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
-            };
+            });
 
-            const id = await mutate(mutationData);
-            toast.success("Pitch created");
+            toast.success("Pitch created successfully");
             router.push(`/pitch/${id}`);
             setFiles([]);
             form.reset();
@@ -214,7 +232,6 @@ export const UploadForm = () => {
             setIsProcessing(false);
         }
     };
-
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
