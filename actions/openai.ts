@@ -71,7 +71,7 @@ export async function transcribeAudio(formData: FormData) {
             await fs.unlink(filePath);
 
             // Return the text directly as the API returns it as a string
-            return transcription;
+            return transcription.text;
 
         } catch (apiError:any) {
             console.error("OpenAI API Error:", apiError);
