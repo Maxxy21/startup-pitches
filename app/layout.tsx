@@ -13,7 +13,7 @@ const defaultFont = Noto_Sans_Georgian({subsets: ["latin"]});
 
 const ORIGIN_URL =
     process.env.NODE === "production"
-        ? "https://pitch-perfect.com"
+        ? "https://startup-pitches.vercel.app/"
         : "http://localhost:3000";
 
 

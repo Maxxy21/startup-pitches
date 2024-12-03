@@ -12,7 +12,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'No text provided' }, { status: 400 });
         }
 
-        // Add timeout promise
+        //Timeout promise
         const timeoutPromise = new Promise((_, reject) => {
             setTimeout(() => reject(new Error('Evaluation timed out')), 240000); // 4 minutes
         });
@@ -26,10 +26,6 @@ export async function POST(req: Request) {
         return NextResponse.json(evaluationResults);
     } catch (error: any) {
         console.error('Evaluation error:', error);
-        // If timeout, return mock data
-        if (error.message === 'Evaluation timed out') {
-            return ;
-        }
         return NextResponse.json(
             { error: 'Evaluation failed' },
             { status: 500 }
