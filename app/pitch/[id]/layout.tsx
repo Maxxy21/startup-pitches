@@ -1,9 +1,9 @@
-import {Pages} from "@/components/nav/pages";
+import {SidebarProvider} from "@/components/nav/SidebarProvider";
 
 export default function Layout({children}: { children: React.ReactNode }) {
     return (
-        <Pages>
+        <SidebarProvider>
             {children}
-        </Pages>
+        </SidebarProvider>
     )
 }

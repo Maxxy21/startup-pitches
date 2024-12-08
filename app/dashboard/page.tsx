@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { DashboardStats } from "./_components/stats";
-import { DashboardHeader } from "./_components/layout/dashboard-header";
+import { DashboardHeader } from "@/app/dashboard/layout/dashboard-header";
 import { PitchList } from "./_components/pitch-list";
 
 interface DashboardPageProps {
