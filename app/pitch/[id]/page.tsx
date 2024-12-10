@@ -70,10 +70,10 @@ const PitchDetails = () => {
                 <h1 className="p-4 text-xl font-semibold">
                     {data.title} Evaluation
                 </h1>
-                <div className="flex-1 overflow-hidden">
+                <ScrollArea className="flex-1 px-4">
                     <div className="md:hidden h-full">{mobileView}</div>
                     <div className="hidden md:block h-full">{desktopView}</div>
-                </div>
+                </ScrollArea>
             </div>
         </SidebarInset>
     );
