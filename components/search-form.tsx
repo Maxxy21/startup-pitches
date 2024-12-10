@@ -9,10 +9,11 @@ import qs from "query-string";
 import { Label } from "@/components/ui/label";
 import {
     SidebarGroup,
-    SidebarGroupContent,
+    SidebarGroupContent, SidebarGroupLabel,
     SidebarInput,
     useSidebar,
 } from "@/components/ui/sidebar";
+import {Hint} from "@/components/hint";
 
 export function SearchForm({ className, ...props }: React.ComponentProps<"form">) {
     const router = useRouter();
@@ -51,12 +52,15 @@ export function SearchForm({ className, ...props }: React.ComponentProps<"form">
                         Search
                     </Label>
                     {state === "collapsed" ? (
-                        <button
-                            className="py-2"
-                            onClick={toggleSidebar}
-                        >
-                            <Search className="size-4" />
-                        </button>
+                        <Hint label="Search" side="right" sideOffset={12}>
+                            <button
+                                className="py-2"
+                                onClick={toggleSidebar}
+                            >
+                                <Search className="size-4"/>
+                            </button>
+                        </Hint>
+
                     ) : (
                         <div className="relative">
                             <Search

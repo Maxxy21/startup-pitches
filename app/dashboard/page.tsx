@@ -1,28 +1,33 @@
 "use client";
 import React from 'react';
-import { DashboardStats } from "./_components/stats";
-import { DashboardHeader } from "@/app/dashboard/layout/dashboard-header";
-import { PitchList } from "./_components/pitch-list";
+import {DashboardStats} from "./_components/stats";
 
-interface DashboardPageProps {
+import {PitchList} from "./_components/pitch-list";
+import {SidebarInset, SidebarTrigger} from "@/components/ui/sidebar";
+import {Separator} from "@/components/ui/separator";
+import ModeToggle from "@/components/mode-toggle";
+import DashboardHeader from "@/app/dashboard/_components/dashboard-header";
+
+interface DashboardProps {
     searchParams: {
         search?: string;
         favorites?: string;
     };
 }
 
-const DashboardPage = ({ searchParams }: DashboardPageProps) => {
+
+const Dashboard = ({searchParams}: DashboardProps) => {
     return (
-        <div className="flex flex-col h-[calc(100vh-2rem)]">
-            <div className="flex-none p-4 space-y-6">
-                <DashboardHeader />
-                <DashboardStats />
+        <SidebarInset>
+            <DashboardHeader/>
+            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+                <DashboardStats/>
+                <PitchList query={searchParams}/>
             </div>
-            <div className="flex-1 min-h-0"> {/* min-h-0 is important for nested flexbox scrolling */}
-                <PitchList query={searchParams} />
-            </div>
-        </div>
+
+        </SidebarInset>
+
     );
 };
 
-export default DashboardPage;
+export default Dashboard;

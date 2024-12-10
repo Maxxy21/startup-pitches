@@ -7,11 +7,18 @@ import {
     Bot,
     Command,
     Frame,
-    GalleryVerticalEnd,
+    GalleryVerticalEnd, Inbox,
     Map,
     PieChart,
     Settings2,
     SquareTerminal,
+    Blocks,
+    Calendar,
+    Home,
+    MessageCircleQuestion,
+    Search,
+    Sparkles,
+    Trash2,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -53,92 +60,28 @@ const data = {
     ],
     navMain: [
         {
-            title: "Playground",
+            title: "Search",
             url: "#",
-            icon: SquareTerminal,
+            icon: Search,
+        },
+        {
+            title: "Ask AI",
+            url: "#",
+            icon: Sparkles,
+        },
+        {
+            title: "Home",
+            url: "#",
+            icon: Home,
             isActive: true,
-            items: [
-                {
-                    title: "History",
-                    url: "#",
-                },
-                {
-                    title: "Starred",
-                    url: "#",
-                },
-                {
-                    title: "Settings",
-                    url: "#",
-                },
-            ],
         },
         {
-            title: "Models",
+            title: "Inbox",
             url: "#",
-            icon: Bot,
-            items: [
-                {
-                    title: "Genesis",
-                    url: "#",
-                },
-                {
-                    title: "Explorer",
-                    url: "#",
-                },
-                {
-                    title: "Quantum",
-                    url: "#",
-                },
-            ],
+            icon: Inbox,
+            badge: "10",
         },
-        {
-            title: "Documentation",
-            url: "#",
-            icon: BookOpen,
-            items: [
-                {
-                    title: "Introduction",
-                    url: "#",
-                },
-                {
-                    title: "Get Started",
-                    url: "#",
-                },
-                {
-                    title: "Tutorials",
-                    url: "#",
-                },
-                {
-                    title: "Changelog",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Settings",
-            url: "#",
-            icon: Settings2,
-            items: [
-                {
-                    title: "General",
-                    url: "#",
-                },
-                {
-                    title: "Team",
-                    url: "#",
-                },
-                {
-                    title: "Billing",
-                    url: "#",
-                },
-                {
-                    title: "Limits",
-                    url: "#",
-                },
-            ],
-        },
-    ],
-    projects: [
+    ],projects: [
         {
             name: "Design Engineering",
             url: "#",
