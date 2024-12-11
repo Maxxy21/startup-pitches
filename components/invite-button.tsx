@@ -25,7 +25,7 @@ export const InviteButton = ({ isDark }: InviteButtonProps) => {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton >
-                            <UserPlus size={6} />
+                            <UserPlus/>
                             <span>Invite members</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
