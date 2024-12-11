@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { ChevronsUpDown, Plus } from "lucide-react";
-import { useOrganization, useOrganizationList } from "@clerk/nextjs";
-import { CreateOrganization } from "@clerk/nextjs";
+import {ChevronsUpDown, Plus} from "lucide-react";
+import {useOrganization, useOrganizationList} from "@clerk/nextjs";
+import {CreateOrganization} from "@clerk/nextjs";
 
 import {
     Dialog,
@@ -29,12 +29,14 @@ import {
 import {useTheme} from "next-themes";
 import {dark} from "@clerk/themes";
 
-export function TeamSwitcher() {
-    const { isMobile } = useSidebar();
-    const { resolvedTheme } = useTheme();
-    const isDark = resolvedTheme === 'dark';
-    const { organization } = useOrganization();
-    const { userMemberships, setActive } = useOrganizationList({
+interface TeamSwitcherProps {
+    isDark?: boolean;
+}
+
+export function TeamSwitcher({isDark}: TeamSwitcherProps) {
+    const {isMobile} = useSidebar();
+    const {organization} = useOrganization();
+    const {userMemberships, setActive} = useOrganizationList({
         userMemberships: {
             infinite: true,
         },
@@ -90,10 +92,11 @@ export function TeamSwitcher() {
                         {organizations.map((org, index) => (
                             <DropdownMenuItem
                                 key={org.id}
-                                onClick={() => setActive?.({ organization: org.id })}
+                                onClick={() => setActive?.({organization: org.id})}
                                 className="gap-2 p-2"
                             >
-                                <div className="flex size-6 items-center justify-center rounded-sm border overflow-hidden">
+                                <div
+                                    className="flex size-6 items-center justify-center rounded-sm border overflow-hidden">
                                     <Image
                                         src={org.imageUrl}
                                         alt={org.name}
@@ -105,12 +108,13 @@ export function TeamSwitcher() {
                                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                             </DropdownMenuItem>
                         ))}
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator/>
                         <Dialog>
                             <DialogTrigger asChild>
                                 <DropdownMenuItem className="gap-2 p-2" onSelect={(e) => e.preventDefault()}>
-                                    <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                                        <Plus className="size-4" />
+                                    <div
+                                        className="flex size-6 items-center justify-center rounded-md border bg-background">
+                                        <Plus className="size-4"/>
                                     </div>
                                     <div className="font-medium text-muted-foreground">
                                         Create Organization
@@ -118,7 +122,8 @@ export function TeamSwitcher() {
                                 </DropdownMenuItem>
                             </DialogTrigger>
                             <DialogContent className="p-0 bg-transparent border-none max-w-[430px]">
-                                <CreateOrganization appearance={{ baseTheme: isDark ? dark : undefined }} routing={"hash"}/>
+                                <CreateOrganization appearance={{baseTheme: isDark ? dark : undefined}}
+                                                    routing={"hash"}/>
                             </DialogContent>
                         </Dialog>
                     </DropdownMenuContent>

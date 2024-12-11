@@ -24,7 +24,6 @@ const Dashboard = ({searchParams}: DashboardProps) => {
                 <DashboardStats/>
                 <PitchList query={searchParams}/>
             </div>
-
         </SidebarInset>
 
     );
