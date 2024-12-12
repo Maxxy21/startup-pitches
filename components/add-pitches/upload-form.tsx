@@ -17,11 +17,8 @@ import {Dropzone} from "@/components/add-pitches/dropzone";
 import {useApiMutation} from "@/hooks/use-api-mutation";
 import {FormSchema} from "@/components/add-pitches/form-schema";
 
-;
 import {api} from "@/convex/_generated/api";
 import {AnimatePresence} from "framer-motion";
-import {evaluatePitch, transcribeAudio} from "@/actions/openai";
-import {fileToText} from "@/utils";
 import {Loader2} from "lucide-react";
 
 export const mockEvaluation = {

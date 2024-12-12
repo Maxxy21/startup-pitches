@@ -18,7 +18,7 @@ interface ConfirmModalProps {
   disabled?: boolean;
   header: string;
   description?: string;
-};
+}
 
 export const ConfirmModal = ({
   children,

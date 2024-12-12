@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const PitchCardSkeleton = () => {
