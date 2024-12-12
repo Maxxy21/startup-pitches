@@ -1,4 +1,4 @@
-import {DatabaseReader, DatabaseWriter, mutation, MutationCtx, query, QueryCtx} from "./_generated/server";
+import {DatabaseReader, DatabaseWriter, mutation, query, QueryCtx} from "./_generated/server";
 import {ConvexError, v} from "convex/values";
 import {Doc} from "@/convex/_generated/dataModel";
 import {getAllOrThrow} from "convex-helpers/server/relationships";
@@ -115,12 +115,16 @@ export const get = query({
         favorites: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
-        const identity = await validateUser(ctx);
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Unauthorized");
+        }
 
         if (args.favorites) {
             const favoritedPitches = await ctx.db
                 .query("userFavorites")
-                .withIndex("by_user_org", (q) =>
+                .withIndex("by_user_org_pitch", (q) =>
                     q
                         .eq("userId", identity.subject)
                         .eq("orgId", args.orgId)
@@ -128,7 +132,7 @@ export const get = query({
                 .order("desc")
                 .collect();
 
-            const ids = favoritedPitches.map((p) => p.pitchId);
+            const ids = favoritedPitches.map((f) => f.pitchId);
 
             const pitches = await getAllOrThrow(ctx.db, ids);
 
@@ -139,7 +143,7 @@ export const get = query({
         }
 
         const title = args.search as string;
-        let pitches: any[];
+        let pitches = [];
 
         if (title) {
             pitches = await ctx.db
@@ -179,6 +183,7 @@ export const get = query({
         return Promise.all(pitchesWithFavoriteRelation);
     },
 });
+
 
 export const getPitch = query({
     args: {
@@ -288,7 +293,6 @@ export const removePitch = mutation({
         await ctx.db.delete(args.id);
     },
 });
-
 
 
 export const getPitchStats = query({
@@ -480,62 +484,86 @@ export const comparePitches = query({
 export const favorite = mutation({
     args: {
         id: v.id("pitches"),
-        orgId: v.string(),
+        orgId: v.string()
     },
     handler: async (ctx, args) => {
-        const identity = await validateUser(ctx);
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Unauthorized");
+        }
+
+        const pitch = await ctx.db.get(args.id);
+
+        if (!pitch) {
+            throw new Error("Pitch not found");
+        }
+
         const userId = identity.subject;
 
         const existingFavorite = await ctx.db
             .query("userFavorites")
             .withIndex("by_user_org_pitch", (q) =>
-                q.eq("userId", userId)
+                q
+                    .eq("userId", userId)
                     .eq("orgId", args.orgId)
-                    .eq("pitchId", args.id)
+                    .eq("pitchId", pitch._id)
             )
             .unique();
 
         if (existingFavorite) {
-            throw new Error("Already favorited");
+            throw new Error("Pitch already favorited");
         }
 
         await ctx.db.insert("userFavorites", {
             userId,
-            pitchId: args.id,
+            pitchId: pitch._id,
             orgId: args.orgId,
         });
 
-        return await ctx.db.get(args.id);
+        return pitch;
     },
 });
 
 export const unfavorite = mutation({
     args: {
         id: v.id("pitches"),
-        orgId: v.string(),
+        orgId: v.string()
     },
     handler: async (ctx, args) => {
-        const identity = await validateUser(ctx);
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("Unauthorized");
+        }
+
+        const pitch = await ctx.db.get(args.id);
+
+        if (!pitch) {
+            throw new Error("Pitch not found");
+        }
+
         const userId = identity.subject;
 
         const existingFavorite = await ctx.db
             .query("userFavorites")
             .withIndex("by_user_org_pitch", (q) =>
-                q.eq("userId", userId)
+                q
+                    .eq("userId", userId)
                     .eq("orgId", args.orgId)
-                    .eq("pitchId", args.id)
+                    .eq("pitchId", pitch._id)
             )
             .unique();
 
         if (!existingFavorite) {
-            throw new Error("Not favorited");
+            throw new Error("Favorited pitch not found");
         }
 
         await ctx.db.delete(existingFavorite._id);
-        return await ctx.db.get(args.id);
+
+        return pitch;
     },
 });
-
 
 
 // Types
