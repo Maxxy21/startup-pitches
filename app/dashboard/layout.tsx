@@ -1,13 +1,22 @@
 import { AppSidebar } from "@/components/app-sidebar"
-import {
-    SidebarProvider,
-} from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <SidebarProvider>
-            <AppSidebar />
-            {children}
+            <div className="flex h-screen">
+                <AppSidebar />
+                <SidebarInset className="flex-1">
+                    <header className="flex h-14 items-center gap-4 border-b bg-background px-6">
+                        <SidebarTrigger />
+                        <div className="flex-1" />
+                    </header>
+                    <main className="flex-1 overflow-auto p-6">
+                        {children}
+                    </main>
+                </SidebarInset>
+            </div>
         </SidebarProvider>
     )
 }
+
