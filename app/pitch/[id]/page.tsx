@@ -16,6 +16,7 @@ import { Progress } from "@/components/ui/progress"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { ExpandTrigger } from "@/components/expand-trigger"
 import { toast } from "sonner"
+import FollowUpSection from "@/components/follow-up-section";
 
 const PitchDetails = () => {
     const { id } = useParams<{ id: string }>()
@@ -142,7 +143,11 @@ const PitchDetails = () => {
                             <CopyButton text={data.evaluation.overallFeedback} />
                         </CardContent>
                     </Card>
-
+                    <FollowUpSection
+                        id={id}
+                        pitchText={data.text}
+                        evaluation={data.evaluation}
+                    />
                     <Card>
                         <CardHeader>
                             <CardTitle>Detailed Analysis</CardTitle>
