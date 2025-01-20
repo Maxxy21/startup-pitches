@@ -60,7 +60,6 @@ const PitchDetails = () => {
             </Button>
         )
     }
-
     const ScoreOverview = () => (
         <div className="grid gap-4 md:grid-cols-2">
             <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/10">
@@ -93,7 +92,6 @@ const PitchDetails = () => {
             </Card>
         </div>
     )
-
     const TranscriptSection = () => (
         <Collapsible open={isTranscriptOpen} onOpenChange={setIsTranscriptOpen}>
             <CollapsibleTrigger asChild>
