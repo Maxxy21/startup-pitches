@@ -143,11 +143,11 @@ const PitchDetails = () => {
                             <CopyButton text={data.evaluation.overallFeedback} />
                         </CardContent>
                     </Card>
-                    <FollowUpSection
-                        id={id}
-                        pitchText={data.text}
-                        evaluation={data.evaluation}
-                    />
+                    {/*<FollowUpSection*/}
+                    {/*    id={id}*/}
+                    {/*    pitchText={data.text}*/}
+                    {/*    evaluation={data.evaluation}*/}
+                    {/*/>*/}
                     <Card>
                         <CardHeader>
                             <CardTitle>Detailed Analysis</CardTitle>
