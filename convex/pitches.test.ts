@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { convexTest } from "convex-test";
 import { expect, test, describe } from "vitest";
 import schema from "./schema";
