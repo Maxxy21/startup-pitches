@@ -115,18 +115,14 @@ export function PitchDetailsSidebar(props: React.ComponentProps<typeof Sidebar>)
         if (!currentPitch) return;
         
         const action = currentPitch.isFavorite ? onUnfavorite : onFavorite;
-        const payload = workspace.mode === 'org' 
-            ? { id: currentPitch._id, orgId: currentPitch.orgId } 
-            : { id: currentPitch._id };
-            
-        action(payload as any)
+        action({ id: currentPitch._id })
             .then(() => {
                 toast.success(`Pitch ${currentPitch.isFavorite ? "removed from" : "added to"} favorites`);
             })
             .catch(() => {
                 toast.error(`Failed to ${currentPitch.isFavorite ? "unfavorite" : "favorite"} pitch`);
             });
-    }, [currentPitch, onFavorite, onUnfavorite, workspace.mode]);
+    }, [currentPitch, onFavorite, onUnfavorite]);
 
     const copyToClipboard = React.useCallback(async (text: string) => {
         try {
