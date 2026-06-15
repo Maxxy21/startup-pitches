@@ -66,7 +66,7 @@ export const getPitch = query({
             .withIndex("by_user_pitch", (q) =>
                 q.eq("userId", identity.subject).eq("pitchId", id)
             )
-            .unique();
+            .first();
 
         return {
             ...pitch,
