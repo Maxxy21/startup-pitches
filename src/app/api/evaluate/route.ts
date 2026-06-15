@@ -83,7 +83,7 @@ type Question = {
 };
 
 
-async function makeOpenAIRequest(prompt: string, temperature = SCORING_TEMPERATURE) {
+async function callOpenAI(system: string, user: string, temperature: number) {
   const openai = getOpenAI();
   try {
     return await backOff(
@@ -91,14 +91,8 @@ async function makeOpenAIRequest(prompt: string, temperature = SCORING_TEMPERATU
         openai.chat.completions.create({
           model: MODEL_NAME,
           messages: [
-            {
-              role: "system",
-              content: SCORING_SYSTEM_PROMPT,
-            },
-            {
-              role: "user",
-              content: prompt,
-            },
+            { role: "system", content: system },
+            { role: "user", content: user },
           ],
           temperature,
         }),
@@ -119,6 +113,9 @@ async function makeOpenAIRequest(prompt: string, temperature = SCORING_TEMPERATU
     throw error;
   }
 }
+
+const FEEDBACK_SYSTEM_PROMPT =
+  "You are an experienced venture capitalist. Provide structured, actionable feedback in valid JSON format.";
 
 function truncateContent(content: string, maxChars: number): string {
   if (content.length <= maxChars) return content;
@@ -194,8 +191,6 @@ async function generateStructuredFeedback(
   fullContent: string,
   evaluations: StructuredEvaluation[]
 ): Promise<StructuredFeedback> {
-  const openai = getOpenAI();
-  
   const feedbackPrompt = `
 Based on the pitch evaluation, provide a comprehensive structured feedback as JSON:
 
@@ -241,20 +236,7 @@ Respond with this JSON structure:
   }
 }`;
 
-  const completion = await openai.chat.completions.create({
-    model: MODEL_NAME,
-    messages: [
-      {
-        role: "system",
-        content: "You are an experienced venture capitalist. Provide structured, actionable feedback in valid JSON format.",
-      },
-      {
-        role: "user",
-        content: feedbackPrompt,
-      },
-    ],
-    temperature: FEEDBACK_TEMPERATURE,
-  });
+  const completion = await callOpenAI(FEEDBACK_SYSTEM_PROMPT, feedbackPrompt, FEEDBACK_TEMPERATURE);
 
   try {
     return JSON.parse(completion.choices[0].message.content || "{}");
@@ -318,7 +300,7 @@ export const POST = withRateLimit(evaluationRateLimiter)(withAuth(async (req: Au
           Array.from(criteria.aspects),
           fullContent
         );
-        const completion = await makeOpenAIRequest(prompt, SCORING_TEMPERATURE);
+        const completion = await callOpenAI(SCORING_SYSTEM_PROMPT, prompt, SCORING_TEMPERATURE);
         const response = completion.choices[0].message.content || "";
         return parseStructuredEvaluationResponse(
           response,
