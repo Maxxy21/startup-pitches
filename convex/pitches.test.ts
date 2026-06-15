@@ -106,10 +106,23 @@ describe("favorites", () => {
     const t = convexTest(schema, modules);
     const alice = t.withIdentity({ subject: "user_alice", name: "Alice" });
 
-    const pitchId = await alice.mutation(api.pitches.create, newPitch());
+    // Pitch created in an ORG context, then favorited.
+    const pitchId = await alice.mutation(api.pitches.create, newPitch({ orgId: "org_x" }));
     await alice.mutation(api.pitches.favorite, { id: pitchId });
 
-    const list = await alice.query(api.pitches.getFilteredPitches, { ownerUserId: "user_alice" });
-    expect(list.find((p) => p._id === pitchId)?.isFavorite).toBe(true);
+    // Reading the ORG workspace list shows it favorited...
+    const orgList = await alice.query(api.pitches.getFilteredPitches, { orgId: "org_x" });
+    expect(orgList.find((p) => p._id === pitchId)?.isFavorite).toBe(true);
+
+    // ...and the favorites set is built from by_user (not org-scoped), so the
+    // favorite row exists independent of any workspace arg.
+    const favRows = await t.run(async (ctx) =>
+      ctx.db
+        .query("userFavorites")
+        .withIndex("by_user", (q) => q.eq("userId", "user_alice"))
+        .collect()
+    );
+    expect(favRows).toHaveLength(1);
+    expect(favRows[0].pitchId).toBe(pitchId);
   });
 });
