@@ -29,14 +29,14 @@ Browser
   │     └── /api              — evaluate, transcribe, generate-questions
   │
   ├── Convex (real-time backend)
-  │     ├── pitches           — CRUD, search index, CSV export
-  │     └── userFavorites     — per-user/org favourite tracking
+  │     ├── pitches           — CRUD, search index, filtering & stats
+  │     └── userFavorites     — per-user favourite tracking (keyed by pitch)
   │
   ├── Clerk (authentication)
   │     └── Personal + organisation workspaces
   │
   └── OpenAI
-        ├── gpt-4o-mini       — pitch evaluation (parallel criteria requests)
+        ├── gpt-4             — pitch evaluation (parallel criteria requests)
         └── whisper-1         — audio transcription
 ```
 
@@ -68,7 +68,7 @@ Rate limits are keyed on the authenticated Clerk `userId` — not the client IP,
 | Styling | Tailwind CSS + shadcn/ui |
 | Database | Convex |
 | Auth | Clerk |
-| AI | OpenAI (gpt-4o-mini, whisper-1) |
+| AI | OpenAI (gpt-4, whisper-1) |
 | Charts | Recharts |
 | Animations | Framer Motion |
 | Testing | Vitest |
