@@ -63,11 +63,10 @@ export const getPitch = query({
 
         const favorite = await ctx.db
             .query("userFavorites")
-            .filter((q) => q.and(
-                q.eq(q.field("userId"), identity.subject),
-                q.eq(q.field("pitchId"), id)
-            ))
-            .first();
+            .withIndex("by_user_pitch", (q) =>
+                q.eq("userId", identity.subject).eq("pitchId", id)
+            )
+            .unique();
 
         return {
             ...pitch,
