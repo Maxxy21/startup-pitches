@@ -246,20 +246,10 @@ export const getFilteredPitches = query({
             );
         }
 
-        let favorites: Doc<"userFavorites">[] = [];
-        if (args.orgId) {
-            favorites = await ctx.db
-                .query("userFavorites")
-                .withIndex("by_user_org_pitch", (q) =>
-                    q.eq("userId", identity.subject).eq("orgId", args.orgId!)
-                )
-                .collect();
-        } else {
-            favorites = await ctx.db
-                .query("userFavorites")
-                .withIndex("by_user", (q) => q.eq("userId", identity.subject))
-                .collect();
-        }
+        const favorites = await ctx.db
+            .query("userFavorites")
+            .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+            .collect();
 
         const favoritedIds = new Set(favorites.map((f) => f.pitchId));
 
