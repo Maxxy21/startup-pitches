@@ -39,7 +39,7 @@ export const create = mutation({
             ...args,
             orgId: args.orgId ?? "",
             userId: identity.subject,
-            authorName: identity.name!,
+            authorName: identity.name ?? "Anonymous",
             createdAt: Date.now(),
             updatedAt: Date.now(),
         });
