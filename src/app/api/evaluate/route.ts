@@ -10,7 +10,7 @@ import {
   StructuredEvaluation, 
   StructuredFeedback 
 } from "@/lib/types/evaluation";
-import { parseStructuredEvaluationResponse, parseTextEvaluationResponse } from '@/lib/eval/parse'
+import { parseStructuredEvaluationResponse } from '@/lib/eval/parse'
 import {
   MODEL_VERSION,
   PROMPT_VERSION,
