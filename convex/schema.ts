@@ -128,9 +128,7 @@ const userFavorites = defineTable({
     pitchId: v.id("pitches"),
 })
     .index("by_user", ["userId"])
-    .index("by_org", ["orgId"])
-    .index("by_user_pitch", ["userId", "pitchId"])
-    .index("by_user_org_pitch", ["userId", "orgId", "pitchId"]);
+    .index("by_user_pitch", ["userId", "pitchId"]);
 
 
 export default defineSchema({

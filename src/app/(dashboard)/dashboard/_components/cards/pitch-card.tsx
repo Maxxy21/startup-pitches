@@ -9,7 +9,6 @@ import { ScoreRing } from "@/components/ui/score-ring";
 import { FavoriteToggleButton } from "./favorite-toggle";
 import { CardActions } from "./card-actions";
 import { toast } from "sonner";
-import { useWorkspace } from "@/hooks/use-workspace";
 
 export interface PitchCardProps {
     id: string;
@@ -32,14 +31,12 @@ export function PitchCard({
     authorId,
     authorName,
     createdAt,
-    orgId,
     isFavorite,
     score,
     inputType,
     onClick,
 }: PitchCardProps) {
     const { userId } = useAuth();
-    const workspace = useWorkspace();
 
     const authorLabel = useMemo(
         () => (userId === authorId ? "You" : authorName),
@@ -66,8 +63,7 @@ export function PitchCard({
             e.preventDefault();
 
             const action = isFavorite ? onUnfavorite : onFavorite;
-            const payload = workspace.mode === 'org' ? { id, orgId } : { id };
-            action(payload as any)
+            action({ id })
                 .then(() => {
                     toast.success(`Pitch ${isFavorite ? "removed from" : "added to"} favorites`);
                 })
@@ -75,7 +71,7 @@ export function PitchCard({
                     toast.error(`Failed to ${isFavorite ? "unfavorite" : "favorite"} pitch`);
                 });
         },
-        [isFavorite, onFavorite, onUnfavorite, id, orgId, workspace.mode]
+        [isFavorite, onFavorite, onUnfavorite, id]
     );
 
     const isPending = pendingFavorite || pendingUnfavorite;
