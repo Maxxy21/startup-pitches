@@ -30,6 +30,7 @@ const MAX_CONTENT_CHARS = CONTENT_LIMITS.evaluateChars;
 const EVALUATION_CRITERIA = {
   problemSolution: {
     name: "Problem-Solution Fit",
+    weight: 0.3,
     aspects: [
       "Problem Definition Clarity",
       "Solution Innovation",
@@ -40,6 +41,7 @@ const EVALUATION_CRITERIA = {
   },
   businessModel: {
     name: "Business Model & Market",
+    weight: 0.3,
     aspects: [
       "Revenue Model",
       "Market Size & Growth",
@@ -50,6 +52,7 @@ const EVALUATION_CRITERIA = {
   },
   team: {
     name: "Team & Execution",
+    weight: 0.25,
     aspects: [
       "Team Capability",
       "Domain Expertise",
@@ -60,6 +63,7 @@ const EVALUATION_CRITERIA = {
   },
   presentation: {
     name: "Pitch Quality",
+    weight: 0.15,
     aspects: [
       "Clarity & Structure",
       "Data & Evidence",
@@ -70,12 +74,9 @@ const EVALUATION_CRITERIA = {
   },
 } as const;
 
-const WEIGHTS: Record<string, number> = {
-  "Problem-Solution Fit": 0.3,
-  "Business Model & Market": 0.3,
-  "Team & Execution": 0.25,
-  "Pitch Quality": 0.15,
-};
+const WEIGHT_BY_CRITERION: Record<string, number> = Object.fromEntries(
+  Object.values(EVALUATION_CRITERIA).map((c) => [c.name, c.weight])
+);
 
 type Question = {
   text: string;
@@ -173,7 +174,7 @@ ${SCORING_RULES}
 function calculateOverallScore(evaluations: StructuredEvaluation[]): number {
   const { weightedSum, totalWeight } = evaluations.reduce(
     (acc, evali) => {
-      const weight = WEIGHTS[evali.criteria] ?? 0.25;
+      const weight = WEIGHT_BY_CRITERION[evali.criteria] ?? 0.25;
       return {
         weightedSum: acc.weightedSum + evali.score * weight,
         totalWeight: acc.totalWeight + weight,
