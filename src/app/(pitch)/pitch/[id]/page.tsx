@@ -12,6 +12,7 @@ import {SkeletonCard} from "@/components/ui/skeleton-card"
 
 import {PitchHeader} from "./_components/sections/pitch-header"
 import {isStructuredEvaluationData} from "@/lib/types/evaluation"
+import { useWorkspace } from "@/hooks/use-workspace"
 
 const TranscriptSection = lazy(() => import("./_components/sections/transcript-section").then(mod => ({default: mod.TranscriptSection})))
 const ScoreOverview = lazy(() => import("./_components/sections/score-overview").then(mod => ({default: mod.ScoreOverview})))
@@ -77,8 +78,10 @@ const DetailedAnalysisSkeleton = () => (
 
 const PitchDetails = () => {
     const {id} = useParams<{ id: string }>()
+    const workspace = useWorkspace()
     const data = useQuery(api.pitches.getPitch, {
         id: id as Id<"pitches">,
+        orgId: workspace.mode === 'org' && workspace.orgId ? workspace.orgId : undefined,
     })
 
     if (!data) return (
