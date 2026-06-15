@@ -1,7 +1,6 @@
 import { mutation, query, MutationCtx, QueryCtx } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { Doc } from "@/convex/_generated/dataModel";
-import { getAllOrThrow } from "convex-helpers/server/relationships";
 import { evaluationData, questionAnswer } from "./schema";
 
 interface PitchStats {
@@ -45,66 +44,6 @@ export const create = mutation({
             createdAt: Date.now(),
             updatedAt: Date.now(),
         });
-    },
-});
-
-export const get = query({
-    args: {
-        orgId: v.string(),
-        search: v.optional(v.string()),
-        favorites: v.optional(v.boolean()),
-    },
-    handler: async (ctx, args) => {
-        const identity = await validateUser(ctx);
-
-        if (args.favorites) {
-            const favoritedPitches = await ctx.db
-                .query("userFavorites")
-                .withIndex("by_user_org_pitch", (q) =>
-                    q.eq("userId", identity.subject).eq("orgId", args.orgId)
-                )
-                .order("desc")
-                .collect();
-
-            const ids = favoritedPitches.map((f) => f.pitchId);
-            const pitches = await getAllOrThrow(ctx.db, ids);
-
-            return pitches.map((pitch) => ({
-                ...pitch,
-                isFavorite: true,
-            }));
-        }
-
-        let pitches: Doc<"pitches">[];
-        const searchTerm = args.search?.trim();
-        if (searchTerm) {
-            pitches = await ctx.db
-                .query("pitches")
-                .withSearchIndex("search_title", (q) =>
-                    q.search("title", searchTerm).eq("orgId", args.orgId)
-                )
-                .collect();
-        } else {
-            pitches = await ctx.db
-                .query("pitches")
-                .withIndex("by_org", (q) => q.eq("orgId", args.orgId))
-                .order("desc")
-                .collect();
-        }
-
-        const favorites = await ctx.db
-            .query("userFavorites")
-            .withIndex("by_user_org_pitch", (q) =>
-                q.eq("userId", identity.subject).eq("orgId", args.orgId)
-            )
-            .collect();
-
-        const favoritedIds = new Set(favorites.map((f) => f.pitchId));
-
-        return pitches.map((pitch) => ({
-            ...pitch,
-            isFavorite: favoritedIds.has(pitch._id),
-        }));
     },
 });
 
@@ -438,60 +377,3 @@ export const getPitchStats = query({
     },
 });
 
-export const exportCSV = query({
-    args: {},
-    handler: async (ctx) => {
-        const identity = await validateUser(ctx);
-
-        const rows: string[] = [];
-        const headers = [
-            'id','title','type','author','createdAt','overallScore','evaluatedAt','modelVersion','promptVersion','policyVersion'
-        ];
-        rows.push(headers.join(','));
-
-        const pitches = await ctx.db
-            .query("pitches")
-            .filter((q) => q.eq(q.field("userId"), identity.subject))
-            .collect();
-
-        for (const p of pitches) {
-            const id = String(p._id);
-            const title = JSON.stringify(p.title ?? "");
-            const type = JSON.stringify(p.type ?? "");
-            const author = JSON.stringify(p.authorName ?? "");
-            const createdAt = new Date(p.createdAt).toISOString();
-
-            let overallScore = '';
-            let evaluatedAt = '';
-            let modelVersion = '';
-            let promptVersion = '';
-            let policyVersion = '';
-
-            const ev = p.evaluation as Record<string, unknown> & { overallScore?: number; metadata?: Record<string, string> };
-            if (ev && typeof ev === 'object') {
-                overallScore = String(ev.overallScore ?? '');
-                if (ev.metadata) {
-                    evaluatedAt = ev.metadata.evaluatedAt ?? '';
-                    modelVersion = ev.metadata.modelVersion ?? '';
-                    promptVersion = ev.metadata.promptVersion ?? '';
-                    policyVersion = ev.metadata.policyVersion ?? '';
-                }
-            }
-
-            rows.push([
-                id,
-                title,
-                type,
-                author,
-                createdAt,
-                overallScore,
-                evaluatedAt,
-                JSON.stringify(modelVersion),
-                JSON.stringify(promptVersion),
-                JSON.stringify(policyVersion)
-            ].join(','));
-        }
-
-        return rows.join('\n');
-    }
-});
