@@ -7,11 +7,10 @@ interface PitchStats {
     totalPitches: number;
     averageScore: number;
     bestPitch: Doc<"pitches"> | undefined;
-    recentPitches: Doc<"pitches">[];
-    scoreDistribution: Record<number, number>;
+    recentCount: number;
 }
 
-const RECENT_PITCH_COUNT = 5;
+const RECENT_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
 const validateUser = async (ctx: QueryCtx | MutationCtx) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -347,8 +346,7 @@ export const getPitchStats = query({
                 totalPitches: 0,
                 averageScore: 0,
                 bestPitch: undefined,
-                recentPitches: [],
-                scoreDistribution: {},
+                recentCount: 0,
             };
         }
 
@@ -363,16 +361,12 @@ export const getPitchStats = query({
                 : best
         );
 
+        const recentThreshold = Date.now() - RECENT_WINDOW_MS;
         return {
             totalPitches: pitches.length,
             averageScore: totalScores / pitches.length,
             bestPitch,
-            recentPitches: pitches.slice(-RECENT_PITCH_COUNT),
-            scoreDistribution: pitches.reduce((acc, pitch) => {
-                const score = Math.floor(pitch.evaluation.overallScore);
-                acc[score] = (acc[score] || 0) + 1;
-                return acc;
-            }, {} as Record<number, number>),
+            recentCount: pitches.filter((pitch) => pitch.createdAt >= recentThreshold).length,
         };
     },
 });

@@ -42,7 +42,7 @@ export function DashboardStats() {
                 title: string;
                 evaluation: { overallScore: number };
             },
-            recentPitches: [] as Array<unknown>,
+            recentCount: 0,
         }),
         []
     );
@@ -98,7 +98,7 @@ export function DashboardStats() {
                 </span>
             </StatCell>
             <StatCell label="Recent" sub="last 7 days">
-                {mergedStats.recentPitches.length}
+                {mergedStats.recentCount}
             </StatCell>
         </motion.div>
     );
