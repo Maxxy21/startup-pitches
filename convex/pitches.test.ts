@@ -126,3 +126,54 @@ describe("favorites", () => {
     expect(favRows[0].pitchId).toBe(pitchId);
   });
 });
+
+describe("getPitch authorization", () => {
+  test("owner reads their own personal pitch", async () => {
+    const t = convexTest(schema, modules);
+    const alice = t.withIdentity({ subject: "user_alice", name: "Alice" });
+
+    const pitchId = await alice.mutation(api.pitches.create, newPitch());
+    const pitch = await alice.query(api.pitches.getPitch, { id: pitchId });
+    expect(pitch._id).toBe(pitchId);
+  });
+
+  test("a different user cannot read someone else's personal pitch", async () => {
+    const t = convexTest(schema, modules);
+    const alice = t.withIdentity({ subject: "user_alice", name: "Alice" });
+    const bob = t.withIdentity({ subject: "user_bob", name: "Bob" });
+
+    const pitchId = await alice.mutation(api.pitches.create, newPitch());
+
+    await expect(
+      bob.query(api.pitches.getPitch, { id: pitchId })
+    ).rejects.toThrow("Unauthorized");
+  });
+
+  test("an org member reads an org pitch when asserting the matching orgId", async () => {
+    const t = convexTest(schema, modules);
+    const alice = t.withIdentity({ subject: "user_alice", name: "Alice" });
+    const bob = t.withIdentity({ subject: "user_bob", name: "Bob" });
+
+    const pitchId = await alice.mutation(api.pitches.create, newPitch({ orgId: "org_x" }));
+
+    const pitch = await bob.query(api.pitches.getPitch, { id: pitchId, orgId: "org_x" });
+    expect(pitch._id).toBe(pitchId);
+    expect(pitch.isFavorite).toBe(false);
+  });
+
+  test("a non-owner with no/mismatched orgId is denied an org pitch", async () => {
+    const t = convexTest(schema, modules);
+    const alice = t.withIdentity({ subject: "user_alice", name: "Alice" });
+    const bob = t.withIdentity({ subject: "user_bob", name: "Bob" });
+
+    const pitchId = await alice.mutation(api.pitches.create, newPitch({ orgId: "org_x" }));
+
+    await expect(
+      bob.query(api.pitches.getPitch, { id: pitchId })
+    ).rejects.toThrow("Unauthorized");
+
+    await expect(
+      bob.query(api.pitches.getPitch, { id: pitchId, orgId: "org_y" })
+    ).rejects.toThrow("Unauthorized");
+  });
+});
