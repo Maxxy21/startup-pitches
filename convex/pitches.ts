@@ -154,34 +154,20 @@ export const favorite = mutation({
 export const unfavorite = mutation({
     args: {
         id: v.id("pitches"),
-        orgId: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const identity = await validateUser(ctx);
 
-        let favorite;
-        if (args.orgId) {
-            favorite = await ctx.db
-                .query("userFavorites")
-                .withIndex("by_user_org_pitch", (q) =>
-                    q
-                        .eq("userId", identity.subject)
-                        .eq("orgId", args.orgId!)
-                        .eq("pitchId", args.id)
-                )
-                .unique();
-        } else {
-            favorite = await ctx.db
-                .query("userFavorites")
-                .withIndex("by_user_pitch", (q) =>
-                    q.eq("userId", identity.subject).eq("pitchId", args.id)
-                )
-                .unique();
-        }
+        const favorites = await ctx.db
+            .query("userFavorites")
+            .withIndex("by_user_pitch", (q) =>
+                q.eq("userId", identity.subject).eq("pitchId", args.id)
+            )
+            .collect();
 
-        if (!favorite) throw new ConvexError("Not favorited");
+        if (favorites.length === 0) throw new ConvexError("Not favorited");
 
-        await ctx.db.delete(favorite._id);
+        await Promise.all(favorites.map((f) => ctx.db.delete(f._id)));
     },
 });
 
