@@ -49,15 +49,19 @@ export const create = mutation({
 export const getPitch = query({
     args: {
         id: v.id("pitches"),
+        orgId: v.optional(v.string()),
     },
-    handler: async (ctx, { id }) => {
+    handler: async (ctx, { id, orgId }) => {
         const identity = await validateUser(ctx);
 
         const pitch = await ctx.db.get(id);
         if (!pitch) {
             throw new ConvexError("Pitch not found");
         }
-        if (pitch.userId !== identity.subject) {
+
+        const isOwner = pitch.userId === identity.subject;
+        const inSameOrg = !!orgId && pitch.orgId === orgId;
+        if (!isOwner && !inSameOrg) {
             throw new ConvexError("Unauthorized");
         }
 
