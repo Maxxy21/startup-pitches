@@ -91,7 +91,10 @@ export function PitchDetailsSidebar(props: React.ComponentProps<typeof Sidebar>)
     const currentPitch = useQuery(
         api.pitches.getPitch,
         isAuthLoaded && isSignedIn && params.id
-            ? { id: params.id as Id<"pitches"> }
+            ? {
+                  id: params.id as Id<"pitches">,
+                  orgId: workspace.mode === 'org' && workspace.orgId ? workspace.orgId : undefined,
+              }
             : "skip"
     );
 
