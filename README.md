@@ -43,7 +43,7 @@ Browser
 ### Key Design Decisions
 
 **Why Convex instead of a traditional database?**
-Convex provides real-time query subscriptions out of the box. The dashboard updates live when a pitch evaluation completes — no polling or WebSocket management required. It also collocates schema, indexes, and query logic in TypeScript, eliminating the ORM layer.
+Convex provides real-time query subscriptions out of the box. The dashboard updates live when a pitch evaluation completes, no polling or WebSocket management required. It also collocates schema, indexes, and query logic in TypeScript, eliminating the ORM layer.
 
 **Why parallel AI requests?**
 Each evaluation criterion (Problem-Solution Fit, Business Model, etc.) is evaluated in a separate OpenAI call that runs concurrently. This reduces total latency from ~120s (sequential) to ~30-40s (parallel), and isolates prompt context per dimension for more consistent scoring.
@@ -52,7 +52,7 @@ Each evaluation criterion (Problem-Solution Fit, Business Model, etc.) is evalua
 Early evaluations used a flat JSON format. The current version uses a structured schema with per-aspect scores, impact ratings, and actionable improvements. Both formats are supported at runtime via a type guard (`isStructuredEvaluationData`) so older pitches render correctly alongside new ones.
 
 **Rate limiting strategy**
-Rate limits are keyed on the authenticated Clerk `userId` — not the client IP, which is spoofable behind proxies. This gives per-user fairness: 20 evaluation requests and 10 transcription requests per minute.
+Rate limits are keyed on the authenticated Clerk `userId`, not the client IP, which is spoofable behind proxies. This gives per-user fairness: 20 evaluation requests and 10 transcription requests per minute.
 
 **Versioned evaluation policy**
 `MODEL_VERSION`, `PROMPT_VERSION`, and `POLICY_VERSION` are stored with every evaluation. This allows future studies to compare evaluation quality across prompt iterations and model upgrades — important for the thesis research context.

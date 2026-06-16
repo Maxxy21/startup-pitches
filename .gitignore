@@ -65,14 +65,6 @@ tsconfig.tsbuildinfo
 # Temporary files
 undefined
 blob
-.claude
 
-# brainstorm visual companion scratch
-.superpowers/
 
-# local-only, never commit
-CLAUDE.md
-tempimages/
 
-# superpowers workflow artifacts (local-only)
-docs/superpowers/
